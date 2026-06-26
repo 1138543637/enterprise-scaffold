@@ -20,3 +20,10 @@ mybatis-plus:
       logic-delete-field: deleted
       logic-delete-value: 1
       logic-not-delete-value: 0
+
+enterprise:
+  security:
+    jwt:
+      issuer: enterprise-scaffold
+      secret: ${JWT_SECRET:enterprise-scaffold-local-dev-secret-please-change-32}
+      expire-minutes: 120
