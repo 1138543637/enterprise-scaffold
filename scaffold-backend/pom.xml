@@ -103,6 +103,12 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<!-- Spring AOP：用于操作日志切面 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+
 
 	</dependencies>
 

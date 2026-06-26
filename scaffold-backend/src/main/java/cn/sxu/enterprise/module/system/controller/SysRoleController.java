@@ -7,6 +7,7 @@ import cn.sxu.enterprise.module.system.vo.SysRolePageQuery;
 import cn.sxu.enterprise.module.system.vo.SysRolePageVO;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import cn.sxu.enterprise.common.web.annotation.OperLog;
 
 @RestController
 public class SysRoleController {
@@ -17,6 +18,7 @@ public class SysRoleController {
         this.sysRoleService = sysRoleService;
     }
 
+    @OperLog(title = "角色管理", businessType = "分页查询")
     @GetMapping("/api/system/roles/page")
     public ApiResult<PageResult<SysRolePageVO>> pageRoles(SysRolePageQuery query) {
         return ApiResult.success(sysRoleService.pageRoles(query));

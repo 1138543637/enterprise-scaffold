@@ -391,3 +391,12 @@ git commit -m "feat: init vue3 frontend scaffold"
 
 git push
 ```
+## S0-08 日志功能本地验证
+
+### 启动后端
+
+```cmd
+cd /d D:\Code\enterprise-scaffold\scaffold-backend
+set MYSQL_PASSWORD=你的MySQL密码
+set JWT_SECRET=enterprise-scaffold-local-dev-secret-please-change-32
+mvn spring-boot:run

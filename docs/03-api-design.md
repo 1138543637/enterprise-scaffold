@@ -513,3 +513,64 @@ scaffold-frontend/src/views/dashboard/DashboardView.vue
 3. 展示前端技术栈
 4. 支持退出登录
 ```
+## S0-08 登录日志和操作日志接口
+
+### 登录日志分页查询
+
+GET /api/system/login-logs/page
+
+认证：需要 token
+
+Query 参数：
+
+| 参数 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| pageNo | Long | 否 | 当前页，默认 1 |
+| pageSize | Long | 否 | 每页条数，默认 10，最大 100 |
+| username | String | 否 | 登录账号，模糊查询 |
+| status | Integer | 否 | 状态：0 成功，1 失败 |
+
+返回字段：
+
+- id
+- username
+- ipaddr
+- loginLocation
+- browser
+- os
+- status
+- msg
+- loginTime
+
+### 操作日志分页查询
+
+GET /api/system/oper-logs/page
+
+认证：需要 token
+
+Query 参数：
+
+| 参数 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| pageNo | Long | 否 | 当前页，默认 1 |
+| pageSize | Long | 否 | 每页条数，默认 10，最大 100 |
+| title | String | 否 | 模块标题，模糊查询 |
+| businessType | String | 否 | 业务类型，模糊查询 |
+| operName | String | 否 | 操作人员，模糊查询 |
+| status | Integer | 否 | 状态：0 正常，1 异常 |
+
+返回字段：
+
+- id
+- title
+- businessType
+- method
+- requestMethod
+- operatorType
+- operName
+- operUrl
+- operIp
+- status
+- errorMsg
+- operTime
+- costTime
