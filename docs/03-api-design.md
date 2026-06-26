@@ -55,3 +55,38 @@ POST
   "username": "admin",
   "password": "admin123"
 }
+```
+## S0-06 RBAC 基础查询接口
+
+### 角色分页
+
+GET /api/system/roles/page
+
+认证：需要 token
+
+Query 参数：
+
+- pageNo
+- pageSize
+- roleName
+- roleKey
+- status
+
+### 菜单树
+
+GET /api/system/menus/tree
+
+认证：需要 token
+
+### 用户权限查询
+
+GET /api/system/users/{userId}/permissions
+
+认证：需要 token
+
+返回字段：
+
+- userId
+- roleKeys
+- permissions
+- menus
