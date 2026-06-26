@@ -44,11 +44,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
-
-
-
-
 		<!-- MyBatis-Plus：S0-04 会用它做用户分页查询 -->
 		<dependency>
 			<groupId>com.baomidou</groupId>
@@ -66,6 +61,14 @@
 			<artifactId>mysql-connector-j</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		<!-- MyBatis-Plus 分页插件依赖：3.5.9+ 需要单独引入 -->
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatis-plus-jsqlparser</artifactId>
+			<version>3.5.10.1</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
