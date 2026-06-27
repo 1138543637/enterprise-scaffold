@@ -138,3 +138,19 @@ M1-01 不新增数据库表，不新增 SQL 文件，不修改已有表结构。
 - M1-04：告警规则和告警事件
 - M1-05：工单闭环
 
+## M1-02：mine_device 与 mine_sensor
+
+新增两表：
+
+mine_device：设备基础信息表
+mine_sensor：传感器基础信息表
+
+关系：
+mine_sensor.device_id -> mine_device.id（逻辑关联）
+
+索引：
+- mine_device：device_code唯一，device_type，area_name，status
+- mine_sensor：sensor_code唯一，device_id，sensor_type，area_name，status
+
+说明：
+不建外键，仅业务关联。

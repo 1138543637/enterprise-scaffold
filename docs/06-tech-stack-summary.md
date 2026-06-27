@@ -1755,3 +1755,18 @@ M1-01 解决的是公共脚手架向业务项目扩展的问题。
 - M1-07：接入 MQTT / EMQX
 
 
+## M1-02
+
+新增能力：
+设备台账 + 传感器台账分页查询
+
+技术：
+Spring Boot
+MyBatis-Plus
+JWT
+MySQL
+AOP日志
+
+接口：
+/api/mine/devices/page
+/api/mine/sensors/page

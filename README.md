@@ -89,3 +89,16 @@ cd /d D:\Code\enterprise-scaffold\scaffold-docker
 已新增模块健康检查接口：`GET /api/mine/health`。
 
 该接口需要 JWT 认证，并复用统一返回结构 `ApiResult` 和操作日志注解 `@OperLog`。
+
+## M1-02
+
+新增：
+mine_device
+mine_sensor
+
+接口：
+GET /api/mine/devices/page
+GET /api/mine/sensors/page
+
+特点：
+JWT认证 + 分页查询 + 操作日志

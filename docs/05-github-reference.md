@@ -191,4 +191,16 @@ M1-01 新增业务包：`cn.sxu.enterprise.module.mine`
 - 不要引入当前阶段不需要的大量依赖
 - 不要在 M1-01 提前复制完整智能矿山项目
 
+## M1-02
 
+参考：
+- RuoYi-Vue 分页结构
+- MyBatis-Plus BaseMapper + Page + Wrapper
+
+本项目：
+- mine_device
+- mine_sensor
+- MineDeviceController
+- MineSensorController
+- ApiResult + PageResult
+- JWT + @OperLog

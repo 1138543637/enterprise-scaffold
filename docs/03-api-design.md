@@ -675,3 +675,25 @@ Apifox 测试步骤：
 - `status = 0`
 
 
+## M1-02：设备与传感器分页接口
+
+### 设备分页
+GET /api/mine/devices/page
+
+参数：
+pageNo, pageSize, deviceCode, deviceName, deviceType, areaName, status
+
+### 传感器分页
+GET /api/mine/sensors/page
+
+参数：
+pageNo, pageSize, sensorCode, sensorName, sensorType, deviceId, areaName, status
+
+返回：
+ApiResult + PageResult
+
+权限：
+JWT
+
+日志：
+@OperLog
