@@ -574,3 +574,15 @@ Query 参数：
 - errorMsg
 - operTime
 - costTime
+
+## S0-09：字典管理和文件上传接口
+
+所有接口成功响应继续使用统一结构：
+
+```json
+{
+  "code": 0,
+  "msg": "success",
+  "data": {}
+}
+```

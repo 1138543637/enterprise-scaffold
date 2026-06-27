@@ -35,6 +35,7 @@ public class SecurityConfig {
                                 "/api/health/db",
                                 "/api/auth/login"
                         ).permitAll()
+                        .requestMatchers("/files/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception

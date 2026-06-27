@@ -257,7 +257,7 @@ scaffold-backend/src/main/java/cn/sxu/enterprise/module/system/vo/LoginRequest.j
 
 ```java
 @NotBlank(message = "用户名不能为空")
-@NotBlank(message = "密码不能为空")
+@NotBlank(message = "密码不能为空") 
 ```
 
 总结表达：
@@ -1585,3 +1585,33 @@ docs/01-project-overview.md
 ```
 
 本文档 `docs/06-tech-stack-summary.md` 是长期维护文件，不能只在最后项目完成时才写。
+## S0-09：字典管理和文件上传技术栈总结
+
+### 1. 本阶段新增技术
+
+S0-09 新增或正式使用：
+
+- Spring MultipartFile
+- 本地文件存储
+- Spring MVC 静态资源映射
+- 文件 MD5 计算
+- MyBatis-Plus 多表基础查询
+- 字典数据接口封装
+- 文件元数据管理
+
+### 2. 解决了什么问题
+
+本阶段解决两个企业后台常见问题：
+
+1. 字典管理  
+   用于统一维护状态、类型、枚举类数据，例如用户状态、性别、是否默认、业务类型等。
+
+2. 文件上传  
+   用于上传附件、图片、证明材料、日志文件、数据文件等，为后续智能矿山、AIOps、银行风控、数据治理模块提供公共文件能力。
+
+### 3. 后端文件路径
+
+配置文件：
+
+```text
+scaffold-backend/src/main/resources/application.yml

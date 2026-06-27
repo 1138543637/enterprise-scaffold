@@ -27,3 +27,7 @@ enterprise:
       issuer: enterprise-scaffold
       secret: ${JWT_SECRET:enterprise-scaffold-local-dev-secret-please-change-32}
       expire-minutes: 120
+
+  file:
+    local-upload-path: ${LOCAL_UPLOAD_PATH:D:/Code/enterprise-scaffold/uploads}
+    access-prefix: /files
