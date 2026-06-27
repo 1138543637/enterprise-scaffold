@@ -1,0 +1,1587 @@
+# Enterprise Scaffold 技术栈总结文档
+
+当前版本：S0-08  
+维护要求：每完成一个阶段，必须同步更新本文档。  
+建议仓库路径：`docs/06-tech-stack-summary.md`
+
+---
+
+# 0. 文档用途
+
+本文档用于长期记录 `enterprise-scaffold` 项目的技术栈、使用位置、解决的问题、对应代码文件、接口路径和后续扩展方向。
+
+这个文档不是简单列技术名，而是帮助后续做三件事：
+
+1. 项目完成后快速回顾每个技术为什么用；
+2. 写简历、准备面试时可以直接提炼项目亮点；
+3. 新阶段开发时避免忘记已经用过的包名、类名、接口路径和配置方式。
+
+每完成一个阶段，例如 S0-09、S0-10、M1-01，都必须更新本文档。
+
+---
+
+# 1. 项目总体定位
+
+项目名称：
+
+```text
+Enterprise Scaffold
+```
+
+项目定位：
+
+```text
+面向央国企、能源、运营商、银行科技、政务数字化场景的企业级后台脚手架。
+```
+
+项目作用：
+
+```text
+作为后续五个业务项目的公共基础底座：
+1. 智能矿山安全生产与设备预测性维护平台
+2. 云网融合 AIOps 智能运维平台
+3. 银行实时交易风控与反欺诈平台
+4. 国企 / 政务数据治理与共享交换平台
+5. 统一身份认证、权限审计与数据安全平台
+```
+
+当前阶段：
+
+```text
+已完成到 S0-08：操作日志和登录日志
+下一步：S0-09：字典管理和文件上传
+```
+
+---
+
+# 2. 总体技术栈一览
+
+## 2.1 后端技术栈
+
+| 技术 | 当前使用状态 | 主要作用 |
+|---|---|---|
+| Java 17 | 已使用 | 后端主开发语言 |
+| Spring Boot 3 | 已使用 | 后端应用框架 |
+| Maven | 已使用 | 后端依赖管理和构建 |
+| Spring Web | 已使用 | REST API 接口开发 |
+| Validation | 已使用 | 登录参数等请求参数校验 |
+| Spring Security | 已使用 | 登录认证、安全过滤器、接口保护 |
+| JWT | 已使用 | 无状态登录 Token |
+| BCrypt | 已使用 | 密码哈希校验 |
+| MyBatis-Plus | 已使用 | ORM、基础 CRUD、分页查询 |
+| MySQL | 已使用 | 业务数据存储 |
+| JdbcTemplate | 已使用 | 数据库健康检查 |
+| Spring AOP | 已使用 | 操作日志切面 |
+| Redis | 未开始 | 后续缓存、验证码、权限缓存、限流 |
+| Docker Compose | 未开始 | 后续一键部署 |
+
+## 2.2 前端技术栈
+
+| 技术 | 当前使用状态 | 主要作用 |
+|---|---|---|
+| Vue3 | 已使用 | 前端主框架 |
+| Vite | 已使用 | 前端构建工具和开发服务器 |
+| TypeScript | 已使用 | 前端类型约束 |
+| Element Plus | 已使用 | 后台管理 UI 组件库 |
+| Vue Router | 已使用 | 页面路由 |
+| Pinia | 已使用 | 登录状态和用户信息管理 |
+| Axios | 已使用 | 调用后端接口 |
+| ECharts | 未开始 | 后续看板图表 |
+| MQTT 前端可视化 | 未开始 | 后续智能矿山传感器数据展示 |
+
+## 2.3 数据库与存储技术
+
+| 技术 | 当前使用状态 | 主要作用 |
+|---|---|---|
+| MySQL | 已使用 | 保存用户、角色、菜单、日志、字典、文件记录 |
+| 本地文件存储 | 未开始，S0-09 使用 | 文件上传初版 |
+| MinIO | 未开始 | 后续对象存储增强 |
+| Redis | 未开始 | 后续缓存和安全能力 |
+
+## 2.4 运维与部署技术
+
+| 技术 | 当前使用状态 | 主要作用 |
+|---|---|---|
+| Git | 已使用 | 版本管理 |
+| GitHub | 已使用 | 远程仓库 |
+| Docker Desktop | 已安装，未正式接入 | 后续 Docker Compose 部署 |
+| Docker Compose | 未开始，S0-10 使用 | 后端、前端、MySQL、Redis 一键启动 |
+| Linux | 未开始 | 后续部署演示 |
+| Prometheus / Grafana | 未开始 | 后续 AIOps 指标监控 |
+
+---
+
+# 3. 后端技术栈详细总结
+
+## 3.1 Java 17
+
+使用阶段：
+
+```text
+S0-02 开始
+```
+
+项目中的作用：
+
+```text
+后端主开发语言。
+```
+
+对应目录：
+
+```text
+scaffold-backend/src/main/java/cn/sxu/enterprise
+```
+
+当前重点类：
+
+```text
+ScaffoldBackendApplication.java
+ApiResult.java
+PageResult.java
+BusinessException.java
+GlobalExceptionHandler.java
+```
+
+总结表达：
+
+```text
+项目后端基于 Java 17 开发，使用 Spring Boot 3 构建企业级后台服务。
+```
+
+## 3.2 Spring Boot 3
+
+使用阶段：
+
+```text
+S0-02 开始
+```
+
+项目中的作用：
+
+```text
+作为后端应用基础框架，负责应用启动、依赖注入、Web 接口、配置管理等。
+```
+
+启动类路径：
+
+```text
+scaffold-backend/src/main/java/cn/sxu/enterprise/ScaffoldBackendApplication.java
+```
+
+配置文件路径：
+
+```text
+scaffold-backend/src/main/resources/application.yml
+```
+
+当前启动命令：
+
+```cmd
+cd /d D:\Code\enterprise-scaffold\scaffold-backend
+set MYSQL_PASSWORD=你的MySQL密码
+set JWT_SECRET=enterprise-scaffold-local-dev-secret-please-change-32
+mvn spring-boot:run
+```
+
+总结表达：
+
+```text
+使用 Spring Boot 3 搭建后端服务，统一管理 Controller、Service、Mapper、Security、AOP 等组件。
+```
+
+## 3.3 Spring Web
+
+使用阶段：
+
+```text
+S0-02 开始
+```
+
+项目中的作用：
+
+```text
+提供 REST API 能力。
+```
+
+已完成 Controller：
+
+```text
+HealthController
+DatabaseHealthController
+AuthController
+SysUserController
+SysRoleController
+SysMenuController
+SysPermissionController
+SysLoginLogController
+SysOperLogController
+```
+
+接口示例：
+
+```text
+GET  /api/health
+POST /api/auth/login
+GET  /api/system/users/page
+GET  /api/system/oper-logs/page
+```
+
+总结表达：
+
+```text
+使用 Spring Web 对外提供 RESTful 风格接口，统一返回 ApiResult 结构。
+```
+
+## 3.4 Validation
+
+使用阶段：
+
+```text
+S0-05 开始
+```
+
+项目中的作用：
+
+```text
+对登录请求参数进行基础校验。
+```
+
+典型文件：
+
+```text
+scaffold-backend/src/main/java/cn/sxu/enterprise/module/system/vo/LoginRequest.java
+```
+
+字段校验：
+
+```java
+@NotBlank(message = "用户名不能为空")
+@NotBlank(message = "密码不能为空")
+```
+
+总结表达：
+
+```text
+使用 Validation 对请求参数进行约束，减少 Controller 中手写参数判断。
+```
+
+## 3.5 MySQL
+
+使用阶段：
+
+```text
+S0-03 开始
+```
+
+数据库名：
+
+```text
+enterprise_scaffold
+```
+
+字符集：
+
+```text
+utf8mb4
+```
+
+排序规则：
+
+```text
+utf8mb4_unicode_ci
+```
+
+当前已建基础表：
+
+```text
+sys_dept
+sys_user
+sys_role
+sys_menu
+sys_post
+sys_user_role
+sys_role_menu
+sys_user_post
+sys_dict_type
+sys_dict_data
+sys_login_log
+sys_oper_log
+sys_file
+```
+
+核心作用：
+
+```text
+保存系统用户、部门、角色、菜单、权限、日志、字典、文件等企业后台基础数据。
+```
+
+总结表达：
+
+```text
+项目使用 MySQL 存储系统基础数据，表结构围绕企业后台常见的用户、角色、菜单、日志、字典、文件模块设计。
+```
+
+## 3.6 MyBatis-Plus
+
+使用阶段：
+
+```text
+S0-03 / S0-04 开始
+```
+
+项目中的作用：
+
+```text
+简化数据库 CRUD 和分页查询。
+```
+
+配置类：
+
+```text
+scaffold-backend/src/main/java/cn/sxu/enterprise/common/mybatis/config/MybatisPlusConfig.java
+```
+
+重要配置：
+
+```text
+map-underscore-to-camel-case: true
+logic-delete-field: deleted
+logic-delete-value: 1
+logic-not-delete-value: 0
+```
+
+已使用 Mapper：
+
+```text
+SysUserMapper
+SysRoleMapper
+SysMenuMapper
+SysUserRoleMapper
+SysRoleMenuMapper
+SysLoginLogMapper
+SysOperLogMapper
+```
+
+分页返回统一使用：
+
+```text
+PageResult<T>
+```
+
+总结表达：
+
+```text
+使用 MyBatis-Plus 实现实体与数据库表映射，通过 BaseMapper 和 ServiceImpl 简化 CRUD，并使用分页插件统一处理分页查询。
+```
+
+## 3.7 Spring Security
+
+使用阶段：
+
+```text
+S0-05 开始
+```
+
+配置类：
+
+```text
+scaffold-backend/src/main/java/cn/sxu/enterprise/common/security/config/SecurityConfig.java
+```
+
+当前作用：
+
+```text
+1. 禁用 csrf、formLogin、httpBasic、logout
+2. 使用无状态 Session
+3. 放行健康检查和登录接口
+4. 其他接口都需要登录
+5. 注册 JwtAuthenticationFilter
+6. 未登录返回统一 401 JSON
+```
+
+放行接口：
+
+```text
+/api/health
+/api/health/db
+/api/auth/login
+```
+
+需要登录接口示例：
+
+```text
+/api/auth/me
+/api/system/users/page
+/api/system/roles/page
+/api/system/menus/tree
+/api/system/login-logs/page
+/api/system/oper-logs/page
+```
+
+总结表达：
+
+```text
+项目使用 Spring Security 作为安全框架，结合 JWT 实现前后端分离场景下的无状态认证。
+```
+
+## 3.8 JWT
+
+使用阶段：
+
+```text
+S0-05 开始
+```
+
+核心类：
+
+```text
+JwtProperties
+JwtTokenProvider
+JwtAuthenticationFilter
+LoginUser
+```
+
+配置前缀：
+
+```text
+enterprise.security.jwt
+```
+
+配置项：
+
+```text
+issuer
+secret
+expireMinutes
+```
+
+认证请求头：
+
+```text
+Authorization: Bearer <token>
+```
+
+Token 中保存：
+
+```text
+issuer
+subject = username
+userId
+nickname
+issuedAt
+expiration
+```
+
+总结表达：
+
+```text
+使用 JWT 保存登录态，后端不依赖 Session，适合前后端分离和后续微服务扩展。
+```
+
+## 3.9 BCrypt
+
+使用阶段：
+
+```text
+S0-05 开始
+```
+
+项目中的作用：
+
+```text
+对用户密码进行安全哈希存储和校验。
+```
+
+默认账号：
+
+```text
+username: admin
+password: admin123
+```
+
+数据库字段：
+
+```text
+sys_user.password_hash
+```
+
+校验代码位置：
+
+```text
+scaffold-backend/src/main/java/cn/sxu/enterprise/module/system/service/AuthService.java
+```
+
+总结表达：
+
+```text
+项目使用 BCrypt 对密码进行哈希校验，避免明文存储密码。
+```
+
+## 3.10 RBAC 权限模型
+
+使用阶段：
+
+```text
+S0-06 开始
+```
+
+涉及表：
+
+```text
+sys_user
+sys_role
+sys_menu
+sys_user_role
+sys_role_menu
+```
+
+关系：
+
+```text
+用户 -> 用户角色关联 -> 角色 -> 角色菜单关联 -> 菜单 / 按钮权限
+```
+
+已完成接口：
+
+```text
+GET /api/system/roles/page
+GET /api/system/menus/tree
+GET /api/system/users/{userId}/permissions
+```
+
+当前策略：
+
+```text
+S0-06 只做权限查询
+暂时不做 @PreAuthorize
+暂时不做按钮级后端拦截
+```
+
+总结表达：
+
+```text
+项目实现了基础 RBAC 权限模型，支持查询用户角色、权限标识和菜单树，为后续动态路由和按钮权限控制打基础。
+```
+
+## 3.11 Spring AOP
+
+使用阶段：
+
+```text
+S0-08 开始
+```
+
+项目中的作用：
+
+```text
+实现操作日志自动记录。
+```
+
+核心文件：
+
+```text
+scaffold-backend/src/main/java/cn/sxu/enterprise/common/web/annotation/OperLog.java
+scaffold-backend/src/main/java/cn/sxu/enterprise/module/system/aspect/OperLogAspect.java
+```
+
+日志表：
+
+```text
+sys_oper_log
+```
+
+使用方式：
+
+```java
+@OperLog(title = "用户管理", businessType = "分页查询")
+@GetMapping("/api/system/users/page")
+public ApiResult<PageResult<SysUserPageVO>> pageUsers(SysUserPageQuery query) {
+    return ApiResult.success(sysUserService.pageUsers(query));
+}
+```
+
+记录内容：
+
+```text
+模块标题
+业务类型
+请求方法
+操作人员
+请求地址
+请求 IP
+请求参数
+响应结果
+操作状态
+错误信息
+耗时
+操作时间
+```
+
+总结表达：
+
+```text
+项目使用 Spring AOP + 自定义 @OperLog 注解实现操作日志，业务代码只需加注解即可记录审计信息。
+```
+
+## 3.12 登录日志
+
+使用阶段：
+
+```text
+S0-08 开始
+```
+
+日志表：
+
+```text
+sys_login_log
+```
+
+核心类：
+
+```text
+SysLoginLog
+SysLoginLogMapper
+SysLoginLogService
+SysLoginLogServiceImpl
+SysLoginLogController
+```
+
+写入位置：
+
+```text
+AuthService.login()
+```
+
+记录规则：
+
+```text
+登录成功：status = 0，msg = 登录成功
+登录失败：status = 1，msg = 失败原因
+```
+
+查询接口：
+
+```text
+GET /api/system/login-logs/page
+```
+
+总结表达：
+
+```text
+项目实现登录成功和失败日志记录，便于后续安全审计、异常登录检测和 IAM 模块扩展。
+```
+
+## 3.13 操作日志
+
+使用阶段：
+
+```text
+S0-08 开始
+```
+
+日志表：
+
+```text
+sys_oper_log
+```
+
+核心类：
+
+```text
+SysOperLog
+SysOperLogMapper
+SysOperLogService
+SysOperLogServiceImpl
+SysOperLogController
+OperLog
+OperLogAspect
+```
+
+查询接口：
+
+```text
+GET /api/system/oper-logs/page
+```
+
+当前已加日志注解的接口：
+
+```text
+GET /api/system/users/page
+GET /api/system/roles/page
+GET /api/system/menus/tree
+GET /api/system/users/{userId}/permissions
+GET /api/system/login-logs/page
+GET /api/system/oper-logs/page
+```
+
+总结表达：
+
+```text
+项目实现了基于注解的操作日志能力，可以记录用户访问接口的行为，为企业系统审计和问题追踪提供基础。
+```
+
+---
+
+# 4. 前端技术栈详细总结
+
+## 4.1 Vue3
+
+使用阶段：
+
+```text
+S0-07 开始
+```
+
+前端目录：
+
+```text
+scaffold-frontend
+```
+
+入口文件：
+
+```text
+scaffold-frontend/src/main.ts
+```
+
+根组件：
+
+```text
+scaffold-frontend/src/App.vue
+```
+
+总结表达：
+
+```text
+前端使用 Vue3 构建后台管理界面，当前已完成登录页和 Dashboard 首页。
+```
+
+## 4.2 Vite
+
+使用阶段：
+
+```text
+S0-07 开始
+```
+
+配置文件：
+
+```text
+scaffold-frontend/vite.config.ts
+```
+
+开发端口：
+
+```text
+5173
+```
+
+开发代理：
+
+```text
+/api -> http://localhost:8080
+```
+
+启动命令：
+
+```cmd
+cd /d D:\Code\enterprise-scaffold\scaffold-frontend
+pnpm dev
+```
+
+构建命令：
+
+```cmd
+pnpm build
+```
+
+总结表达：
+
+```text
+使用 Vite 作为前端开发和构建工具，开发环境通过 proxy 将 /api 请求转发到后端。
+```
+
+## 4.3 TypeScript
+
+使用阶段：
+
+```text
+S0-07 开始
+```
+
+当前类型文件：
+
+```text
+scaffold-frontend/src/types/api.ts
+scaffold-frontend/src/api/system/auth.ts
+```
+
+已定义类型：
+
+```text
+ApiResult<T>
+LoginRequest
+LoginResponse
+LoginUser
+```
+
+总结表达：
+
+```text
+前端使用 TypeScript 定义接口返回结构和请求参数类型，减少前后端字段不一致的问题。
+```
+
+## 4.4 Element Plus
+
+使用阶段：
+
+```text
+S0-07 开始
+```
+
+引入位置：
+
+```text
+scaffold-frontend/src/main.ts
+```
+
+当前使用页面：
+
+```text
+LoginView.vue
+DashboardView.vue
+```
+
+当前使用组件：
+
+```text
+el-form
+el-form-item
+el-input
+el-button
+el-container
+el-header
+el-main
+el-card
+el-descriptions
+ElMessage
+```
+
+总结表达：
+
+```text
+前端使用 Element Plus 快速搭建后台页面，保证界面风格统一。
+```
+
+## 4.5 Vue Router
+
+使用阶段：
+
+```text
+S0-07 开始
+```
+
+路由文件：
+
+```text
+scaffold-frontend/src/router/index.ts
+```
+
+当前路由：
+
+```text
+/          -> /dashboard
+/login     -> LoginView.vue
+/dashboard -> DashboardView.vue
+```
+
+路由守卫：
+
+```text
+未登录访问 /dashboard，跳转 /login
+已登录访问 /login，跳转 /dashboard
+```
+
+总结表达：
+
+```text
+使用 Vue Router 管理前端页面，并通过路由守卫实现基础登录拦截。
+```
+
+## 4.6 Pinia
+
+使用阶段：
+
+```text
+S0-07 开始
+```
+
+Store 文件：
+
+```text
+scaffold-frontend/src/stores/auth.ts
+```
+
+Store 名：
+
+```text
+auth
+```
+
+保存内容：
+
+```text
+token
+user
+```
+
+方法：
+
+```text
+login(data)
+loadMe()
+logout()
+```
+
+总结表达：
+
+```text
+使用 Pinia 管理登录状态和当前用户信息，刷新页面后可从 localStorage 恢复 token。
+```
+
+## 4.7 Axios
+
+使用阶段：
+
+```text
+S0-07 开始
+```
+
+统一封装文件：
+
+```text
+scaffold-frontend/src/api/request.ts
+```
+
+业务接口文件：
+
+```text
+scaffold-frontend/src/api/system/auth.ts
+```
+
+Token Key：
+
+```text
+enterprise_scaffold_token
+```
+
+当前封装能力：
+
+```text
+请求前自动添加 Authorization: Bearer <token>
+响应后统一判断 ApiResult.code
+code !== 0 时弹出错误
+401 时清除 token
+```
+
+总结表达：
+
+```text
+使用 Axios 封装前端请求，统一处理 Token、响应结构和错误提示。
+```
+
+---
+
+# 5. 已完成阶段技术栈变化记录
+
+## 5.1 P-01：开发环境
+
+新增技术和工具：
+
+```text
+Java 17
+Maven
+Git
+Node.js
+pnpm
+Docker
+MySQL 客户端
+Apifox
+IntelliJ IDEA
+```
+
+价值：
+
+```text
+完成 Java 后端、Vue 前端、数据库、接口测试和后续 Docker 部署所需的开发环境。
+```
+
+## 5.2 P-02：GitHub 仓库
+
+新增技术和工具：
+
+```text
+Git
+GitHub
+```
+
+仓库：
+
+```text
+https://github.com/1138543637/enterprise-scaffold.git
+```
+
+价值：
+
+```text
+建立版本管理和远程代码托管能力。
+```
+
+## 5.3 S0-01：基础目录
+
+新增内容：
+
+```text
+scaffold-backend
+scaffold-frontend
+scaffold-sql
+scaffold-docker
+docs
+README.md
+```
+
+价值：
+
+```text
+形成前后端分离、SQL 独立管理、Docker 独立管理、文档独立管理的工程结构。
+```
+
+## 5.4 S0-02：Spring Boot 后端初始化
+
+新增技术：
+
+```text
+Spring Boot 3
+Spring Web
+ApiResult
+```
+
+新增接口：
+
+```text
+GET /api/health
+```
+
+价值：
+
+```text
+跑通后端服务启动和统一返回结构。
+```
+
+## 5.5 S0-03：MySQL 与基础表
+
+新增技术：
+
+```text
+MySQL
+MyBatis-Plus
+JdbcTemplate
+```
+
+新增内容：
+
+```text
+enterprise_scaffold 数据库
+13 张系统基础表
+GET /api/health/db
+```
+
+价值：
+
+```text
+建立企业后台系统的数据库基础。
+```
+
+## 5.6 S0-04：用户分页
+
+新增技术：
+
+```text
+MyBatis-Plus 分页插件
+LambdaQueryWrapper
+PageResult
+```
+
+新增接口：
+
+```text
+GET /api/system/users/page
+```
+
+价值：
+
+```text
+实现系统中第一个正式业务分页接口，形成 Controller / Service / Mapper / Entity / VO 分层样板。
+```
+
+## 5.7 S0-05：JWT 登录认证
+
+新增技术：
+
+```text
+Spring Security
+JWT
+BCrypt
+Validation
+```
+
+新增接口：
+
+```text
+POST /api/auth/login
+GET  /api/auth/me
+```
+
+价值：
+
+```text
+实现前后端分离项目的登录认证基础，所有系统接口可以基于 token 保护。
+```
+
+## 5.8 S0-06：RBAC 权限基础查询
+
+新增技术 / 设计：
+
+```text
+RBAC
+用户-角色-菜单权限模型
+菜单树构建
+权限标识 permissions
+```
+
+新增接口：
+
+```text
+GET /api/system/roles/page
+GET /api/system/menus/tree
+GET /api/system/users/{userId}/permissions
+```
+
+价值：
+
+```text
+系统从“只能登录”升级为“能查询用户拥有哪些角色、菜单和按钮权限”。
+```
+
+## 5.9 S0-07：Vue3 前端初始化
+
+新增技术：
+
+```text
+Vue3
+Vite
+TypeScript
+Element Plus
+Vue Router
+Pinia
+Axios
+```
+
+新增页面：
+
+```text
+/login
+/dashboard
+```
+
+价值：
+
+```text
+项目从纯后端接口阶段进入前后端联调阶段，实现浏览器登录和首页展示。
+```
+
+## 5.10 S0-08：操作日志和登录日志
+
+新增技术：
+
+```text
+Spring AOP
+自定义注解 @OperLog
+操作日志切面
+登录日志记录
+```
+
+新增接口：
+
+```text
+GET /api/system/login-logs/page
+GET /api/system/oper-logs/page
+```
+
+价值：
+
+```text
+为企业级系统补齐安全审计能力，可以追踪登录行为和接口访问行为。
+```
+
+---
+
+# 6. 当前可写进简历的技术点
+
+当前项目还没有全部完成，但到 S0-08 已经可以提炼这些技术点。
+
+## 6.1 后端方向
+
+```text
+基于 Spring Boot 3 + MyBatis-Plus + MySQL 搭建企业级后台脚手架，完成用户、角色、菜单、权限、登录日志、操作日志等系统基础模块。
+```
+
+```text
+使用 Spring Security + JWT 实现前后端分离登录认证，使用 BCrypt 完成密码哈希校验，统一处理未登录 401 返回。
+```
+
+```text
+设计并实现 RBAC 权限模型，基于 sys_user、sys_role、sys_menu、sys_user_role、sys_role_menu 表完成角色分页、菜单树和用户权限查询。
+```
+
+```text
+使用 Spring AOP + 自定义 @OperLog 注解实现操作日志，记录请求方法、操作人员、请求 URL、请求参数、响应结果、异常信息和耗时。
+```
+
+```text
+使用 MyBatis-Plus 实现分页查询和逻辑删除，统一封装 PageResult 分页返回结构。
+```
+
+## 6.2 前端方向
+
+```text
+基于 Vue3 + Vite + TypeScript + Element Plus 初始化后台管理前端，实现登录页、首页、路由守卫和后端接口联调。
+```
+
+```text
+使用 Pinia 管理登录 token 和当前用户信息，使用 Axios 拦截器统一添加 Authorization 请求头并处理 ApiResult 响应结构。
+```
+
+## 6.3 企业信息化方向
+
+```text
+项目面向央国企信息化场景，围绕统一认证、权限管理、操作审计、日志追踪等后台系统基础能力构建，为后续智能矿山、AIOps、银行风控和数据治理模块提供公共底座。
+```
+
+---
+
+# 7. 面试讲解模板
+
+## 7.1 一分钟项目介绍
+
+```text
+Enterprise Scaffold 是我从零搭建的企业级后台脚手架，定位是服务于央国企、能源、运营商、银行科技和政务数字化场景。项目采用 Spring Boot 3、MyBatis-Plus、MySQL、Spring Security、JWT、Vue3、Vite、Element Plus 等技术，已经完成了用户分页、JWT 登录认证、RBAC 权限查询、Vue3 前端登录联调、登录日志和操作日志等基础能力。后续会在这个脚手架上扩展智能矿山、AIOps、银行风控、数据治理和统一身份认证等业务模块。
+```
+
+## 7.2 登录认证怎么实现
+
+```text
+登录时前端调用 POST /api/auth/login，后端根据 username 查询 sys_user，判断用户是否存在、账号是否停用，再用 BCrypt 校验密码。校验通过后由 JwtTokenProvider 生成 JWT，返回 token、tokenType、expiresIn 和用户基础信息。后续请求由前端 Axios 拦截器自动添加 Authorization: Bearer token，后端 JwtAuthenticationFilter 解析 token，并把 LoginUser 放入 SecurityContext。
+```
+
+## 7.3 RBAC 怎么实现
+
+```text
+RBAC 使用 sys_user、sys_role、sys_menu、sys_user_role、sys_role_menu 五张表。用户和角色通过 sys_user_role 关联，角色和菜单权限通过 sys_role_menu 关联。系统提供角色分页、菜单树查询和用户权限查询接口，用户权限接口会返回 roleKeys、permissions 和 menus。当前阶段先实现权限查询，后续会继续扩展按钮权限拦截和前端动态菜单。
+```
+
+## 7.4 操作日志怎么实现
+
+```text
+操作日志使用 Spring AOP 和自定义 @OperLog 注解实现。Controller 方法上加 @OperLog 后，OperLogAspect 会拦截方法调用，记录模块标题、业务类型、请求方法、操作人、请求 URL、请求 IP、请求参数、返回结果、异常信息和耗时，最后保存到 sys_oper_log 表。日志记录被 try-catch 包裹，即使日志失败也不会影响主业务接口。
+```
+
+## 7.5 前端登录怎么实现
+
+```text
+前端使用 Vue3 + Vite + TypeScript + Element Plus。登录页调用 auth.ts 中的 loginApi，请求后端 /api/auth/login。登录成功后 Pinia 保存 token，并写入 localStorage。Axios 请求拦截器会自动读取 enterprise_scaffold_token，并添加 Authorization 请求头。Vue Router 路由守卫会判断 token，未登录访问 /dashboard 会跳回 /login。
+```
+
+---
+
+# 8. 后续技术栈扩展计划
+
+## 8.1 S0-09：字典管理和文件上传
+
+预计新增 / 使用：
+
+```text
+sys_dict_type
+sys_dict_data
+sys_file
+MultipartFile
+本地文件存储 LOCAL
+文件上传接口
+字典查询接口
+```
+
+预计接口：
+
+```text
+GET  /api/system/dict-types/page
+GET  /api/system/dict-data/page
+GET  /api/system/dict-data/type/{dictType}
+POST /api/system/files/upload
+GET  /api/system/files/page
+```
+
+完成后本文档需要补充：
+
+```text
+字典管理技术总结
+文件上传技术总结
+MultipartFile 使用位置
+本地文件存储路径配置
+文件表字段说明
+```
+
+## 8.2 S0-10：Docker Compose 一键部署
+
+预计新增 / 使用：
+
+```text
+Dockerfile
+Docker Compose
+MySQL 容器
+Redis 容器
+后端容器
+前端 Nginx 容器
+```
+
+完成后本文档需要补充：
+
+```text
+Docker Compose 架构
+容器端口
+环境变量
+部署命令
+常见问题
+```
+
+## 8.3 M1：智能矿山平台
+
+预计新增 / 使用：
+
+```text
+module/mine
+设备台账
+传感器台账
+告警规则
+告警事件
+工单闭环
+MQTT
+EMQX
+ECharts
+```
+
+完成后本文档需要补充：
+
+```text
+智能矿山业务技术栈
+MQTT 数据流
+告警规则设计
+工单闭环设计
+看板图表设计
+```
+
+## 8.4 A2：AIOps 智能运维平台
+
+预计新增 / 使用：
+
+```text
+Prometheus
+Grafana
+指标采集
+日志检索
+告警中心
+根因分析
+```
+
+完成后本文档需要补充：
+
+```text
+AIOps 技术栈
+指标数据模型
+告警流转设计
+根因分析简化实现
+```
+
+## 8.5 R3：银行实时交易风控平台
+
+预计新增 / 使用：
+
+```text
+Kafka
+交易模拟
+规则引擎
+风险评分
+人工审核
+风控看板
+```
+
+完成后本文档需要补充：
+
+```text
+风控技术栈
+交易消息流
+规则引擎设计
+风险评分设计
+```
+
+## 8.6 D4：数据治理与共享交换平台
+
+预计新增 / 使用：
+
+```text
+数据源管理
+元数据采集
+数据质量检测
+敏感数据识别
+脱敏
+API 共享
+数据血缘
+```
+
+完成后本文档需要补充：
+
+```text
+数据治理技术栈
+元数据模型
+数据质量规则
+脱敏策略
+共享接口设计
+```
+
+## 8.7 I5：统一身份认证与安全审计
+
+预计新增 / 使用：
+
+```text
+IAM
+权限审计
+接口访问日志
+异常登录检测
+接口限流
+SSO 简化版
+```
+
+完成后本文档需要补充：
+
+```text
+IAM 技术栈
+SSO 设计
+异常登录检测逻辑
+接口限流策略
+审计日志增强
+```
+
+---
+
+# 9. 每阶段更新本文档的固定规则
+
+每完成一个阶段，都必须更新本文档。
+
+## 9.1 必须更新的位置
+
+每次至少更新：
+
+```text
+# 2. 总体技术栈一览
+# 5. 已完成阶段技术栈变化记录
+# 6. 当前可写进简历的技术点
+# 8. 后续技术栈扩展计划
+```
+
+如果新增了一个重要技术，例如 Redis、Kafka、MQTT、Docker、MinIO，还必须新增一个详细小节，例如：
+
+```text
+# 3.x Redis
+# 3.x Kafka
+# 3.x MQTT
+# 3.x Docker Compose
+```
+
+或者如果是前端技术，则新增：
+
+```text
+# 4.x ECharts
+# 4.x 动态路由
+```
+
+## 9.2 每个阶段更新时必须记录
+
+每个阶段完成后，必须补充：
+
+```text
+1. 本阶段新增了什么技术
+2. 这个技术解决了什么问题
+3. 对应的后端文件路径
+4. 对应的前端文件路径
+5. 对应的数据库表
+6. 对应的接口路径
+7. 如何启动和验证
+8. 可以写进简历的一句话
+9. 面试时怎么解释
+10. 后续还能怎么增强
+```
+
+## 9.3 提交要求
+
+每次更新本文档后，建议和该阶段代码一起提交。
+
+示例：
+
+```cmd
+cd /d D:\Code\enterprise-scaffold
+
+git add .
+
+git commit -m "feat: implement dictionary and file upload api"
+
+git push
+```
+
+如果只是单独更新技术栈文档，可以提交：
+
+```cmd
+git add docs/06-tech-stack-summary.md
+
+git commit -m "docs: update tech stack summary"
+
+git push
+```
+
+---
+
+# 10. 永久提醒
+
+后续每完成一个阶段，都要同时检查并更新：
+
+```text
+docs/03-api-design.md
+docs/04-deploy-guide.md
+docs/05-github-reference.md
+docs/06-tech-stack-summary.md
+```
+
+如果涉及数据库变化，还要更新：
+
+```text
+docs/02-database-design.md
+```
+
+如果进入新的业务模块，还要更新：
+
+```text
+README.md
+docs/01-project-overview.md
+```
+
+本文档 `docs/06-tech-stack-summary.md` 是长期维护文件，不能只在最后项目完成时才写。
