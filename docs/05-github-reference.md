@@ -139,3 +139,56 @@ S0-10 主要参考企业后台项目的部署组织方式，包括：
 - 不替换本项目已有接口路径
 - 不提交真实密码、真实密钥、`.env` 文件
 
+## M1-01：智能矿山模块骨架参考说明
+
+### 本阶段参考项目
+
+#### RuoYi-Vue-Pro
+
+地址：`https://github.com/YunaiV/ruoyi-vue-pro`
+
+参考点：
+
+- 企业后台整体结构
+- 业务模块拆分方式
+- Controller / Service / Mapper / VO 分层组织方式
+
+本项目只参考模块组织思想，不复制代码。
+
+#### RuoYi-Vue
+
+地址：`https://github.com/yangzongzhuan/RuoYi-Vue`
+
+参考点：
+
+- Spring Security + JWT 后台接口保护
+- 操作日志注解与切面记录思路
+- 系统模块与业务模块分离方式
+
+本项目已经有自己的 `@OperLog` 和 `OperLogAspect`，M1-01 继续复用已有实现，不复制 RuoYi 代码。
+
+### 本项目自己的实现
+
+M1-01 新增业务包：`cn.sxu.enterprise.module.mine`
+
+新增接口：`GET /api/mine/health`
+
+新增控制器：`cn.sxu.enterprise.module.mine.controller.MineHealthController`
+
+### 正确参考方式
+
+- 参考目录分层
+- 参考接口组织方式
+- 参考命名规范
+- 参考模块拆分思想
+- 自己编写核心代码
+- 自己维护接口文档和部署文档
+
+### 错误方式
+
+- 不要复制若依代码直接改名
+- 不要 fork 其他项目只改 logo
+- 不要引入当前阶段不需要的大量依赖
+- 不要在 M1-01 提前复制完整智能矿山项目
+
+

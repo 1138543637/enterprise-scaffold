@@ -102,3 +102,44 @@ S0-10 不改变已有业务代码：
 - 文件访问前缀继续使用 `/files`
 - 统一返回结构继续使用 `ApiResult`
 - 分页返回结构继续使用 `PageResult`
+
+## M1-01：新增智能矿山模块骨架
+
+M1-01 是项目一“智能矿山安全生产与设备预测性维护平台”的起始步骤。
+
+本阶段在已有公共企业级脚手架基础上，新增智能矿山业务模块包：`cn.sxu.enterprise.module.mine`。
+
+新增后端目录：
+
+- `scaffold-backend/src/main/java/cn/sxu/enterprise/module/mine/controller`
+- `scaffold-backend/src/main/java/cn/sxu/enterprise/module/mine/entity`
+- `scaffold-backend/src/main/java/cn/sxu/enterprise/module/mine/mapper`
+- `scaffold-backend/src/main/java/cn/sxu/enterprise/module/mine/service`
+- `scaffold-backend/src/main/java/cn/sxu/enterprise/module/mine/service/impl`
+- `scaffold-backend/src/main/java/cn/sxu/enterprise/module/mine/vo`
+- `scaffold-backend/src/main/java/cn/sxu/enterprise/module/mine/dto`
+
+新增控制器：`cn.sxu.enterprise.module.mine.controller.MineHealthController`。
+
+新增接口：`GET /api/mine/health`。
+
+该接口继续复用已有公共能力：
+
+- 统一返回结构：`ApiResult`
+- JWT 登录认证
+- 操作日志注解：`@OperLog`
+- 操作日志表：`sys_oper_log`
+
+本阶段暂不实现：
+
+- 不新增数据库表
+- 不新增 SQL 文件
+- 不新增前端页面
+- 不引入 MQTT
+- 不引入 EMQX
+- 不做设备台账
+- 不做传感器数据
+- 不做告警规则
+- 不做工单闭环
+
+M1-01 的作用是验证智能矿山业务模块已经能被 Spring Boot 扫描，并且可以复用公共脚手架中的认证、统一返回和操作日志能力。

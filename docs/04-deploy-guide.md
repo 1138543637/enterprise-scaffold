@@ -432,3 +432,94 @@ mvn spring-boot:run
 docker --version
 docker compose version
 ```
+
+## M1-01：智能矿山模块部署与验证
+
+### 本阶段部署变化
+
+M1-01 不新增 Docker Compose 服务，不新增环境变量，不新增端口，不修改 Nginx 配置。
+
+继续使用 S0-10 已完成的部署方式：
+
+- MySQL 容器：`enterprise-scaffold-mysql`
+- 后端容器：`enterprise-scaffold-backend`
+- 前端容器：`enterprise-scaffold-frontend`
+
+端口继续保持：
+
+- MySQL：`3306`
+- 后端：`8080`
+- 前端：`5173 -> 容器内 80`
+
+### 本地后端启动
+
+执行目录：
+
+`D:\Code\enterprise-scaffold\scaffold-backend`
+
+启动命令：
+
+`cd /d D:\Code\enterprise-scaffold\scaffold-backend`
+
+`set MYSQL_PASSWORD=你的MySQL密码`
+
+`set JWT_SECRET=enterprise-scaffold-local-dev-secret-please-change-32`
+
+`set LOCAL_UPLOAD_PATH=D:\Code\enterprise-scaffold\uploads`
+
+`mvn spring-boot:run`
+
+### 本地接口验证
+
+登录接口：
+
+`POST http://localhost:8080/api/auth/login`
+
+智能矿山模块健康检查：
+
+`GET http://localhost:8080/api/mine/health`
+
+请求头：
+
+`Authorization: Bearer <token>`
+
+预期返回：
+
+{
+"code": 0,
+"msg": "success",
+"data": "enterprise-scaffold mine module running"
+}
+
+### Docker Compose 重新构建
+
+执行目录：
+
+`D:\Code\enterprise-scaffold\scaffold-docker`
+
+启动并重新构建：
+
+`docker compose --env-file .env up -d --build`
+
+查看状态：
+
+`docker compose ps`
+
+查看后端日志：
+
+`docker compose logs -f enterprise-scaffold-backend`
+
+### Docker 环境接口验证
+
+后端直连：
+
+`GET http://localhost:8080/api/mine/health`
+
+前端 Nginx 代理：
+
+`GET http://localhost:5173/api/mine/health`
+
+以上两个地址都需要请求头：
+
+`Authorization: Bearer <token>`
+

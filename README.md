@@ -75,3 +75,17 @@
 ```cmd
 cd /d D:\Code\enterprise-scaffold\scaffold-docker
 ```
+
+## 当前进度
+
+已完成第 0 阶段公共企业级脚手架，包括后端基础接口、MySQL、MyBatis-Plus、JWT 登录认证、RBAC 基础查询、操作日志、字典管理、文件上传、Vue3 前端登录页和 Docker Compose 一键部署。
+
+当前已进入项目一“智能矿山安全生产与设备预测性维护平台”的开发阶段。
+
+### M1-01：智能矿山模块骨架
+
+已新增智能矿山业务模块：`cn.sxu.enterprise.module.mine`。
+
+已新增模块健康检查接口：`GET /api/mine/health`。
+
+该接口需要 JWT 认证，并复用统一返回结构 `ApiResult` 和操作日志注解 `@OperLog`。

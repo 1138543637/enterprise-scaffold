@@ -102,3 +102,39 @@ S0-10 将 MySQL 从本机手动运行扩展为 Docker Compose 容器化运行。
 排序规则继续固定为：utf8mb4_unicode_ci
 ```sql
 enterprise_scaffold
+```
+
+## M1-01：智能矿山模块数据库说明
+
+M1-01 不新增数据库表，不新增 SQL 文件，不修改已有表结构。
+
+原因：M1-01 只新增 `module/mine` 模块骨架和 `MineHealthController`，`GET /api/mine/health` 只返回模块运行状态，不需要查询业务表。
+
+本阶段复用已有系统表：`sys_oper_log`。
+
+复用原因：`GET /api/mine/health` 使用 `@OperLog` 记录操作日志，访问该接口后，操作记录会写入 `sys_oper_log`。
+
+操作日志字段预期：
+
+- `title = 智能矿山`
+- `business_type = 模块健康检查`
+- `request_method = GET`
+- `oper_url = /api/mine/health`
+- `status = 0`
+
+本阶段暂不创建以下业务表：
+
+- `mine_device`
+- `mine_sensor`
+- `mine_sensor_data`
+- `mine_alarm_rule`
+- `mine_alarm_event`
+- `mine_work_order`
+
+这些表将在后续 M1 阶段逐步设计：
+
+- M1-02：设备台账和传感器台账
+- M1-03：模拟传感器数据
+- M1-04：告警规则和告警事件
+- M1-05：工单闭环
+
