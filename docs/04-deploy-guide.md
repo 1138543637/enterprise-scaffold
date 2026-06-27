@@ -400,3 +400,35 @@ cd /d D:\Code\enterprise-scaffold\scaffold-backend
 set MYSQL_PASSWORD=你的MySQL密码
 set JWT_SECRET=enterprise-scaffold-local-dev-secret-please-change-32
 mvn spring-boot:run
+```
+
+## 本地启动脚本
+
+项目新增 3 个 Windows 批处理启动脚本：
+
+- scripts/start-mysql.bat：检查并启动 MySQL，默认检查 3306 端口
+- scripts/start-backend.bat：检查 MySQL、8080 端口、Maven 后启动 Spring Boot 后端
+- scripts/start-frontend.bat：检查 Node、pnpm、5173 端口后启动 Vue3 前端
+
+推荐启动顺序：
+
+1. start-mysql.bat
+2. start-backend.bat
+3. start-frontend.bat
+
+## S0-10：Docker Compose 一键部署指南
+
+### 1. 前提条件
+
+本地需要已安装并启动：
+
+- Docker Desktop
+- Docker Compose
+- Git
+
+检查命令：
+
+```cmd
+docker --version
+docker compose version
+```

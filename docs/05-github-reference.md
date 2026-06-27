@@ -99,3 +99,43 @@ S0-07 没有照搬以下内容：
 8. 前端权限指令
 9. 后端权限注解
 ```
+
+## S0-10：Docker Compose 部署参考说明
+
+### 参考方向
+
+S0-10 主要参考企业后台项目的部署组织方式，包括：
+
+- 后端 Dockerfile
+- 前端 Dockerfile
+- Nginx 托管前端静态资源
+- Nginx 反向代理 `/api/**`
+- Docker Compose 编排 MySQL、后端、前端
+- 使用 `.env` 管理本地环境变量
+- 使用 volume 持久化数据库数据
+- 使用 bind mount 持久化上传文件
+
+### 可参考项目
+
+| 项目 | 参考点 |
+|---|---|
+| RuoYi-Vue | 企业后台部署目录、后端服务和前端服务拆分思路 |
+| RuoYi-Vue3 | Vue3 前端打包和 Nginx 部署思路 |
+| Docker 官方文档 | Docker Compose、Dockerfile、多阶段构建、环境变量、服务依赖、健康检查 |
+
+### 正确参考方式
+
+- 参考部署文件组织方式
+- 参考前后端分离部署思路
+- 参考 Nginx 代理 `/api` 的思路
+- 参考 Docker Compose 管理多服务的方式
+
+### 不允许的方式
+
+- 不复制若依的业务代码
+- 不替换本项目包名 `cn.sxu.enterprise`
+- 不替换本项目数据库名 `enterprise_scaffold`
+- 不替换本项目已有表结构
+- 不替换本项目已有接口路径
+- 不提交真实密码、真实密钥、`.env` 文件
+

@@ -1615,3 +1615,30 @@ S0-09 新增或正式使用：
 
 ```text
 scaffold-backend/src/main/resources/application.yml
+```
+
+## S0-10：Docker Compose 一键部署技术总结
+
+### 1. 本阶段新增技术
+
+| 技术 | 用途 |
+|---|---|
+| Dockerfile | 构建后端和前端镜像 |
+| Docker Compose | 编排 MySQL、后端、前端多个容器 |
+| MySQL Docker 镜像 | 容器化运行 MySQL 数据库 |
+| Nginx | 托管 Vue3 前端静态资源并代理接口 |
+| Docker volume | 持久化 MySQL 数据 |
+| bind mount | 持久化本地上传文件 uploads |
+| .env | 管理本地环境变量 |
+
+### 2. 解决的问题
+
+S0-10 解决了项目从“本机手动启动”到“容器化一键部署”的问题。
+
+原来需要分别启动：
+
+```text
+本机 MySQL
+mvn spring-boot:run
+pnpm dev
+```

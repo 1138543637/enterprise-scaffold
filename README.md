@@ -68,3 +68,10 @@
 
 \- iam：统一身份认证、权限审计与数据安全模块
 
+## Docker Compose 本地一键部署
+
+进入部署目录：
+
+```cmd
+cd /d D:\Code\enterprise-scaffold\scaffold-docker
+```

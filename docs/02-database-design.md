@@ -90,3 +90,15 @@ S0-09 复用 S0-03 已创建的 3 张表：
 - create_by 从当前 JWT 登录用户名中获取
 - object_name 使用日期目录加 UUID 文件名
 - url 使用 /files 前缀
+
+## S0-10：Docker Compose 数据库部署说明
+
+### 数据库部署方式
+
+S0-10 将 MySQL 从本机手动运行扩展为 Docker Compose 容器化运行。
+
+数据库名继续固定为：utf8mb4
+
+排序规则继续固定为：utf8mb4_unicode_ci
+```sql
+enterprise_scaffold

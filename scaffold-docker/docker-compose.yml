@@ -1,0 +1,60 @@
+services:
+  enterprise-scaffold-mysql:
+    image: mysql:8.4
+    container_name: enterprise-scaffold-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: enterprise_scaffold
+      TZ: Asia/Shanghai
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-time-zone=+08:00
+    ports:
+      - "3306:3306"
+    volumes:
+      - enterprise-scaffold-mysql-data:/var/lib/mysql
+      - ../scaffold-sql/enterprise_scaffold_init.sql:/docker-entrypoint-initdb.d/01_enterprise_scaffold_init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  enterprise-scaffold-backend:
+    build:
+      context: ../scaffold-backend
+      dockerfile: Dockerfile
+    image: enterprise-scaffold-backend:0.0.1
+    container_name: enterprise-scaffold-backend
+    restart: unless-stopped
+    depends_on:
+      enterprise-scaffold-mysql:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://enterprise-scaffold-mysql:3306/enterprise_scaffold?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      LOCAL_UPLOAD_PATH: ${LOCAL_UPLOAD_PATH}
+      TZ: Asia/Shanghai
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../uploads:/app/uploads
+
+  enterprise-scaffold-frontend:
+    build:
+      context: ../scaffold-frontend
+      dockerfile: Dockerfile
+    image: enterprise-scaffold-frontend:0.0.1
+    container_name: enterprise-scaffold-frontend
+    restart: unless-stopped
+    depends_on:
+      - enterprise-scaffold-backend
+    ports:
+      - "5173:80"
+
+volumes:
+  enterprise-scaffold-mysql-data:

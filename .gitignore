@@ -18,3 +18,9 @@ dist/
 # OS
 .DS_Store
 Thumbs.db
+
+# Local upload files
+uploads/
+
+# Docker local env
+scaffold-docker/.env
