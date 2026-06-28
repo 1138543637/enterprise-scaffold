@@ -204,3 +204,29 @@ M1-01 新增业务包：`cn.sxu.enterprise.module.mine`
 - MineSensorController
 - ApiResult + PageResult
 - JWT + @OperLog
+
+## M1-03 参考说明
+
+M1-03 参考 RuoYi-Vue、RuoYi-Vue-Pro 和 MyBatis-Plus 的分层思想。
+
+参考内容：
+
+1. 参考 RuoYi 系列 Controller / Service / Mapper / Entity 分层组织方式。
+2. 参考 RuoYi 系列操作日志注解思想。
+3. 参考 MyBatis-Plus BaseMapper、Page、LambdaQueryWrapper 的分页查询方式。
+4. 参考企业后台项目中业务数据表与台账表分离的设计思路。
+
+本项目自己的实现是：
+
+cn.sxu.enterprise.module.mine
+mine_sensor_data
+MineSensorData
+MineSensorDataMapper
+MineSensorDataService
+MineSensorDataServiceImpl
+MineSensorDataController
+POST /api/mine/sensor-data/simulate
+GET /api/mine/sensor-data/latest
+GET /api/mine/sensor-data/page
+
+本阶段不复制 RuoYi 代码，不引入 RuoYi 代码生成器，不引入新的权限框架，不提前接入 MQTT / EMQX。

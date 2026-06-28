@@ -1770,3 +1770,71 @@ AOP日志
 接口：
 /api/mine/devices/page
 /api/mine/sensors/page
+
+## M1-03：智能矿山传感器模拟数据
+
+本阶段新增技术与能力：
+
+1. 智能矿山传感器数据表设计。
+2. 基于 mine_sensor 台账生成模拟传感器数据。
+3. 使用 MyBatis-Plus BaseMapper 写入业务数据。
+4. 使用 LambdaQueryWrapper 实现条件查询。
+5. 使用 MyBatis-Plus Page 实现历史数据分页。
+6. 使用 Java ThreadLocalRandom 生成模拟采集值。
+7. 使用 BigDecimal 保存传感器采集数值。
+8. 使用 @OperLog 记录模拟生成、最新数据查询、历史数据分页查询操作日志。
+9. 使用 JWT 保护智能矿山业务接口。
+
+解决的问题：
+
+M1-02 已经完成设备台账和传感器台账，但还没有传感器运行数据。M1-03 补齐了“传感器产生数据”的基础能力，使后续告警规则、告警事件、工单闭环和看板展示有数据来源。
+
+后端文件路径：
+
+scaffold-backend/src/main/java/cn/sxu/enterprise/module/mine/entity/MineSensorData.java
+scaffold-backend/src/main/java/cn/sxu/enterprise/module/mine/mapper/MineSensorDataMapper.java
+scaffold-backend/src/main/java/cn/sxu/enterprise/module/mine/service/MineSensorDataService.java
+scaffold-backend/src/main/java/cn/sxu/enterprise/module/mine/service/impl/MineSensorDataServiceImpl.java
+scaffold-backend/src/main/java/cn/sxu/enterprise/module/mine/controller/MineSensorDataController.java
+scaffold-backend/src/main/java/cn/sxu/enterprise/module/mine/dto/MineSensorDataSimulateRequest.java
+scaffold-backend/src/main/java/cn/sxu/enterprise/module/mine/vo/MineSensorDataPageQuery.java
+scaffold-backend/src/main/java/cn/sxu/enterprise/module/mine/vo/MineSensorDataVO.java
+
+数据库表：
+
+mine_sensor_data
+
+SQL 文件：
+
+scaffold-sql/m1_03_mine_sensor_data.sql
+
+接口路径：
+
+POST /api/mine/sensor-data/simulate
+GET /api/mine/sensor-data/latest
+GET /api/mine/sensor-data/page
+
+启动和验证：
+
+1. 执行 scaffold-sql/m1_03_mine_sensor_data.sql。
+2. 启动后端。
+3. 登录获取 JWT token。
+4. 调用 POST /api/mine/sensor-data/simulate 生成模拟数据。
+5. 调用 GET /api/mine/sensor-data/latest 查询最新数据。
+6. 调用 GET /api/mine/sensor-data/page 分页查询历史数据。
+7. 查询 sys_oper_log 验证操作日志是否记录成功。
+
+简历表达：
+
+在智能矿山安全生产与设备预测性维护平台中，设计并实现传感器数据模拟模块，基于传感器台账动态生成实时采集数据，支持最新数据查询、历史数据分页查询和操作日志审计，为后续告警规则和设备预测性维护提供数据基础。
+
+面试解释：
+
+M1-03 主要解决智能矿山模块“只有台账、没有运行数据”的问题。系统读取 mine_sensor 中正常状态的传感器，根据传感器类型、上下限和告警阈值生成模拟采集值，写入 mine_sensor_data 表。如果采集值达到阈值，则标记为告警数据。接口层继续使用 JWT 认证、ApiResult 统一返回和 @OperLog 操作日志，保持企业后台项目的一致性。
+
+后续增强：
+
+1. M1-04 基于 mine_sensor_data 实现告警规则和告警事件。
+2. M1-06 基于最新数据接口实现智能矿山看板。
+3. M1-07 接入 MQTT / EMQX，将模拟接口替换为真实消息接入。
+4. 后续可加入定时任务自动生成传感器数据。

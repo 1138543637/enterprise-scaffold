@@ -154,3 +154,48 @@ mine_sensor.device_id -> mine_device.id（逻辑关联）
 
 说明：
 不建外键，仅业务关联。
+
+## mine_sensor_data：传感器数据表
+
+表名：mine_sensor_data
+
+用途：记录智能矿山传感器每次模拟上报的数据，包括传感器编码、传感器类型、采集值、单位、告警阈值、是否告警、采集时间等。
+
+字段包括：
+
+id：主键ID。
+sensor_id：传感器ID，逻辑关联 mine_sensor.id。
+sensor_code：传感器编码。
+sensor_name：传感器名称。
+sensor_type：传感器类型，例如 GAS、TEMPERATURE、VIBRATION。
+device_id：所属设备ID，逻辑关联 mine_device.id。
+area_name：所属区域。
+location：安装位置。
+data_value：采集数值。
+unit：单位。
+alarm_threshold：告警阈值。
+alarm_flag：是否告警，0否，1是。
+collect_time：采集时间。
+status：数据状态，0正常，1异常。
+create_by：创建者。
+create_time：创建时间。
+update_by：更新者。
+update_time：更新时间。
+deleted：逻辑删除，0未删除，1已删除。
+remark：备注。
+
+索引包括：
+
+idx_sensor_id(sensor_id)
+idx_sensor_code(sensor_code)
+idx_sensor_type(sensor_type)
+idx_area_name(area_name)
+idx_collect_time(collect_time)
+idx_alarm_flag(alarm_flag)
+idx_status(status)
+
+说明：
+
+mine_sensor_data.sensor_id 逻辑关联 mine_sensor.id。
+mine_sensor_data.device_id 逻辑关联 mine_device.id。
+本阶段不设置数据库外键，避免测试数据导入、删除和 Docker 初始化时受外键约束影响。

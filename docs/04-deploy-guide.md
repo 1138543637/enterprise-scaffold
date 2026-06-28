@@ -537,3 +537,37 @@ mysql -u root -p < scaffold-sql/m1_02_mine_device_sensor.sql
 接口：
 /api/mine/devices/page
 /api/mine/sensors/page
+## M1-03 数据库升级说明
+
+M1-03 新增 SQL 文件：
+
+scaffold-sql/m1_03_mine_sensor_data.sql
+
+如果是本地 MySQL，执行：
+
+cd /d D:\Code\enterprise-scaffold
+mysql -u root -p < scaffold-sql\m1_03_mine_sensor_data.sql
+
+如果是 Docker Compose 已经启动过的 MySQL，因为 Docker volume 已经存在，enterprise_scaffold_init.sql 不会自动重新执行，需要手动执行 M1-03 SQL：
+
+cd /d D:\Code\enterprise-scaffold
+mysql -h 127.0.0.1 -P 3306 -u root -p < scaffold-sql\m1_03_mine_sensor_data.sql
+
+或者：
+
+docker exec -i enterprise-scaffold-mysql mysql -u root -p enterprise_scaffold < scaffold-sql\m1_03_mine_sensor_data.sql
+
+执行完成后重启后端：
+
+cd /d D:\Code\enterprise-scaffold\scaffold-docker
+docker compose restart enterprise-scaffold-backend
+
+M1-03 验收接口：
+
+POST http://localhost:8080/api/mine/sensor-data/simulate
+GET  http://localhost:8080/api/mine/sensor-data/latest
+GET  http://localhost:8080/api/mine/sensor-data/page?pageNo=1&pageSize=10
+
+以上接口均需要：
+
+Authorization: Bearer <token>

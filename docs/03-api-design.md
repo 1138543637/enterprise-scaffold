@@ -697,3 +697,98 @@ JWT
 
 日志：
 @OperLog
+
+## M1-03：传感器模拟数据接口
+
+### 生成模拟传感器数据
+
+接口：
+
+POST /api/mine/sensor-data/simulate
+
+认证：
+
+需要 JWT token。
+
+请求头：
+
+Authorization: Bearer <token>
+
+请求体示例：
+
+{
+"sensorType": "GAS",
+"count": 5
+}
+
+参数说明：
+
+sensorId：可选，指定某个传感器生成数据。
+sensorType：可选，按传感器类型生成数据。
+count：可选，每个传感器生成几条数据，默认 1，最大 20。
+
+返回：
+
+ApiResult<List<MineSensorDataVO>>
+
+说明：
+
+接口基于 mine_sensor 中 status = 0 的传感器生成模拟数据，并写入 mine_sensor_data 表。如果 data_value 大于等于 alarm_threshold，则 alarm_flag = 1，status = 1。
+
+### 查询传感器最新数据
+
+接口：
+
+GET /api/mine/sensor-data/latest
+
+认证：
+
+需要 JWT token。
+
+请求参数：
+
+sensorId
+sensorCode
+sensorName
+sensorType
+areaName
+alarmFlag
+status
+
+返回：
+
+ApiResult<List<MineSensorDataVO>>
+
+说明：
+
+按传感器维度返回最新一条数据。
+
+### 分页查询传感器历史数据
+
+接口：
+
+GET /api/mine/sensor-data/page
+
+认证：
+
+需要 JWT token。
+
+请求参数：
+
+pageNo
+pageSize
+sensorId
+sensorCode
+sensorName
+sensorType
+areaName
+alarmFlag
+status
+
+返回：
+
+ApiResult<PageResult<MineSensorDataVO>>
+
+说明：
+
+按照 collect_time 和 id 倒序分页查询传感器历史数据。

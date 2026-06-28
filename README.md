@@ -102,3 +102,37 @@ GET /api/mine/sensors/page
 
 特点：
 JWT认证 + 分页查询 + 操作日志
+
+## 当前进度：M1-03 模拟传感器数据
+
+项目一“智能矿山安全生产与设备预测性维护平台”已完成传感器模拟数据能力。
+
+本阶段新增：
+
+- mine_sensor_data 传感器数据表
+- MineSensorData 实体
+- MineSensorDataMapper
+- MineSensorDataService
+- MineSensorDataServiceImpl
+- MineSensorDataController
+- MineSensorDataSimulateRequest
+- MineSensorDataPageQuery
+- MineSensorDataVO
+
+新增接口：
+
+- POST /api/mine/sensor-data/simulate
+- GET /api/mine/sensor-data/latest
+- GET /api/mine/sensor-data/page
+
+接口说明：
+
+- 模拟数据生成接口基于 mine_sensor 中的正常传感器生成数据。
+- 最新数据接口按传感器返回最新一条采集数据。
+- 历史数据接口支持分页查询。
+- 所有接口均需要 JWT 认证。
+- 所有接口继续使用 ApiResult 统一返回结构。
+- 分页接口继续使用 PageResult。
+- 接口继续使用 @OperLog 记录操作日志。
+
+M1-03 为后续 M1-04 告警规则和告警事件提供数据基础。
