@@ -792,3 +792,319 @@ ApiResult<PageResult<MineSensorDataVO>>
 说明：
 
 按照 collect_time 和 id 倒序分页查询传感器历史数据。
+
+## M1-04：告警规则和告警事件接口
+
+M1-04 新增智能矿山告警规则和告警事件接口。
+
+本阶段新增接口：
+
+```text
+GET  /api/mine/alarm-rules/page
+GET  /api/mine/alarm-events/page
+POST /api/mine/alarm-events/generate
+```
+
+所有接口都需要 JWT 认证。
+
+请求头固定：
+
+```text
+Authorization: Bearer <token>
+```
+
+所有成功响应继续使用统一结构：
+
+```json
+{
+  "code": 0,
+  "msg": "success",
+  "data": {}
+}
+```
+
+分页接口继续使用统一分页结构：
+
+```json
+{
+  "pageNo": 1,
+  "pageSize": 10,
+  "total": 0,
+  "pages": 0,
+  "records": []
+}
+```
+
+### 1. 告警规则分页查询
+
+接口：
+
+```text
+GET /api/mine/alarm-rules/page
+```
+
+认证：
+
+```text
+需要 JWT
+Authorization: Bearer <token>
+```
+
+Query 参数：
+
+```text
+pageNo
+pageSize
+ruleCode
+ruleName
+sensorType
+alarmLevel
+status
+```
+
+参数说明：
+
+```text
+pageNo：页码，默认 1
+pageSize：每页条数，默认 10
+ruleCode：规则编码，模糊查询
+ruleName：规则名称，模糊查询
+sensorType：传感器类型，精确查询
+alarmLevel：告警级别，精确查询
+status：状态，精确查询
+```
+
+请求示例：
+
+```text
+GET http://localhost:8080/api/mine/alarm-rules/page?pageNo=1&pageSize=10
+GET http://localhost:8080/api/mine/alarm-rules/page?pageNo=1&pageSize=10&sensorType=GAS
+GET http://localhost:8080/api/mine/alarm-rules/page?pageNo=1&pageSize=10&alarmLevel=3
+```
+
+返回：
+
+```text
+ApiResult<PageResult<MineAlarmRulePageVO>>
+```
+
+MineAlarmRulePageVO 字段：
+
+```text
+id
+ruleCode
+ruleName
+sensorType
+compareOperator
+thresholdValue
+alarmLevel
+alarmTitle
+alarmContent
+status
+createTime
+remark
+```
+
+操作日志：
+
+```java
+@OperLog(title = "智能矿山-告警规则", businessType = "分页查询")
+```
+
+### 2. 告警事件分页查询
+
+接口：
+
+```text
+GET /api/mine/alarm-events/page
+```
+
+认证：
+
+```text
+需要 JWT
+Authorization: Bearer <token>
+```
+
+Query 参数：
+
+```text
+pageNo
+pageSize
+eventCode
+ruleCode
+sensorCode
+sensorName
+sensorType
+areaName
+alarmLevel
+handleStatus
+status
+```
+
+参数说明：
+
+```text
+pageNo：页码，默认 1
+pageSize：每页条数，默认 10
+eventCode：告警事件编码，模糊查询
+ruleCode：规则编码，模糊查询
+sensorCode：传感器编码，模糊查询
+sensorName：传感器名称，模糊查询
+sensorType：传感器类型，精确查询
+areaName：所属区域，模糊查询
+alarmLevel：告警级别，精确查询
+handleStatus：处理状态，精确查询
+status：状态，精确查询
+```
+
+请求示例：
+
+```text
+GET http://localhost:8080/api/mine/alarm-events/page?pageNo=1&pageSize=10
+GET http://localhost:8080/api/mine/alarm-events/page?pageNo=1&pageSize=10&sensorType=GAS
+GET http://localhost:8080/api/mine/alarm-events/page?pageNo=1&pageSize=10&alarmLevel=3
+GET http://localhost:8080/api/mine/alarm-events/page?pageNo=1&pageSize=10&handleStatus=0
+```
+
+返回：
+
+```text
+ApiResult<PageResult<MineAlarmEventPageVO>>
+```
+
+MineAlarmEventPageVO 字段：
+
+```text
+id
+eventCode
+ruleId
+ruleCode
+ruleName
+sensorDataId
+sensorId
+sensorCode
+sensorName
+sensorType
+deviceId
+areaName
+location
+dataValue
+thresholdValue
+compareOperator
+alarmLevel
+alarmTitle
+alarmContent
+alarmTime
+handleStatus
+status
+createTime
+remark
+```
+
+排序规则：
+
+```text
+alarmTime 倒序
+id 倒序
+```
+
+操作日志：
+
+```java
+@OperLog(title = "智能矿山-告警事件", businessType = "分页查询")
+```
+
+### 3. 根据传感器数据生成告警事件
+
+接口：
+
+```text
+POST /api/mine/alarm-events/generate
+```
+
+认证：
+
+```text
+需要 JWT
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+Body 参数：
+
+```text
+sensorDataId
+sensorType
+limit
+```
+
+参数说明：
+
+```text
+sensorDataId：可选，只根据某一条传感器数据生成告警事件
+sensorType：可选，只处理某一类传感器数据，例如 GAS
+limit：可选，最多扫描最近多少条传感器数据，默认 100，最大 1000
+```
+
+Body 示例 1：扫描最近 100 条传感器数据生成告警事件
+
+```json
+{
+  "limit": 100
+}
+```
+
+Body 示例 2：只扫描瓦斯传感器数据
+
+```json
+{
+  "sensorType": "GAS",
+  "limit": 100
+}
+```
+
+Body 示例 3：只处理某条传感器数据
+
+```json
+{
+  "sensorDataId": 1,
+  "limit": 1
+}
+```
+
+返回：
+
+```text
+ApiResult<List<MineAlarmEventPageVO>>
+```
+
+生成规则：
+
+```text
+1. 查询 mine_sensor_data 中的传感器数据。
+2. 查询 mine_alarm_rule 中 status = 0 的启用规则。
+3. 根据 sensor_type 匹配对应规则。
+4. 根据 compare_operator 和 threshold_value 判断 data_value 是否触发告警。
+5. 如果触发告警，写入 mine_alarm_event。
+6. 同一个 rule_id + sensor_data_id 不重复生成告警事件。
+```
+
+操作日志：
+
+```java
+@OperLog(title = "智能矿山-告警事件", businessType = "生成告警事件")
+```
+
+### 4. 401 未登录返回
+
+不带 token 访问 M1-04 接口时返回：
+
+```json
+{
+  "code": 401,
+  "msg": "请先登录或登录已过期",
+  "data": null
+}
+```
+

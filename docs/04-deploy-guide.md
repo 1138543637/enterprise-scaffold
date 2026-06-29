@@ -571,3 +571,289 @@ GET  http://localhost:8080/api/mine/sensor-data/page?pageNo=1&pageSize=10
 以上接口均需要：
 
 Authorization: Bearer <token>
+
+## M1-04：告警规则和告警事件部署说明
+
+M1-04 新增数据库表和后端接口，不新增前端页面，不新增 Docker 服务，不修改端口，不新增环境变量。
+
+### 1. 新增 SQL 文件
+
+SQL 文件路径：
+
+```text
+scaffold-sql/m1_04_mine_alarm_rule_event.sql
+```
+
+该 SQL 文件第一行必须是：
+
+```sql
+SET NAMES utf8mb4;
+```
+
+固定开头：
+
+```sql
+SET NAMES utf8mb4;
+
+USE enterprise_scaffold;
+```
+
+### 2. 本地 MySQL 执行 SQL
+
+命令前提：
+
+```text
+1. MySQL 已启动
+2. enterprise_scaffold 数据库已存在
+3. 当前目录是 D:\Code\enterprise-scaffold
+4. 已经创建 scaffold-sql\m1_04_mine_alarm_rule_event.sql
+```
+
+执行目录：
+
+```cmd
+cd /d D:\Code\enterprise-scaffold
+```
+
+执行命令：
+
+```cmd
+mysql -u root -p < scaffold-sql\m1_04_mine_alarm_rule_event.sql
+```
+
+执行后检查：
+
+```cmd
+mysql -u root -p enterprise_scaffold
+```
+
+进入 MySQL 后执行：
+
+```sql
+SHOW TABLES LIKE 'mine_alarm%';
+
+SELECT * FROM mine_alarm_rule;
+
+SELECT COUNT(*) FROM mine_alarm_event;
+```
+
+预期：
+
+```text
+能看到 mine_alarm_rule
+能看到 mine_alarm_event
+mine_alarm_rule 至少有 3 条初始化规则
+mine_alarm_event 初始可以是 0 条
+```
+
+### 3. Docker MySQL 已启动时执行 SQL
+
+命令前提：
+
+```text
+1. Docker Desktop 已启动
+2. enterprise-scaffold-mysql 容器正在运行
+3. 宿主机 3306 端口可以访问 MySQL
+4. 当前目录是 D:\Code\enterprise-scaffold
+```
+
+执行目录：
+
+```cmd
+cd /d D:\Code\enterprise-scaffold
+```
+
+执行命令：
+
+```cmd
+mysql -h 127.0.0.1 -P 3306 -u root -p < scaffold-sql\m1_04_mine_alarm_rule_event.sql
+```
+
+### 4. 启动后端
+
+执行目录：
+
+```cmd
+cd /d D:\Code\enterprise-scaffold\scaffold-backend
+```
+
+命令前提：
+
+```text
+1. MySQL 已启动
+2. 已执行 m1_04_mine_alarm_rule_event.sql
+3. MYSQL_PASSWORD 要改成自己的 MySQL 密码
+4. LOCAL_UPLOAD_PATH 保持固定路径 D:\Code\enterprise-scaffold\uploads
+```
+
+设置环境变量：
+
+```cmd
+set MYSQL_PASSWORD=你的MySQL密码
+set JWT_SECRET=enterprise-scaffold-local-dev-secret-please-change-32
+set LOCAL_UPLOAD_PATH=D:\Code\enterprise-scaffold\uploads
+```
+
+启动：
+
+```cmd
+mvn spring-boot:run
+```
+
+预期：
+
+```text
+后端启动成功
+端口仍然是 8080
+不出现 Java 编译错误
+不出现 Mapper 找不到错误
+不出现 SQL 表不存在错误
+```
+
+### 5. 获取 token
+
+请求地址：
+
+```text
+POST http://localhost:8080/api/auth/login
+```
+
+请求头：
+
+```text
+Content-Type: application/json
+```
+
+Body：
+
+```json
+{
+  "username": "admin",
+  "password": "admin123"
+}
+```
+
+成功后复制：
+
+```text
+data.token
+```
+
+后续请求头固定使用：
+
+```text
+Authorization: Bearer <token>
+```
+
+### 6. M1-04 接口验收地址
+
+告警规则分页：
+
+```text
+GET http://localhost:8080/api/mine/alarm-rules/page?pageNo=1&pageSize=10
+```
+
+生成传感器数据：
+
+```text
+POST http://localhost:8080/api/mine/sensor-data/simulate
+```
+
+生成告警事件：
+
+```text
+POST http://localhost:8080/api/mine/alarm-events/generate
+```
+
+告警事件分页：
+
+```text
+GET http://localhost:8080/api/mine/alarm-events/page?pageNo=1&pageSize=10
+```
+
+### 7. 操作日志验收
+
+查询告警规则操作日志：
+
+```text
+GET http://localhost:8080/api/system/oper-logs/page?pageNo=1&pageSize=10&title=智能矿山-告警规则
+```
+
+查询告警事件操作日志：
+
+```text
+GET http://localhost:8080/api/system/oper-logs/page?pageNo=1&pageSize=10&title=智能矿山-告警事件
+```
+
+预期：
+
+```text
+records 中能看到对应接口访问记录
+status = 0
+requestMethod = GET 或 POST
+```
+
+### 8. 构建验收
+
+后端构建：
+
+```cmd
+cd /d D:\Code\enterprise-scaffold\scaffold-backend
+mvn clean package -DskipTests
+```
+
+预期：
+
+```text
+BUILD SUCCESS
+```
+
+前端本阶段没有修改，但可以继续执行构建：
+
+```cmd
+cd /d D:\Code\enterprise-scaffold\scaffold-frontend
+pnpm build
+```
+
+预期：
+
+```text
+构建成功
+```
+
+### 9. Docker Compose 说明
+
+M1-04 不新增 Docker 服务，不修改 Docker Compose 配置。
+
+固定容器名继续为：
+
+```text
+enterprise-scaffold-mysql
+enterprise-scaffold-backend
+enterprise-scaffold-frontend
+```
+
+固定端口继续为：
+
+```text
+MySQL：3306
+后端：8080
+前端：5173 -> 容器内 80
+```
+
+固定上传目录挂载继续为：
+
+```text
+../uploads:/app/uploads
+```
+
+固定环境变量继续为：
+
+```text
+MYSQL_PASSWORD
+JWT_SECRET
+LOCAL_UPLOAD_PATH
+SPRING_DATASOURCE_URL
+```
+
+

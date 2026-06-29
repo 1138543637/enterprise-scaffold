@@ -230,3 +230,87 @@ GET /api/mine/sensor-data/latest
 GET /api/mine/sensor-data/page
 
 本阶段不复制 RuoYi 代码，不引入 RuoYi 代码生成器，不引入新的权限框架，不提前接入 MQTT / EMQX。
+
+
+## M1-04：告警规则和告警事件参考说明
+
+M1-04 参考项目：
+
+```text
+RuoYi-Vue
+RuoYi-Vue-Pro
+MyBatis-Plus
+```
+
+参考内容：
+
+```text
+1. 参考 RuoYi 系列后台管理系统的 Controller / Service / Mapper / Entity 分层方式。
+2. 参考 RuoYi 系列操作日志注解思想。
+3. 参考 MyBatis-Plus BaseMapper、Page、LambdaQueryWrapper 的分页查询方式。
+4. 参考企业后台项目中“规则表 + 事件表”的业务建模方式。
+```
+
+本项目自己的实现是：
+
+```text
+cn.sxu.enterprise.module.mine
+mine_alarm_rule
+mine_alarm_event
+MineAlarmRule
+MineAlarmEvent
+MineAlarmRuleMapper
+MineAlarmEventMapper
+MineAlarmRuleService
+MineAlarmEventService
+MineAlarmRuleServiceImpl
+MineAlarmEventServiceImpl
+MineAlarmRuleController
+MineAlarmEventController
+MineAlarmGenerateRequest
+MineAlarmRulePageQuery
+MineAlarmRulePageVO
+MineAlarmEventPageQuery
+MineAlarmEventPageVO
+GET /api/mine/alarm-rules/page
+GET /api/mine/alarm-events/page
+POST /api/mine/alarm-events/generate
+ApiResult
+PageResult
+JWT
+@OperLog
+```
+
+本阶段参考方式：
+
+```text
+1. 只参考企业后台项目的分层思想。
+2. 只参考操作日志注解的设计思想。
+3. 只参考分页查询接口的组织方式。
+4. 只参考“规则配置 + 事件记录”的业务建模方式。
+5. 代码仍然按照本项目已有包名、类名、接口路径和返回结构自己实现。
+```
+
+不能做：
+
+```text
+1. 不能复制若依代码。
+2. 不能引入若依代码生成器。
+3. 不能引入新的权限框架。
+4. 不能修改现有 JWT 登录认证方式。
+5. 不能修改 ApiResult 和 PageResult 返回结构。
+6. 不能修改已有 mine_device、mine_sensor、mine_sensor_data 表名。
+7. 不能把 MineAlarmRule 改成 AlarmRule。
+8. 不能把 MineAlarmEvent 改成 AlarmEvent。
+9. 不能提前引入 MQTT / EMQX。
+10. 不能提前做前端页面。
+```
+
+M1-04 的价值：
+
+```text
+M1-04 将 M1-03 的传感器数据进一步转换为业务告警事件，为后续 M1-05 工单闭环提供基础。
+```
+
+
+

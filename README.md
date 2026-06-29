@@ -136,3 +136,75 @@ JWT认证 + 分页查询 + 操作日志
 - 接口继续使用 @OperLog 记录操作日志。
 
 M1-03 为后续 M1-04 告警规则和告警事件提供数据基础。
+
+
+## M1-04：智能矿山告警规则和告警事件
+
+当前项目一“智能矿山安全生产与设备预测性维护平台”已完成告警规则和告警事件基础能力。
+
+本阶段基于 M1-03 的传感器模拟数据能力，新增告警规则表和告警事件表，实现从传感器数据到告警事件的转换。
+
+本阶段新增数据库表：
+
+```text
+mine_alarm_rule
+mine_alarm_event
+```
+
+本阶段新增接口：
+
+```text
+GET  /api/mine/alarm-rules/page
+GET  /api/mine/alarm-events/page
+POST /api/mine/alarm-events/generate
+```
+
+本阶段实现能力：
+
+```text
+1. 支持配置不同传感器类型的告警规则
+2. 支持告警规则分页查询
+3. 支持根据传感器数据生成告警事件
+4. 支持告警事件分页查询
+5. 支持按传感器类型、告警等级、处理状态等条件查询告警事件
+6. 支持 rule_id + sensor_data_id 去重，避免重复生成告警事件
+7. 接口需要 JWT 认证
+8. 接口使用 ApiResult 统一返回
+9. 分页接口使用 PageResult
+10. 接口使用 @OperLog 记录操作日志
+```
+
+本阶段新增后端类：
+
+```text
+MineAlarmRule
+MineAlarmEvent
+MineAlarmRuleMapper
+MineAlarmEventMapper
+MineAlarmRuleService
+MineAlarmEventService
+MineAlarmRuleServiceImpl
+MineAlarmEventServiceImpl
+MineAlarmRuleController
+MineAlarmEventController
+MineAlarmGenerateRequest
+MineAlarmRulePageQuery
+MineAlarmRulePageVO
+MineAlarmEventPageQuery
+MineAlarmEventPageVO
+```
+
+本阶段暂不实现：
+
+```text
+告警确认
+告警关闭
+告警转工单
+前端页面
+MQTT / EMQX 接入
+短信 / 邮件 / 站内信通知
+```
+
+M1-04 为后续 M1-05 工单闭环提供告警事件基础。
+
+
