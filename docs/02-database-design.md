@@ -611,3 +611,81 @@ M1-12 不新增数据库表，不新增数据库字段，不新增 SQL 文件。
     - `mine_maintenance_task.create_time`
 - 高风险设备任务基于 `mine_maintenance_task.risk_level = 3` 且 `task_status != 3`
 
+
+## M1-13：数据库总体验收说明
+
+M1-13 不新增数据库表，不新增数据库字段，不新增 SQL 文件。
+
+本阶段不创建 `scaffold-sql/m1_13_xxx.sql`。
+
+本阶段复用项目一已有智能矿山业务表：
+
+- `mine_device`：设备台账表
+- `mine_sensor`：传感器台账表
+- `mine_sensor_data`：传感器采集数据表
+- `mine_alarm_rule`：告警规则表
+- `mine_alarm_event`：告警事件表
+- `mine_work_order`：智能矿山工单表
+- `mine_maintenance_task`：预测性维护任务表
+
+M1-13 数据库验收重点：
+
+- 确认所有 `mine_%` 表存在。
+- 确认 `mine_device` 和 `mine_sensor` 有初始化测试数据。
+- 确认 `mine_alarm_rule` 有 GAS、TEMPERATURE、VIBRATION 三类告警规则。
+- 确认 MQTT 模拟上报后 `mine_sensor_data` 可以产生数据。
+- 确认告警生成后 `mine_alarm_event` 可以产生数据。
+- 确认告警转工单后 `mine_work_order` 可以产生数据。
+- 确认设备健康风险生成维护任务后 `mine_maintenance_task` 可以产生数据。
+
+Docker MySQL 验收执行目录：
+
+`D:\Code\enterprise-scaffold\scaffold-docker`
+
+进入 MySQL 容器：
+
+`docker exec -it enterprise-scaffold-mysql mysql -u root -p enterprise_scaffold`
+
+进入数据库后执行：
+
+`SHOW TABLES LIKE 'mine_%';`
+
+预期至少看到以下表：
+
+- `mine_device`
+- `mine_sensor`
+- `mine_sensor_data`
+- `mine_alarm_rule`
+- `mine_alarm_event`
+- `mine_work_order`
+- `mine_maintenance_task`
+
+继续执行以下统计 SQL，用于确认项目一完整链路数据是否存在：
+
+- `SELECT COUNT(*) AS device_count FROM mine_device WHERE deleted = 0;`
+- `SELECT COUNT(*) AS sensor_count FROM mine_sensor WHERE deleted = 0;`
+- `SELECT COUNT(*) AS sensor_data_count FROM mine_sensor_data WHERE deleted = 0;`
+- `SELECT COUNT(*) AS alarm_rule_count FROM mine_alarm_rule WHERE deleted = 0;`
+- `SELECT COUNT(*) AS alarm_event_count FROM mine_alarm_event WHERE deleted = 0;`
+- `SELECT COUNT(*) AS work_order_count FROM mine_work_order WHERE deleted = 0;`
+- `SELECT COUNT(*) AS maintenance_task_count FROM mine_maintenance_task WHERE deleted = 0;`
+
+后续如果新增 SQL 文件，第一行仍然必须是：
+
+`SET NAMES utf8mb4;`
+
+第二段固定使用：
+
+`USE enterprise_scaffold;`
+
+
+
+
+
+
+
+
+
+
+
+

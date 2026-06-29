@@ -494,3 +494,57 @@ M1-12 继续参考以下项目：
 ```
 
 
+## M1-13：GitHub 参考说明
+
+M1-13 主要参考企业级后台项目的收尾方式、首页入口组织方式、README 总结方式和文档验收方式。
+
+参考项目包括：
+
+- RuoYi-Vue
+- RuoYi-Vue3
+- Vue Vben Admin
+- vue-element-admin
+
+参考内容包括：
+
+- 后台首页如何放置业务模块入口。
+- README 如何按功能模块总结项目能力。
+- 文档如何补充部署说明。
+- 文档如何补充接口说明。
+- 文档如何补充数据库说明。
+- 文档如何补充技术栈总结。
+- 如何把业务链路整理成可演示、可答辩、可写简历的表达。
+
+本项目自己的实现继续保持：
+
+- 业务包名：`cn.sxu.enterprise.module.mine`
+- 接口路径：`/api/mine/**`
+- 设备台账表：`mine_device`
+- 传感器台账表：`mine_sensor`
+- 传感器数据表：`mine_sensor_data`
+- 告警规则表：`mine_alarm_rule`
+- 告警事件表：`mine_alarm_event`
+- 工单表：`mine_work_order`
+- 预测性维护任务表：`mine_maintenance_task`
+- 统一返回结构：`ApiResult`
+- 统一分页结构：`PageResult`
+- 认证方式：JWT
+- 操作日志：`@OperLog`
+- 部署方式：Docker Compose
+- MySQL 容器名：`enterprise-scaffold-mysql`
+- 后端容器名：`enterprise-scaffold-backend`
+- 前端容器名：`enterprise-scaffold-frontend`
+- EMQX 容器名：`enterprise-scaffold-emqx`
+
+M1-13 不复制参考项目代码，不引入新的权限框架，不改变已有项目结构，不改变数据库名 `enterprise_scaffold`，不改变 Docker 容器名、端口、环境变量、volume 和上传目录挂载规则。
+
+M1-13 的重点是把项目一整理成完整可展示项目，用于面向能源企业、省属国企、运营商、工业互联网、政务数字化和企业信息化岗位的求职展示。
+
+
+
+
+
+
+
+
+

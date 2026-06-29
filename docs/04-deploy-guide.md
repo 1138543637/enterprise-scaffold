@@ -1157,3 +1157,132 @@ http://localhost:5173/mine/maintenance-dashboard
 -高风险设备任务和最近维护任务表格正常展示
 -页面布局使用 CSS Grid，桌面端一行多张卡片
 
+## M1-13：项目一总体验收部署说明
+
+M1-13 不新增 Docker 服务。
+
+M1-13 不修改以下 Docker 文件：
+
+- `scaffold-docker/docker-compose.yml`
+- `scaffold-docker/.env.example`
+- `scaffold-backend/Dockerfile`
+- `scaffold-frontend/Dockerfile`
+- `scaffold-frontend/nginx.conf`
+
+Docker Compose 服务继续固定为：
+
+- `enterprise-scaffold-mysql`
+- `enterprise-scaffold-backend`
+- `enterprise-scaffold-frontend`
+- `enterprise-scaffold-emqx`
+
+M1-13 即使不修改 Docker 配置，也必须进行 Docker Compose 验收。
+
+### 后端编译验收
+
+执行目录：
+
+`D:\Code\enterprise-scaffold\scaffold-backend`
+
+执行命令：
+
+`mvn -DskipTests compile`
+
+预期结果：
+
+`BUILD SUCCESS`
+
+### 前端构建验收
+
+执行目录：
+
+`D:\Code\enterprise-scaffold\scaffold-frontend`
+
+执行命令：
+
+`pnpm build`
+
+预期结果：
+
+- 构建成功。
+- 没有 TypeScript 报错。
+- 没有 `AxiosResponse<T>` 和 `T` 类型不匹配报错。
+
+### Docker Compose 验收
+
+执行目录：
+
+`D:\Code\enterprise-scaffold\scaffold-docker`
+
+启动命令：
+
+`docker compose --env-file .env up -d --build`
+
+查看容器命令：
+
+`docker compose ps`
+
+预期看到：
+
+- `enterprise-scaffold-mysql`：running 或 healthy
+- `enterprise-scaffold-backend`：running
+- `enterprise-scaffold-frontend`：running
+- `enterprise-scaffold-emqx`：running
+
+### Docker 日志排错命令
+
+后端日志：
+
+`docker logs -f enterprise-scaffold-backend`
+
+前端日志：
+
+`docker logs -f enterprise-scaffold-frontend`
+
+EMQX 日志：
+
+`docker logs -f enterprise-scaffold-emqx`
+
+### Docker 健康检查地址
+
+后端健康检查：
+
+`http://localhost:8080/api/health`
+
+前端 Nginx 代理健康检查：
+
+`http://localhost:5173/api/health`
+
+预期返回：
+
+- `code = 0`
+- `msg = success`
+
+### 前端页面验收地址
+
+- `http://localhost:5173`
+- `http://localhost:5173/dashboard`
+- `http://localhost:5173/mine/dashboard`
+- `http://localhost:5173/mine/device-health`
+- `http://localhost:5173/mine/maintenance-tasks`
+- `http://localhost:5173/mine/maintenance-dashboard`
+
+### 页面加载失败排查顺序
+
+如果页面提示加载失败，排查顺序固定为：
+
+1. 先查 F12 Network。
+2. 如果接口是 401，重新登录 `admin / admin123`。
+3. 如果接口是 404，检查路径是否缺少 `/api`。
+4. 如果接口 `code = 0` 但页面报错，检查前端 ApiResult 解包。
+5. 如果接口是 500，执行 `docker logs -f enterprise-scaffold-backend`。
+6. 如果前端还是旧页面，重新执行 `docker compose --env-file .env up -d --build enterprise-scaffold-frontend`。
+7. 浏览器按 Ctrl + F5 强制刷新。
+
+
+
+
+
+
+
+

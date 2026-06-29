@@ -400,4 +400,86 @@ M1-12 不新增数据库表，不新增 SQL 文件，不新增 Docker 服务。
 ```
 
 
+## 项目一：智能矿山安全生产与设备预测性维护平台
+
+当前项目一已经完成总体验收与收尾。
+
+项目一完整业务链路为：
+
+设备台账 → 传感器台账 → MQTT 数据上报 → 传感器数据入库 → 告警事件生成 → 工单闭环 → 设备健康评分 → 预测性维护任务 → 维护看板与风险趋势分析。
+
+### 已完成能力
+
+- 智能矿山业务模块 `cn.sxu.enterprise.module.mine`
+- 设备台账 `mine_device`
+- 传感器台账 `mine_sensor`
+- 传感器数据 `mine_sensor_data`
+- 告警规则 `mine_alarm_rule`
+- 告警事件 `mine_alarm_event`
+- 工单闭环 `mine_work_order`
+- 预测性维护任务 `mine_maintenance_task`
+- MQTT 数据接入
+- EMQX Docker Compose 服务
+- 智能矿山综合看板 `/mine/dashboard`
+- 设备健康评分页面 `/mine/device-health`
+- 预测性维护任务页面 `/mine/maintenance-tasks`
+- 维护看板与风险趋势页面 `/mine/maintenance-dashboard`
+
+### Docker Compose 服务
+
+- `enterprise-scaffold-mysql`
+- `enterprise-scaffold-backend`
+- `enterprise-scaffold-frontend`
+- `enterprise-scaffold-emqx`
+
+### 项目一适合展示的能力
+
+- Java 后端开发
+- 企业信息化开发
+- 智能矿山信息化
+- 工业互联网数据接入
+- 告警规则和工单闭环
+- 设备健康评分
+- 预测性维护
+- Vue3 可视化看板
+- Docker Compose 一键部署
+
+### 项目一总体验收命令
+
+后端编译：
+
+执行目录：`scaffold-backend`
+
+执行命令：`mvn -DskipTests compile`
+
+前端构建：
+
+执行目录：`scaffold-frontend`
+
+执行命令：`pnpm build`
+
+Docker Compose 验收：
+
+执行目录：`scaffold-docker`
+
+执行命令：`docker compose --env-file .env up -d --build`
+
+查看容器：
+
+`docker compose ps`
+
+### 项目一验收页面
+
+- `http://localhost:5173/dashboard`
+- `http://localhost:5173/mine/dashboard`
+- `http://localhost:5173/mine/device-health`
+- `http://localhost:5173/mine/maintenance-tasks`
+- `http://localhost:5173/mine/maintenance-dashboard`
+
+
+
+
+
+
+
 

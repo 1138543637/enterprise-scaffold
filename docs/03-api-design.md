@@ -1494,4 +1494,122 @@ Authorization: Bearer <token>
 
 `Authorization: Bearer <token>`
 
+## M1-13：项目一接口总体验收
+
+M1-13 不新增后端接口，复用项目一已有接口进行总体验收。
+
+所有智能矿山业务接口均需要 JWT 认证。
+
+请求头固定为：
+
+`Authorization: Bearer <token>`
+
+所有成功响应继续使用统一结构：
+
+`ApiResult`
+
+分页接口继续使用统一结构：
+
+`PageResult`
+
+登录接口：
+
+`POST /api/auth/login`
+
+请求体：
+
+`{ "username": "admin", "password": "admin123" }`
+
+返回成功后，从 `data.token` 中复制 token。
+
+### 智能矿山基础接口
+
+- `GET /api/mine/health`
+- `GET /api/mine/devices/page?pageNo=1&pageSize=10`
+- `GET /api/mine/sensors/page?pageNo=1&pageSize=10`
+
+### 传感器数据接口
+
+- `POST /api/mine/sensor-data/simulate`
+- `GET /api/mine/sensor-data/latest`
+- `GET /api/mine/sensor-data/page?pageNo=1&pageSize=10`
+
+### MQTT 模拟接口
+
+- `POST /api/mine/mqtt/simulate-publish`
+- `POST /api/mine/mqtt/simulate-batch`
+
+单条模拟发布请求体示例：
+
+`{ "sensorCode": "SEN-GAS-001", "dataValue": 1.68, "remark": "M1-13总体验收：MQTT瓦斯高值模拟上报" }`
+
+批量模拟发布请求体示例：
+
+`{ "sensorType": "GAS", "count": 5, "intervalMillis": 200, "remark": "M1-13总体验收：批量MQTT模拟上报" }`
+
+### 告警规则和告警事件接口
+
+- `GET /api/mine/alarm-rules/page?pageNo=1&pageSize=10`
+- `GET /api/mine/alarm-events/page?pageNo=1&pageSize=10`
+- `POST /api/mine/alarm-events/generate`
+
+### 工单闭环接口
+
+- `GET /api/mine/work-orders/page?pageNo=1&pageSize=10`
+- `POST /api/mine/work-orders/create-from-alarm`
+- `POST /api/mine/work-orders/{id}/handle`
+- `POST /api/mine/work-orders/{id}/close`
+
+### 智能矿山综合看板接口
+
+- `GET /api/mine/dashboard/summary`
+- `GET /api/mine/dashboard/alarm-level-stats`
+- `GET /api/mine/dashboard/sensor-type-stats`
+- `GET /api/mine/dashboard/work-order-status-stats`
+- `GET /api/mine/dashboard/recent-alarms`
+- `GET /api/mine/dashboard/recent-work-orders`
+
+### 设备健康评分接口
+
+- `GET /api/mine/device-health/page?pageNo=1&pageSize=10`
+- `GET /api/mine/device-health/summary`
+
+### 预测性维护任务接口
+
+- `GET /api/mine/maintenance-tasks/page?pageNo=1&pageSize=10`
+- `GET /api/mine/maintenance-tasks/summary`
+- `POST /api/mine/maintenance-tasks/create-from-device-health`
+- `POST /api/mine/maintenance-tasks/{id}/plan`
+- `POST /api/mine/maintenance-tasks/{id}/handle`
+- `POST /api/mine/maintenance-tasks/{id}/close`
+
+### 维护看板与风险趋势接口
+
+- `GET /api/mine/maintenance-dashboard/summary`
+- `GET /api/mine/maintenance-dashboard/task-status-stats`
+- `GET /api/mine/maintenance-dashboard/priority-stats`
+- `GET /api/mine/maintenance-dashboard/risk-level-stats`
+- `GET /api/mine/maintenance-dashboard/risk-trend`
+- `GET /api/mine/maintenance-dashboard/recent-tasks`
+- `GET /api/mine/maintenance-dashboard/high-risk-devices`
+
+M1-13 接口验收标准：
+
+- 所有核心接口带 token 请求后返回 `code = 0`。
+- 所有核心接口带 token 请求后返回 `msg = success`。
+- 分页接口返回 `pageNo`、`pageSize`、`total`、`pages`、`records`。
+- 看板统计接口返回 `data` 不为 null。
+
+操作日志验收接口：
+
+`GET /api/system/oper-logs/page?pageNo=1&pageSize=20&title=智能矿山`
+
+预期能看到智能矿山基础、设备台账、传感器台账、传感器数据、告警规则、告警事件、工单、看板、MQTT、设备健康、预测性维护、维护看板相关操作记录。
+
+
+
+
+
+
+
 

@@ -2566,6 +2566,113 @@ M1-12 没有新增数据库表，而是复用已有 mine_maintenance_task、mine
 
 
 
+## M1-13：项目一总体验收与收尾技术总结
+
+M1-13 完成项目一“智能矿山安全生产与设备预测性维护平台”的总体验收与收尾。
+
+本阶段不新增数据库表，不新增数据库字段，不新增 SQL 文件，不新增后端接口，不新增 Docker 服务。
+
+本阶段重点是验证智能矿山完整业务链路、前端页面、Docker Compose 部署和项目文档。
+
+### 完整业务链路
+
+M1-13 后，项目一完整业务链路为：
+
+设备台账 → 传感器台账 → MQTT 数据上报 → 数据入库 `mine_sensor_data` → 告警生成 `mine_alarm_event` → 工单闭环 `mine_work_order` → 智能矿山看板 `/mine/dashboard` → 实时数据展示增强 → 设备健康评分 `/mine/device-health` → 风险等级识别 → 预测性维护任务 `/mine/maintenance-tasks` → 维护任务安排 → 维护任务处理 → 维护任务关闭 → 维护看板 `/mine/maintenance-dashboard` → 最近 7 天风险趋势分析。
+
+### 涉及前端页面
+
+- `scaffold-frontend/src/views/dashboard/DashboardView.vue`
+- `scaffold-frontend/src/views/mine/MineDashboardView.vue`
+- `scaffold-frontend/src/views/mine/MineDeviceHealthView.vue`
+- `scaffold-frontend/src/views/mine/MineMaintenanceTaskView.vue`
+- `scaffold-frontend/src/views/mine/MineMaintenanceDashboardView.vue`
+
+### 涉及后端模块
+
+- `cn.sxu.enterprise.module.mine`
+
+### 涉及数据库表
+
+- `mine_device`
+- `mine_sensor`
+- `mine_sensor_data`
+- `mine_alarm_rule`
+- `mine_alarm_event`
+- `mine_work_order`
+- `mine_maintenance_task`
+
+### 涉及 Docker 服务
+
+- `enterprise-scaffold-mysql`
+- `enterprise-scaffold-backend`
+- `enterprise-scaffold-frontend`
+- `enterprise-scaffold-emqx`
+
+### 验收命令
+
+后端编译：
+
+执行目录：`D:\Code\enterprise-scaffold\scaffold-backend`
+
+执行命令：`mvn -DskipTests compile`
+
+前端构建：
+
+执行目录：`D:\Code\enterprise-scaffold\scaffold-frontend`
+
+执行命令：`pnpm build`
+
+Docker Compose 验收：
+
+执行目录：`D:\Code\enterprise-scaffold\scaffold-docker`
+
+执行命令：`docker compose --env-file .env up -d --build`
+
+查看容器：`docker compose ps`
+
+### 验收地址
+
+- `http://localhost:8080/api/health`
+- `http://localhost:5173/api/health`
+- `http://localhost:5173/dashboard`
+- `http://localhost:5173/mine/dashboard`
+- `http://localhost:5173/mine/device-health`
+- `http://localhost:5173/mine/maintenance-tasks`
+- `http://localhost:5173/mine/maintenance-dashboard`
+
+### 简历表达
+
+基于 Spring Boot 3、MyBatis-Plus、MySQL、Vue3、Element Plus、ECharts、Docker Compose 和 EMQX，独立实现智能矿山安全生产与设备预测性维护平台，覆盖设备台账、传感器数据接入、MQTT 实时上报、告警规则匹配、告警事件生成、工单闭环、设备健康评分、预测性维护任务和风险趋势分析等完整业务链路。
+
+### 面试解释
+
+项目一不是单纯 CRUD，而是围绕智能矿山安全生产场景设计了一条完整链路。
+
+先建立设备和传感器台账，再通过 MQTT 接收传感器数据。
+
+数据入库后，根据告警规则生成告警事件。
+
+告警事件可以转成工单，并完成处理和关闭。
+
+在此基础上，继续做设备健康评分和风险等级识别。
+
+高风险设备可以生成预测性维护任务。
+
+最后通过维护看板展示任务状态、优先级分布、风险等级分布和最近 7 天风险趋势。
+
+项目支持 Docker Compose 一键部署，适合作为能源企业、省属国企、工业互联网、运营商和政务数字化方向的求职项目。
+
+后续进入 A2 阶段时，继续保持 `ApiResult`、`PageResult`、JWT、`@OperLog`、Docker Compose 验收、前端 ApiResult 解包检查和 CSS Grid 关键布局规则。
+
+
+
+
+
+
+
+
+
 
 
 
