@@ -119,10 +119,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, type ShallowRef } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import * as echarts from 'echarts'
+type ChartInstance = ReturnType<typeof echarts.init>
 import {
   generateMineAlarmEventsApi,
   getMineAlarmLevelStatsApi,
@@ -156,9 +157,9 @@ const alarmLevelChartRef = ref<HTMLDivElement | null>(null)
 const sensorTypeChartRef = ref<HTMLDivElement | null>(null)
 const workOrderStatusChartRef = ref<HTMLDivElement | null>(null)
 
-const alarmLevelChart = ref<echarts.ECharts | null>(null)
-const sensorTypeChart = ref<echarts.ECharts | null>(null)
-const workOrderStatusChart = ref<echarts.ECharts | null>(null)
+const alarmLevelChart = shallowRef<ChartInstance | null>(null)
+const sensorTypeChart = shallowRef<ChartInstance | null>(null)
+const workOrderStatusChart = shallowRef<ChartInstance | null>(null)
 
 const metricCards = computed(() => {
   const data = summary.value
@@ -307,7 +308,7 @@ function renderCharts() {
 
 function renderPieChart(
   dom: HTMLDivElement | null,
-  chartRef: { value: echarts.ECharts | null },
+  chartRef: ShallowRef<ChartInstance | null>,
   data: Array<{ name: string; value: number }>
 ) {
   if (!dom) {
