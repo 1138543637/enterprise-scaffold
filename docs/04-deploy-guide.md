@@ -1113,3 +1113,47 @@ docker exec -i enterprise-scaffold-mysql mysql -u root -p enterprise_scaffold < 
 6. 前端验收：
    http://localhost:5173/mine/maintenance-tasks
 
+
+
+## M1-12：维护看板与风险趋势分析部署验收
+
+M1-12 不新增数据库表，不需要执行 SQL 文件。
+
+后端编译：
+
+```cmd
+cd /d D:\Code\enterprise-scaffold\scaffold-backend
+mvn -DskipTests compile
+```
+前端构建：
+```cmd
+cd /d D:\Code\enterprise-scaffold\scaffold-frontend
+pnpm build
+```
+Docker Compose 重建：
+```cmd
+cd /d D:\Code\enterprise-scaffold\scaffold-docker
+docker compose --env-file .env up -d --build
+```
+接口验收：
+```cmd
+GET http://localhost:8080/api/mine/maintenance-dashboard/summary
+GET http://localhost:8080/api/mine/maintenance-dashboard/task-status-stats
+GET http://localhost:8080/api/mine/maintenance-dashboard/priority-stats
+GET http://localhost:8080/api/mine/maintenance-dashboard/risk-level-stats
+GET http://localhost:8080/api/mine/maintenance-dashboard/risk-trend
+GET http://localhost:8080/api/mine/maintenance-dashboard/recent-tasks
+GET http://localhost:8080/api/mine/maintenance-dashboard/high-risk-devices
+```
+前端页面验收：
+```cmd
+http://localhost:5173/mine/maintenance-dashboard
+```
+预期：
+
+-维护统计卡片正常展示
+-风险趋势图正常展示
+-任务状态、优先级、风险等级图正常展示
+-高风险设备任务和最近维护任务表格正常展示
+-页面布局使用 CSS Grid，桌面端一行多张卡片
+

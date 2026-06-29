@@ -13,7 +13,10 @@ const routes: RouteRecordRaw[] = [
     {
         path: '/dashboard',
         name: 'Dashboard',
-        component: () => import('../views/dashboard/DashboardView.vue')
+        component: () => import('../views/dashboard/DashboardView.vue'),
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/mine/dashboard',
@@ -26,12 +29,26 @@ const routes: RouteRecordRaw[] = [
     {
         path: '/mine/device-health',
         name: 'MineDeviceHealth',
-        component: () => import('../views/mine/MineDeviceHealthView.vue')
+        component: () => import('../views/mine/MineDeviceHealthView.vue'),
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/mine/maintenance-tasks',
         name: 'MineMaintenanceTask',
-        component: () => import('../views/mine/MineMaintenanceTaskView.vue')
+        component: () => import('../views/mine/MineMaintenanceTaskView.vue'),
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/mine/maintenance-dashboard',
+        name: 'MineMaintenanceDashboard',
+        component: () => import('../views/mine/MineMaintenanceDashboardView.vue'),
+        meta: {
+            requiresAuth: true
+        }
     }
 
 ]

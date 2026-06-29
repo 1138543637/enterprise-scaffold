@@ -466,3 +466,31 @@ feat: implement mine predictive maintenance tasks
 7. scaffold-frontend/src/views/mine/MineMaintenanceTaskView.vue
 8. scaffold-frontend/src/router/index.ts 新增 /mine/maintenance-tasks 路由
 9. docs 和 README 更新
+
+
+docs/05-github-reference.md 增加：
+
+```md
+## M1-12：维护看板与风险趋势分析参考说明
+
+M1-12 继续参考以下项目：
+
+- RuoYi-Vue-Pro：参考企业后台模块划分、统计接口组织方式
+- RuoYi-Vue：参考 Controller / Service / Mapper 分层和操作日志思想
+- RuoYi-Vue3：参考 Vue3 + Element Plus 后台页面写法
+- Vue Vben Admin：参考中后台看板布局和卡片设计
+- MyBatis-Plus：参考 LambdaQueryWrapper、QueryWrapper、selectMaps 分组统计
+- ECharts：参考折线图、饼图展示方式
+
+本项目自己的实现为：
+
+- `MineMaintenanceDashboardController`
+- `MineMaintenanceDashboardService`
+- `MineMaintenanceDashboardServiceImpl`
+- `/api/mine/maintenance-dashboard/**`
+- `/mine/maintenance-dashboard`
+
+本阶段不复制第三方项目代码，只参考结构、命名习惯和页面组织方式。
+```
+
+

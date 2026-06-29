@@ -1416,4 +1416,82 @@ Authorization: Bearer <token>
 @OperLog(title = "智能矿山-预测性维护", businessType = "任务关闭")
 
 
+## M1-12：维护看板与风险趋势分析接口
+
+### 1. 维护看板汇总统计
+
+`GET /api/mine/maintenance-dashboard/summary`
+
+认证：需要 JWT。
+
+返回：
+
+`ApiResult<MineMaintenanceDashboardSummaryVO>`
+
+字段：
+
+- `taskTotal`
+- `unclosedTaskTotal`
+- `pendingTotal`
+- `plannedTotal`
+- `processingTotal`
+- `closedTotal`
+- `highRiskTaskTotal`
+- `urgentTotal`
+- `todayNewTaskTotal`
+- `alarmTotal7d`
+- `workOrderTotal7d`
+
+### 2. 任务状态统计
+
+`GET /api/mine/maintenance-dashboard/task-status-stats`
+
+返回：
+
+`ApiResult<List<MineMaintenanceTaskStatusStatVO>>`
+
+### 3. 优先级统计
+
+`GET /api/mine/maintenance-dashboard/priority-stats`
+
+返回：
+
+`ApiResult<List<MineMaintenancePriorityStatVO>>`
+
+### 4. 风险等级统计
+
+`GET /api/mine/maintenance-dashboard/risk-level-stats`
+
+返回：
+
+`ApiResult<List<MineMaintenanceRiskLevelStatVO>>`
+
+### 5. 最近 7 天风险趋势
+
+`GET /api/mine/maintenance-dashboard/risk-trend`
+
+返回：
+
+`ApiResult<List<MineMaintenanceRiskTrendVO>>`
+
+### 6. 最近维护任务
+
+`GET /api/mine/maintenance-dashboard/recent-tasks`
+
+返回：
+
+`ApiResult<List<MineMaintenanceRecentTaskVO>>`
+
+### 7. 高风险设备维护任务
+
+`GET /api/mine/maintenance-dashboard/high-risk-devices`
+
+返回：
+
+`ApiResult<List<MineMaintenanceHighRiskDeviceVO>>`
+
+以上接口均需要请求头：
+
+`Authorization: Bearer <token>`
+
 

@@ -373,3 +373,31 @@ POST /api/mine/maintenance-tasks/{id}/handle
 POST /api/mine/maintenance-tasks/{id}/close
 
 
+README.md 增加：
+
+```md
+## M1-12：维护看板与风险趋势分析
+
+当前项目一“智能矿山安全生产与设备预测性维护平台”已完成维护看板与风险趋势分析能力。
+
+已新增后端接口：
+
+- `GET /api/mine/maintenance-dashboard/summary`
+- `GET /api/mine/maintenance-dashboard/task-status-stats`
+- `GET /api/mine/maintenance-dashboard/priority-stats`
+- `GET /api/mine/maintenance-dashboard/risk-level-stats`
+- `GET /api/mine/maintenance-dashboard/risk-trend`
+- `GET /api/mine/maintenance-dashboard/recent-tasks`
+- `GET /api/mine/maintenance-dashboard/high-risk-devices`
+
+已新增前端页面：
+
+- `/mine/maintenance-dashboard`
+
+本阶段基于 `mine_maintenance_task`、`mine_alarm_event`、`mine_work_order` 实现维护任务总览、任务状态统计、优先级统计、风险等级统计、最近 7 天风险趋势、高风险设备任务和最近维护任务展示。
+
+M1-12 不新增数据库表，不新增 SQL 文件，不新增 Docker 服务。
+```
+
+
+
