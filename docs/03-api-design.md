@@ -1118,6 +1118,67 @@ ApiResult<List<MineAlarmEventPageVO>>
 
 工单处理接口：POST /api/mine/work-orders/{id}/handle。请求 Body 示例为 {"handleResult":"已安排检修人员完成现场处置。","remark":"工单已处理"}。返回结构为 ApiResult<MineWorkOrderPageVO>。处理成功后，mine_work_order.order_status 更新为 2，并记录 handler_user_id、handler_username、handle_time、handle_result 等处理信息。
 
-
-
 工单关闭接口：POST /api/mine/work-orders/{id}/close。请求 Body 示例为 {"closeResult":"现场复核正常，工单关闭。","remark":"闭环完成"}。返回结构为 ApiResult<MineWorkOrderPageVO>。关闭成功后，mine_work_order.order_status 更新为 3，并记录 close_user_id、close_username、close_time、close_result 等关闭信息，同时关联的 mine_alarm_event.handle_status 更新为 2。
+
+
+## M1-06：智能矿山看板接口
+
+### 汇总统计
+
+GET /api/mine/dashboard/summary
+
+认证：需要 JWT。
+
+返回：
+
+ApiResult<MineDashboardSummaryVO>
+
+### 告警级别统计
+
+GET /api/mine/dashboard/alarm-level-stats
+
+认证：需要 JWT。
+
+返回：
+
+ApiResult<List<MineAlarmLevelStatVO>>
+
+### 传感器类型统计
+
+GET /api/mine/dashboard/sensor-type-stats
+
+认证：需要 JWT。
+
+返回：
+
+ApiResult<List<MineSensorTypeStatVO>>
+
+### 工单状态统计
+
+GET /api/mine/dashboard/work-order-status-stats
+
+认证：需要 JWT。
+
+返回：
+
+ApiResult<List<MineWorkOrderStatusStatVO>>
+
+### 最近告警事件
+
+GET /api/mine/dashboard/recent-alarms
+
+认证：需要 JWT。
+
+返回：
+
+ApiResult<List<MineRecentAlarmVO>>
+
+### 最近工单记录
+
+GET /api/mine/dashboard/recent-work-orders
+
+认证：需要 JWT。
+
+返回：
+
+ApiResult<List<MineRecentWorkOrderVO>>

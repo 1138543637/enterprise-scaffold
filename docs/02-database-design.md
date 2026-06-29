@@ -487,3 +487,15 @@ mysql -u root -p < scaffold-sql\m1_04_mine_alarm_rule_event.sql
 
 逻辑关联关系为：mine_work_order.alarm_event_id 逻辑关联 mine_alarm_event.id，mine_work_order.sensor_id 逻辑关联 mine_sensor.id，mine_work_order.device_id 逻辑关联 mine_device.id。本阶段不设置数据库外键，避免测试数据导入、删除和 Docker 初始化时受外键约束影响。
 
+## M1-06：智能矿山看板
+
+M1-06 完成智能矿山安全生产看板能力，在已有设备台账、传感器台账、传感器数据、告警规则、告警事件和工单闭环基础上，新增看板统计接口和前端可视化页面。
+
+本阶段新增设备数量、传感器数量、采集数据数量、告警规则数量、告警事件数量、未处理告警数量、工单数量、待处理工单数量和已关闭工单数量统计。
+
+本阶段新增告警级别分布、传感器类型分布、工单状态分布、最近告警事件和最近工单记录展示。
+
+本阶段前端新增 ECharts 图表能力，用于展示智能矿山业务运行状态。
+
+M1-06 不新增数据库表，不新增 SQL 文件，不接入 MQTT / EMQX。
+

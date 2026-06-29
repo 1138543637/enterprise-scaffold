@@ -873,3 +873,34 @@ M1-05 验收接口包括 GET http://localhost:8080/api/mine/work-orders/page?pag
 
 验收流程为：先登录 POST http://localhost:8080/api/auth/login 获取 token；再调用 POST http://localhost:8080/api/mine/sensor-data/simulate 生成传感器数据；再调用 POST http://localhost:8080/api/mine/alarm-events/generate 生成告警事件；再查询 GET http://localhost:8080/api/mine/alarm-events/page?pageNo=1&pageSize=10 获取告警事件 id；然后调用 POST http://localhost:8080/api/mine/work-orders/create-from-alarm 生成工单；最后依次调用工单处理接口和工单关闭接口完成闭环。
 
+
+## M1-06：智能矿山看板部署和验证
+
+M1-06 不新增 Docker 服务，不新增环境变量，不修改 Docker Compose 配置。
+
+后端启动方式保持不变：
+
+cd /d D:\Code\enterprise-scaffold\scaffold-backend
+set MYSQL_PASSWORD=你的MySQL密码
+set JWT_SECRET=enterprise-scaffold-local-dev-secret-please-change-32
+set LOCAL_UPLOAD_PATH=D:\Code\enterprise-scaffold\uploads
+mvn spring-boot:run
+
+前端需要新增 ECharts 依赖：
+
+cd /d D:\Code\enterprise-scaffold\scaffold-frontend
+pnpm add echarts
+pnpm dev
+
+前端访问地址：
+
+http://localhost:5173/mine/dashboard
+
+后端验收接口：
+
+GET http://localhost:8080/api/mine/dashboard/summary
+GET http://localhost:8080/api/mine/dashboard/alarm-level-stats
+GET http://localhost:8080/api/mine/dashboard/sensor-type-stats
+GET http://localhost:8080/api/mine/dashboard/work-order-status-stats
+GET http://localhost:8080/api/mine/dashboard/recent-alarms
+GET http://localhost:8080/api/mine/dashboard/recent-work-orders
