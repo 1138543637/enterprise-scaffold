@@ -1080,3 +1080,36 @@ http://localhost:5173/mine/device-health
 ```
 
 
+## M1-11 部署与验收
+
+1. 执行新增 SQL：
+   cd /d D:\Code\enterprise-scaffold
+   mysql -u root -p < scaffold-sql\m1_11_mine_maintenance_task.sql
+
+如果 MySQL 在 Docker 容器中运行，可在 scaffold-docker 目录执行：
+cd /d D:\Code\enterprise-scaffold\scaffold-docker
+docker exec -i enterprise-scaffold-mysql mysql -u root -p enterprise_scaffold < ..\scaffold-sql\m1_11_mine_maintenance_task.sql
+
+2. 后端编译：
+   cd /d D:\Code\enterprise-scaffold\scaffold-backend
+   mvn -DskipTests compile
+
+3. 前端构建：
+   cd /d D:\Code\enterprise-scaffold\scaffold-frontend
+   pnpm build
+
+4. Docker Compose 重建：
+   cd /d D:\Code\enterprise-scaffold\scaffold-docker
+   docker compose --env-file .env up -d --build
+
+5. 接口验收：
+   GET http://localhost:8080/api/mine/maintenance-tasks/page?pageNo=1&pageSize=10
+   GET http://localhost:8080/api/mine/maintenance-tasks/summary
+   POST http://localhost:8080/api/mine/maintenance-tasks/create-from-device-health
+   POST http://localhost:8080/api/mine/maintenance-tasks/{id}/plan
+   POST http://localhost:8080/api/mine/maintenance-tasks/{id}/handle
+   POST http://localhost:8080/api/mine/maintenance-tasks/{id}/close
+
+6. 前端验收：
+   http://localhost:5173/mine/maintenance-tasks
+

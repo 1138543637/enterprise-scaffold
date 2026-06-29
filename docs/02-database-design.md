@@ -559,3 +559,33 @@ M1-10 不新增 SQL 文件。
 这样做的好处是避免冗余字段和数据同步问题，后续如果需要保留历史评分趋势，可以在后续阶段新增评分快照表。
 
 
+## mine_maintenance_task：智能矿山预测性维护任务表
+
+表名：mine_maintenance_task
+
+用途：记录由设备健康评分和风险等级生成的预测性维护任务，用于完成维护计划、现场处理、复核关闭的业务闭环。
+
+核心字段：
+id、task_code、device_id、device_code、device_name、device_type、area_name、location、health_score、risk_level、risk_level_name、task_title、task_content、task_type、task_source、task_status、priority、plan_start_time、plan_end_time、maintainer_user_id、maintainer_username、handle_time、handle_result、close_time、close_result、status、create_by、create_time、update_by、update_time、deleted、remark。
+
+任务状态：
+task_status = 0：待安排
+task_status = 1：待执行
+task_status = 2：处理中
+task_status = 3：已关闭
+
+优先级：
+priority = 0：低
+priority = 1：中
+priority = 2：高
+priority = 3：紧急
+
+关联关系：
+mine_maintenance_task.device_id 逻辑关联 mine_device.id。
+
+说明：
+M1-11 不设置数据库外键，继续保持历史阶段“逻辑关联、不加物理外键”的规则。
+新增 SQL 文件为 scaffold-sql/m1_11_mine_maintenance_task.sql，第一行必须是 SET NAMES utf8mb4;。
+同时需要将 mine_maintenance_task 建表语句追加到 scaffold-sql/enterprise_scaffold_init.sql，保证全新 Docker 初始化数据库时表结构完整。
+
+

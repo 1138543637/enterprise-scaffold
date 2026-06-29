@@ -109,6 +109,18 @@
           <el-table-column prop="sensorTotal" label="传感器数" width="100" />
           <el-table-column prop="offlineSensorCount" label="离线传感器" width="110" />
           <el-table-column prop="lastReportTime" label="最后上报时间" min-width="170" />
+          <el-table-column label="操作" fixed="right" width="130">
+            <template #default="{ row }">
+              <el-button
+                  size="small"
+                  type="primary"
+                  :disabled="row.riskLevel === 0"
+                  @click="createMaintenanceTask(row)"
+              >
+                生成维护任务
+              </el-button>
+            </template>
+          </el-table-column>
         </el-table>
       </div>
 
@@ -136,6 +148,8 @@ import {
   type MineDeviceHealthSummaryVO,
   type MineDeviceHealthVO
 } from '../../api/mine/deviceHealth'
+import { ElMessage } from 'element-plus'
+import { createMineMaintenanceTaskFromDeviceHealthApi } from '../../api/mine/maintenanceTask'
 
 const router = useRouter()
 
@@ -209,6 +223,14 @@ async function loadPage() {
 
 async function loadData() {
   await Promise.all([loadSummary(), loadPage()])
+}
+
+async function createMaintenanceTask(row: MineDeviceHealthVO) {
+  await createMineMaintenanceTaskFromDeviceHealthApi({
+    deviceId: row.id,
+    remark: '由设备健康风险生成预测性维护任务'
+  })
+  ElMessage.success('预测性维护任务已生成')
 }
 
 function handleSearch() {

@@ -356,4 +356,20 @@ mine_work_order
 M1-10 让项目从“监控告警系统”进一步增强为“预测性维护平台”的基础版本。
 
 
+## M1-11：预测性维护任务闭环
+
+当前智能矿山模块已支持预测性维护任务闭环：
+1. 基于设备健康评分生成维护任务。
+2. 支持维护任务分页查询和汇总统计。
+3. 支持维护任务安排、处理、关闭。
+4. 前端新增 /mine/maintenance-tasks 页面。
+
+新增接口：
+GET /api/mine/maintenance-tasks/page
+GET /api/mine/maintenance-tasks/summary
+POST /api/mine/maintenance-tasks/create-from-device-health
+POST /api/mine/maintenance-tasks/{id}/plan
+POST /api/mine/maintenance-tasks/{id}/handle
+POST /api/mine/maintenance-tasks/{id}/close
+
 

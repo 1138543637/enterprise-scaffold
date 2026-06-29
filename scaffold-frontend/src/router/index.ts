@@ -27,6 +27,11 @@ const routes: RouteRecordRaw[] = [
         path: '/mine/device-health',
         name: 'MineDeviceHealth',
         component: () => import('../views/mine/MineDeviceHealthView.vue')
+    },
+    {
+        path: '/mine/maintenance-tasks',
+        name: 'MineMaintenanceTask',
+        component: () => import('../views/mine/MineMaintenanceTaskView.vue')
     }
 
 ]

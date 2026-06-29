@@ -1374,3 +1374,46 @@ unclosedWorkOrderTotal
 ```
 
 
+## M1-11：预测性维护任务接口
+
+所有接口都需要 JWT：
+Authorization: Bearer <token>
+
+1. 分页查询
+   GET /api/mine/maintenance-tasks/page
+   返回：ApiResult<PageResult<MineMaintenanceTaskPageVO>>
+
+2. 汇总统计
+   GET /api/mine/maintenance-tasks/summary
+   返回：ApiResult<MineMaintenanceTaskSummaryVO>
+
+3. 基于设备健康风险生成维护任务
+   POST /api/mine/maintenance-tasks/create-from-device-health
+   请求体：MineMaintenanceTaskCreateRequest
+   返回：ApiResult<MineMaintenanceTaskPageVO>
+
+4. 安排维护任务
+   POST /api/mine/maintenance-tasks/{id}/plan
+   请求体：MineMaintenanceTaskPlanRequest
+   返回：ApiResult<MineMaintenanceTaskPageVO>
+
+5. 处理维护任务
+   POST /api/mine/maintenance-tasks/{id}/handle
+   请求体：MineMaintenanceTaskHandleRequest
+   返回：ApiResult<MineMaintenanceTaskPageVO>
+
+6. 关闭维护任务
+   POST /api/mine/maintenance-tasks/{id}/close
+   请求体：MineMaintenanceTaskCloseRequest
+   返回：ApiResult<MineMaintenanceTaskPageVO>
+
+操作日志：
+@OperLog(title = "智能矿山-预测性维护", businessType = "分页查询")
+@OperLog(title = "智能矿山-预测性维护", businessType = "汇总统计")
+@OperLog(title = "智能矿山-预测性维护", businessType = "健康风险生成任务")
+@OperLog(title = "智能矿山-预测性维护", businessType = "任务安排")
+@OperLog(title = "智能矿山-预测性维护", businessType = "任务处理")
+@OperLog(title = "智能矿山-预测性维护", businessType = "任务关闭")
+
+
+
