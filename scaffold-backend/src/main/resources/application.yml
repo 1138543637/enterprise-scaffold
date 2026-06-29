@@ -31,3 +31,14 @@ enterprise:
   file:
     local-upload-path: ${LOCAL_UPLOAD_PATH:D:/Code/enterprise-scaffold/uploads}
     access-prefix: /files
+
+  mine:
+    mqtt:
+      enabled: ${MINE_MQTT_ENABLED:true}
+      broker-url: ${MINE_MQTT_BROKER_URL:tcp://localhost:1883}
+      client-id: ${MINE_MQTT_CLIENT_ID:enterprise-scaffold-mine-subscriber}
+      username: ${MINE_MQTT_USERNAME:}
+      password: ${MINE_MQTT_PASSWORD:}
+      topic: ${MINE_MQTT_TOPIC:mine/sensor/data}
+      qos: ${MINE_MQTT_QOS:1}
+      completion-timeout: ${MINE_MQTT_COMPLETION_TIMEOUT:5000}

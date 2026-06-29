@@ -904,3 +904,87 @@ GET http://localhost:8080/api/mine/dashboard/sensor-type-stats
 GET http://localhost:8080/api/mine/dashboard/work-order-status-stats
 GET http://localhost:8080/api/mine/dashboard/recent-alarms
 GET http://localhost:8080/api/mine/dashboard/recent-work-orders
+
+## M1-07：Docker Compose 接入 EMQX
+
+M1-07 新增 EMQX 作为 MQTT Broker，用于接收智能矿山传感器上报消息。
+
+Docker Compose 新增服务名和容器名均固定为：
+
+```text
+enterprise-scaffold-emqx
+```
+
+镜像使用：
+
+```text
+emqx/emqx:5.8.8
+```
+
+固定端口：
+
+| 端口 | 用途 |
+|---|---|
+| 1883 | MQTT TCP 连接端口 |
+| 18083 | EMQX Dashboard 管理端口 |
+
+后端容器通过环境变量连接 EMQX。
+
+固定配置为：
+
+```yaml
+MINE_MQTT_ENABLED: true
+MINE_MQTT_BROKER_URL: tcp://enterprise-scaffold-emqx:1883
+MINE_MQTT_CLIENT_ID: enterprise-scaffold-mine-subscriber
+MINE_MQTT_TOPIC: mine/sensor/data
+MINE_MQTT_QOS: 1
+```
+
+如果 `backend` 使用 `depends_on`，需要在原有 MySQL 健康检查依赖基础上增加 EMQX 依赖。
+
+示例：
+
+```yaml
+depends_on:
+  enterprise-scaffold-mysql:
+    condition: service_healthy
+  enterprise-scaffold-emqx:
+    condition: service_started
+```
+
+启动命令在以下目录执行：
+
+```cmd
+cd /d D:\Code\enterprise-scaffold\scaffold-docker
+docker compose up -d --build
+```
+
+EMQX Dashboard 访问地址为：
+
+```text
+http://localhost:18083
+```
+
+默认登录账号：
+
+```text
+admin
+```
+
+默认登录密码：
+
+```text
+public
+```
+
+M1-07 验收标准：
+
+```text
+1. enterprise-scaffold-emqx 容器状态为 Up
+2. 1883 和 18083 端口映射正常
+3. 后端容器可以通过 tcp://enterprise-scaffold-emqx:1883 连接 EMQX
+4. 调用 /api/mine/mqtt/simulate-publish 后，mine_sensor_data 新增记录
+5. 超过阈值的数据可以生成 mine_alarm_event
+6. M1-06 看板统计可以看到数据变化
+```
+

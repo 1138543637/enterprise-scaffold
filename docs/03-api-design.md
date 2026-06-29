@@ -1182,3 +1182,69 @@ GET /api/mine/dashboard/recent-work-orders
 返回：
 
 ApiResult<List<MineRecentWorkOrderVO>>
+
+## M1-07：MQTT 模拟发布接口
+
+M1-07 新增 MQTT 模拟发布接口，用于开发和验收阶段模拟传感器设备向 EMQX 发布 MQTT 消息。
+
+接口路径为：
+
+```text
+POST /api/mine/mqtt/simulate-publish
+```
+
+认证方式为 JWT，调用时需要在请求头中携带：
+
+```text
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+请求体示例：
+
+```json
+{
+  "sensorCode": "SEN-GAS-001",
+  "dataValue": 1.68,
+  "remark": "M1-07 MQTT模拟上报"
+}
+```
+
+字段说明：
+
+| 字段 | 类型 | 是否必填 | 说明 |
+|---|---|---|---|
+| sensorCode | String | 是 | 传感器编码，必须能在 `mine_sensor` 中查到 |
+| dataValue | BigDecimal | 是 | 传感器采集值 |
+| collectTime | String | 否 | 采集时间，格式为 `yyyy-MM-dd HH:mm:ss`，不传则使用当前时间 |
+| remark | String | 否 | 备注 |
+
+成功返回结构继续使用 `ApiResult`。
+
+返回示例：
+
+```json
+{
+  "code": 0,
+  "msg": "success",
+  "data": {
+    "sensorCode": "SEN-GAS-001",
+    "dataValue": 1.68,
+    "collectTime": "2026-06-29 20:30:00",
+    "remark": "M1-07 MQTT模拟上报"
+  }
+}
+```
+
+该接口收到请求后，会将 JSON 消息发布到 EMQX 的 `mine/sensor/data` Topic。
+
+后端 MQTT 订阅器再接收该消息，并写入 `mine_sensor_data`。
+
+验收接口包括：
+
+```text
+GET /api/mine/sensor-data/page?pageNo=1&pageSize=10&sensorCode=SEN-GAS-001
+GET /api/mine/alarm-events/page?pageNo=1&pageSize=10&sensorCode=SEN-GAS-001
+GET /api/mine/dashboard/summary
+```
+

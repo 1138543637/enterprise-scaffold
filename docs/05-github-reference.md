@@ -356,3 +356,46 @@ M1-06 参考 RuoYi-Vue、RuoYi-Vue3、Vue Vben Admin 和 MyBatis-Plus。
 - scaffold-frontend/src/views/mine/MineDashboardView.vue
 
 不能复制若依代码，不能引入若依代码生成器，不能修改已有项目命名契约。
+
+## M1-07：MQTT / EMQX 参考说明
+
+M1-07 参考 Spring Integration MQTT 官方文档、EMQX 官方 Docker 部署方式以及 MQTT Topic 订阅和消息发布的基础实践。
+
+本阶段参考内容只用于学习 MQTT Broker 与 Spring Boot 后端之间的连接方式、Spring 后端如何订阅 MQTT Topic、如何将 MQTT 消息转换为业务 DTO、如何通过 Docker Compose 启动 EMQX，以及如何使用固定 Topic 接入传感器数据。
+
+本阶段没有复制第三方业务代码，没有引入新的权限框架，没有改变已有系统架构。
+
+M1-07 继续沿用本项目已有命名。
+
+已有业务包名：
+
+```text
+cn.sxu.enterprise.module.mine
+```
+
+已有实体和服务：
+
+```text
+MineSensor
+MineSensorData
+MineAlarmEventService
+```
+
+已有数据库表：
+
+```text
+mine_sensor
+mine_sensor_data
+mine_alarm_event
+```
+
+本阶段新增类名固定为：
+
+```text
+MineMqttProperties
+MineMqttConfig
+MineSensorMqttMessage
+MineSensorMqttListener
+MineMqttController
+```
+
