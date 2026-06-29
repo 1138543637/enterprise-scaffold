@@ -857,3 +857,19 @@ SPRING_DATASOURCE_URL
 ```
 
 
+## M1-05 数据库升级和接口验收
+
+M1-05 新增 SQL 文件 scaffold-sql/m1_05_mine_work_order.sql，用于创建 mine_work_order 工单表。该 SQL 文件第一行必须是 SET NAMES utf8mb4;，并且固定使用 USE enterprise_scaffold; 指定数据库。
+
+本地 MySQL 执行方式：先进入项目根目录 D:\Code\enterprise-scaffold，然后执行 mysql -u root -p < scaffold-sql\m1_05_mine_work_order.sql。
+
+如果 Docker MySQL 已经启动，可以在项目根目录 D:\Code\enterprise-scaffold 执行 mysql -h 127.0.0.1 -P 3306 -u root -p < scaffold-sql\m1_05_mine_work_order.sql。也可以执行 docker exec -i enterprise-scaffold-mysql mysql -u root -p enterprise_scaffold < scaffold-sql\m1_05_mine_work_order.sql。
+
+注意：如果 Docker MySQL 数据卷已经存在，enterprise_scaffold_init.sql 不会自动重新执行。这种情况下必须手动执行 scaffold-sql/m1_05_mine_work_order.sql。
+
+M1-05 后端启动方式保持不变。进入 D:\Code\enterprise-scaffold\scaffold-backend，设置 MYSQL_PASSWORD、JWT_SECRET、LOCAL_UPLOAD_PATH 环境变量后，执行 mvn spring-boot:run 启动后端。
+
+M1-05 验收接口包括 GET http://localhost:8080/api/mine/work-orders/page?pageNo=1&pageSize=10、POST http://localhost:8080/api/mine/work-orders/create-from-alarm、POST http://localhost:8080/api/mine/work-orders/{id}/handle、POST http://localhost:8080/api/mine/work-orders/{id}/close。所有接口都需要请求头 Authorization: Bearer <token>。
+
+验收流程为：先登录 POST http://localhost:8080/api/auth/login 获取 token；再调用 POST http://localhost:8080/api/mine/sensor-data/simulate 生成传感器数据；再调用 POST http://localhost:8080/api/mine/alarm-events/generate 生成告警事件；再查询 GET http://localhost:8080/api/mine/alarm-events/page?pageNo=1&pageSize=10 获取告警事件 id；然后调用 POST http://localhost:8080/api/mine/work-orders/create-from-alarm 生成工单；最后依次调用工单处理接口和工单关闭接口完成闭环。
+

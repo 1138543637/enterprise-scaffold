@@ -232,3 +232,13 @@ MQTT / EMQX 接入
 ```
 
 M1-04 为后续 M1-05 工单闭环提供告警事件基础。
+
+## M1-05：工单闭环
+
+本阶段完成智能矿山告警后的工单闭环能力。系统在 M1-04 已经具备告警规则和告警事件能力，本阶段继续基于 mine_alarm_event 扩展 mine_work_order 工单表，实现“告警事件 -> 生成工单 -> 处理工单 -> 关闭工单”的基础业务闭环。
+
+本阶段新增工单表 mine_work_order，用于记录由告警事件生成的处置工单。新增工单分页查询接口 GET /api/mine/work-orders/page，新增告警事件转工单接口 POST /api/mine/work-orders/create-from-alarm，新增工单处理接口 POST /api/mine/work-orders/{id}/handle，新增工单关闭接口 POST /api/mine/work-orders/{id}/close。
+
+本阶段实现一个告警事件只允许生成一个工单。创建工单后，关联告警事件的 handle_status 更新为 1；工单处理后，工单 order_status 更新为 2；工单关闭后，工单 order_status 更新为 3，同时关联告警事件的 handle_status 更新为 2。本阶段所有接口继续使用 JWT 认证、ApiResult 统一返回、PageResult 分页结构和 @OperLog 操作日志。
+
+M1-05 暂不做前端页面，暂不接复杂流程引擎，暂不做多人审批，暂不接短信、邮件和站内信。

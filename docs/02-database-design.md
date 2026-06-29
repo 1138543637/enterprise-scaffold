@@ -471,3 +471,19 @@ cd /d D:\Code\enterprise-scaffold
 mysql -u root -p < scaffold-sql\m1_04_mine_alarm_rule_event.sql
 ```
 
+## mine_work_order：智能矿山工单表
+
+表名：mine_work_order。
+
+用途：记录由智能矿山告警事件生成的处置工单，用于完成告警确认、处理和关闭闭环。
+
+核心字段包括：id、work_order_code、alarm_event_id、event_code、alarm_level、work_order_title、work_order_content、device_id、sensor_id、sensor_code、sensor_name、sensor_type、area_name、location、order_status、handler_user_id、handler_username、handle_time、handle_result、close_user_id、close_username、close_time、close_result、status、create_by、create_time、update_by、update_time、deleted、remark。
+
+工单状态 order_status 固定含义：0 表示待处理，1 表示处理中，2 表示已处理，3 表示已关闭。数据状态 status 固定含义：0 表示有效，1 表示无效。逻辑删除 deleted 固定含义：0 表示未删除，1 表示已删除。
+
+唯一约束包括 uk_work_order_code(work_order_code) 和 uk_alarm_event_id(alarm_event_id)。其中 uk_alarm_event_id 用于保证一个告警事件只能生成一个工单，避免重复转工单。
+
+普通索引包括 idx_event_code(event_code)、idx_sensor_code(sensor_code)、idx_sensor_type(sensor_type)、idx_area_name(area_name)、idx_alarm_level(alarm_level)、idx_order_status(order_status)、idx_status(status)、idx_create_time(create_time)。
+
+逻辑关联关系为：mine_work_order.alarm_event_id 逻辑关联 mine_alarm_event.id，mine_work_order.sensor_id 逻辑关联 mine_sensor.id，mine_work_order.device_id 逻辑关联 mine_device.id。本阶段不设置数据库外键，避免测试数据导入、删除和 Docker 初始化时受外键约束影响。
+

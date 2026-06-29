@@ -208,3 +208,13 @@ MQTT / EMQX 接入
 M1-04 为后续 M1-05 工单闭环提供告警事件基础。
 
 
+## M1-05：智能矿山工单闭环
+
+当前项目一“智能矿山安全生产与设备预测性维护平台”已完成工单闭环基础能力。
+
+本阶段新增 mine_work_order 工单表，新增 GET /api/mine/work-orders/page、POST /api/mine/work-orders/create-from-alarm、POST /api/mine/work-orders/{id}/handle、POST /api/mine/work-orders/{id}/close 接口。
+
+M1-05 实现告警事件转工单、工单分页查询、工单处理、工单关闭、工单状态流转、告警事件 handle_status 联动更新、操作日志审计和 JWT 认证保护。
+
+本阶段完成后，智能矿山模块已经形成“传感器数据 -> 告警事件 -> 工单处理 -> 工单关闭”的基础业务闭环。
+

@@ -2091,3 +2091,23 @@ Authorization: Bearer <token>
 ```
 
 
+## M1-05：智能矿山工单闭环
+
+本阶段新增智能矿山工单闭环能力，包括告警转工单、工单处理、工单关闭、工单状态流转和告警事件 handle_status 联动更新。
+
+M1-04 已经可以根据传感器数据生成告警事件，但告警事件还没有人工处置闭环。M1-05 新增 mine_work_order 工单表和工单接口，让告警事件可以进入处理流程，形成“传感器数据 -> 告警事件 -> 工单处理 -> 工单关闭”的业务闭环。
+
+本阶段新增数据库表 mine_work_order。新增后端路径包括 cn.sxu.enterprise.module.mine.entity.MineWorkOrder、cn.sxu.enterprise.module.mine.mapper.MineWorkOrderMapper、cn.sxu.enterprise.module.mine.service.MineWorkOrderService、cn.sxu.enterprise.module.mine.service.impl.MineWorkOrderServiceImpl、cn.sxu.enterprise.module.mine.controller.MineWorkOrderController、cn.sxu.enterprise.module.mine.dto.MineWorkOrderCreateRequest、cn.sxu.enterprise.module.mine.dto.MineWorkOrderHandleRequest、cn.sxu.enterprise.module.mine.dto.MineWorkOrderCloseRequest、cn.sxu.enterprise.module.mine.vo.MineWorkOrderPageQuery、cn.sxu.enterprise.module.mine.vo.MineWorkOrderPageVO。
+
+本阶段新增接口包括 GET /api/mine/work-orders/page、POST /api/mine/work-orders/create-from-alarm、POST /api/mine/work-orders/{id}/handle、POST /api/mine/work-orders/{id}/close。接口继续使用 JWT 认证、ApiResult 统一返回、PageResult 分页结构和 @OperLog 操作日志。
+
+本阶段使用的技术包括 Spring Boot Controller、Spring Service、MyBatis-Plus BaseMapper、MyBatis-Plus Page、LambdaQueryWrapper、Spring @Transactional、JWT 认证、SecurityContext 当前登录用户、ApiResult、PageResult 和 @OperLog 操作日志。
+
+核心业务规则包括：一个告警事件只能生成一个工单；mine_work_order.alarm_event_id 使用唯一约束防止重复转工单；创建工单后，mine_alarm_event.handle_status 更新为 1；处理工单后，mine_work_order.order_status 更新为 2；关闭工单后，mine_work_order.order_status 更新为 3；关闭工单后，mine_alarm_event.handle_status 更新为 2。
+
+可以写进简历的一句话：实现智能矿山告警工单闭环模块，支持告警事件转工单、工单处理、工单关闭和状态联动更新，并基于 MyBatis-Plus、JWT、操作日志和事务机制保证接口安全性、可追踪性和业务一致性。
+
+面试时可以这样解释：项目中传感器数据触发告警后，会先生成告警事件。为了让告警不是停留在展示层，我设计了 mine_work_order 工单表，通过 alarm_event_id 和告警事件关联。告警转工单时用唯一约束避免重复生成；工单处理和关闭时会同步更新告警事件 handle_status，并使用 @Transactional 保证工单和告警事件状态的一致性。
+
+后续增强方向包括：增加工单指派、增加工单附件、增加工单处理图片上传、增加前端工单管理页面、增加工单超时统计、增加短信邮件站内信通知，后续也可以扩展简化版流程审批。
+

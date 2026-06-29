@@ -1108,3 +1108,16 @@ ApiResult<List<MineAlarmEventPageVO>>
 }
 ```
 
+## M1-05 工单闭环接口
+
+本阶段新增智能矿山工单闭环接口，统一路径前缀为 /api/mine/work-orders。所有接口都需要 JWT 认证，请求头固定使用 Authorization: Bearer <token>。所有接口继续使用 ApiResult 统一返回结构，分页接口继续使用 PageResult 分页结构。
+
+工单分页查询接口：GET /api/mine/work-orders/page。支持 Query 参数 pageNo、pageSize、workOrderCode、eventCode、alarmLevel、sensorCode、sensorName、sensorType、areaName、orderStatus、status。返回结构为 ApiResult<PageResult<MineWorkOrderPageVO>>。该接口用于分页查询工单列表，支持按工单编码、告警事件编码、告警级别、传感器编码、传感器名称、传感器类型、区域、工单状态和数据状态过滤。
+
+告警转工单接口：POST /api/mine/work-orders/create-from-alarm。请求 Body 示例为 {"alarmEventId":1,"remark":"由告警事件生成检修工单"}。返回结构为 ApiResult<MineWorkOrderPageVO>。该接口根据 mine_alarm_event 中的告警事件生成 mine_work_order 工单。一个告警事件只允许生成一个工单，重复调用同一个 alarmEventId 时不重复创建，而是返回已经存在的工单。
+
+工单处理接口：POST /api/mine/work-orders/{id}/handle。请求 Body 示例为 {"handleResult":"已安排检修人员完成现场处置。","remark":"工单已处理"}。返回结构为 ApiResult<MineWorkOrderPageVO>。处理成功后，mine_work_order.order_status 更新为 2，并记录 handler_user_id、handler_username、handle_time、handle_result 等处理信息。
+
+
+
+工单关闭接口：POST /api/mine/work-orders/{id}/close。请求 Body 示例为 {"closeResult":"现场复核正常，工单关闭。","remark":"闭环完成"}。返回结构为 ApiResult<MineWorkOrderPageVO>。关闭成功后，mine_work_order.order_status 更新为 3，并记录 close_user_id、close_username、close_time、close_result 等关闭信息，同时关联的 mine_alarm_event.handle_status 更新为 2。
