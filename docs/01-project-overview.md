@@ -271,3 +271,15 @@ MQTT 数据写入后，已有看板统计接口可以继续统计设备、传感
 
 本阶段完成后，智能矿山平台的数据来源从“接口手动模拟生成”进一步扩展为“MQTT 消息接入”，更接近工业互联网、智能矿山和物联网平台中的真实数据采集链路。
 
+## M1-08：MQTT 数据模拟增强
+
+M1-08 在 M1-07 已接入 MQTT / EMQX 的基础上，新增了智能矿山传感器数据的批量 MQTT 模拟发布能力。
+
+本阶段新增接口 `POST /api/mine/mqtt/simulate-batch`，支持按传感器类型 `sensorType` 批量生成 MQTT 消息，支持通过 `count` 控制模拟条数，支持通过 `intervalMillis` 控制每条 MQTT 消息的发送间隔。
+
+M1-08 不直接写入数据库，而是继续将消息发布到固定 Topic `mine/sensor/data`。
+
+已有 `MineSensorMqttListener` 监听消息后继续写入 `mine_sensor_data`，并复用已有告警规则生成 `mine_alarm_event`。
+
+本阶段不新增数据库表，不新增数据库字段，不新增 SQL 文件，不修改前端页面，不引入 WebSocket、Kafka、Prometheus 或 Grafana。
+

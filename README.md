@@ -286,3 +286,19 @@ EMQX Dashboard 地址为：
 http://localhost:18083
 ```
 
+## M1-08：MQTT 数据模拟增强
+
+当前项目一“智能矿山安全生产与设备预测性维护平台”已完成 MQTT 数据模拟增强能力。
+
+本阶段新增接口 `POST /api/mine/mqtt/simulate-batch`。
+
+该接口支持按传感器类型 `sensorType` 批量模拟 MQTT 数据，支持通过 `count` 控制模拟条数，支持通过 `intervalMillis` 控制发送间隔。
+
+批量模拟数据继续发布到 Topic `mine/sensor/data`。
+
+后端继续由 `MineSensorMqttListener` 消费消息，继续写入 `mine_sensor_data`，继续触发 `mine_alarm_event` 告警事件生成。
+
+M1-08 不新增数据库表，不新增数据库字段，不新增 SQL 文件，不新增 Docker 服务，不修改前端页面。
+
+
+

@@ -2258,3 +2258,76 @@ M1-07 简历表达：
 接入 EMQX 作为 MQTT Broker，基于 Spring Integration MQTT 实现智能矿山传感器数据订阅、解析、落库和告警联动，完成从设备消息上报到业务告警生成的端到端数据链路。
 ```
 
+## M1-08：MQTT 数据模拟增强
+
+M1-08 新增 MQTT 批量模拟发布能力。
+
+本阶段支持按 `sensorType` 批量生成传感器数据，支持 `count` 控制模拟条数，支持 `intervalMillis` 控制发送间隔。
+
+本阶段继续复用 `mine/sensor/data` Topic、EMQX、`MineSensorMqttListener`、`mine_sensor_data` 和 `mine_alarm_event`。
+
+新增后端文件：
+
+- `scaffold-backend/src/main/java/cn/sxu/enterprise/module/mine/dto/MineMqttBatchSimulateRequest.java`
+
+修改后端文件：
+
+- `scaffold-backend/src/main/java/cn/sxu/enterprise/module/mine/controller/MineMqttController.java`
+
+新增接口：
+
+- `POST /api/mine/mqtt/simulate-batch`
+
+复用接口：
+
+- `POST /api/mine/mqtt/simulate-publish`
+- `GET /api/mine/sensor-data/page`
+- `GET /api/mine/alarm-events/page`
+- `GET /api/mine/dashboard/summary`
+
+涉及数据库表：
+
+- `mine_sensor`
+- `mine_sensor_data`
+- `mine_alarm_event`
+
+技术点：
+
+- Spring Integration MQTT
+- Eclipse Paho MQTT Client
+- EMQX
+- MyBatis-Plus LambdaQueryWrapper
+- ThreadLocalRandom
+- BigDecimal
+- JWT 认证
+- ApiResult 统一返回
+- `@OperLog` 操作日志
+
+验证方式：
+
+- 执行 `mvn -DskipTests compile`
+- 执行 `docker compose --env-file .env up -d --build`
+- 调用 `POST /api/mine/mqtt/simulate-batch`
+- 查询 `GET /api/mine/sensor-data/page`
+- 查询 `GET /api/mine/alarm-events/page`
+- 查询 `GET /api/mine/dashboard/summary`
+
+简历表达：
+
+在智能矿山安全生产平台中，基于 EMQX 和 Spring Integration MQTT 实现传感器数据批量模拟上报能力，支持按传感器类型、模拟条数和发送间隔生成设备数据，并通过 MQTT 消费链路自动写入采集数据表和触发告警事件生成。
+
+面试解释：
+
+M1-08 没有让批量模拟接口直接写数据库，而是让接口只负责发布 MQTT 消息。
+
+真正的数据入库和告警生成仍由 MQTT 监听器完成，这样更符合真实工业设备通过 MQTT 上报数据、平台订阅消费的链路。
+
+后续增强方向：
+
+- 前端看板增加 MQTT 批量模拟按钮
+- 前端看板增加最近 MQTT 上报数据列表
+- 增加定时刷新
+- 后续可扩展 WebSocket 实时推送
+- 后续可接入 Kafka 做高吞吐消息处理
+
+

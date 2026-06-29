@@ -1248,3 +1248,39 @@ GET /api/mine/alarm-events/page?pageNo=1&pageSize=10&sensorCode=SEN-GAS-001
 GET /api/mine/dashboard/summary
 ```
 
+## M1-08：MQTT 批量模拟发布接口
+
+接口地址：`POST /api/mine/mqtt/simulate-batch`
+
+认证方式：需要 JWT。
+
+请求头：
+
+- `Authorization: Bearer <token>`
+- `Content-Type: application/json`
+
+请求 Body 示例：
+
+- `sensorType`：`GAS`
+- `count`：`5`
+- `intervalMillis`：`200`
+- `remark`：`M1-08批量MQTT模拟`
+
+字段说明：
+
+- `sensorType`：可选，表示传感器类型，例如 `GAS`、`TEMPERATURE`、`VIBRATION`。不传则从全部正常传感器中随机选择。
+- `count`：可选，表示批量模拟条数，默认 `10`，范围 `1` 到 `100`。
+- `intervalMillis`：可选，表示每条 MQTT 消息发送间隔，默认 `0`，范围 `0` 到 `1000`，单位毫秒。
+- `remark`：可选，表示备注。
+
+返回结构：`ApiResult<List<MineSensorMqttMessage>>`
+
+验收接口：
+
+- `POST /api/mine/mqtt/simulate-batch`
+- `GET /api/mine/sensor-data/page?pageNo=1&pageSize=10&sensorType=GAS`
+- `GET /api/mine/alarm-events/page?pageNo=1&pageSize=10&sensorType=GAS`
+- `GET /api/mine/dashboard/summary`
+
+操作日志注解：`@OperLog(title = "智能矿山-MQTT", businessType = "批量模拟发布")`
+

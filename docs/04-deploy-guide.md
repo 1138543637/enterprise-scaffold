@@ -988,3 +988,30 @@ M1-07 验收标准：
 6. M1-06 看板统计可以看到数据变化
 ```
 
+## M1-08：MQTT 数据模拟增强部署说明
+
+M1-08 不新增 Docker 服务，继续复用 M1-07 已新增的 EMQX 服务 `enterprise-scaffold-emqx`。
+
+MQTT Topic 继续固定为 `mine/sensor/data`。
+
+本阶段不需要修改 `.env.example`，不需要新增环境变量。
+
+重新构建并启动时，在 `D:\Code\enterprise-scaffold\scaffold-docker` 目录执行 `docker compose --env-file .env up -d --build`。
+
+启动后执行 `docker compose ps` 查看容器状态。
+
+验收时需要确认以下容器均正常运行：
+
+- `enterprise-scaffold-mysql`
+- `enterprise-scaffold-backend`
+- `enterprise-scaffold-frontend`
+- `enterprise-scaffold-emqx`
+
+后端验收接口：
+
+- `POST http://localhost:8080/api/mine/mqtt/simulate-batch`
+- `GET http://localhost:8080/api/mine/sensor-data/page?pageNo=1&pageSize=10&sensorType=GAS`
+- `GET http://localhost:8080/api/mine/alarm-events/page?pageNo=1&pageSize=10&sensorType=GAS`
+- `GET http://localhost:8080/api/mine/dashboard/summary`
+
+

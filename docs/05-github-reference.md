@@ -399,3 +399,18 @@ MineSensorMqttListener
 MineMqttController
 ```
 
+## M1-08：MQTT 数据模拟增强参考说明
+
+M1-08 主要参考 Spring Integration MQTT 的消息发布模式，以及工业互联网场景中传感器批量上报数据的常见模拟方式。
+
+本阶段只参考实现思路：
+
+- 通过 HTTP 接口触发批量模拟
+- 将模拟数据发布到 MQTT Topic
+- 由后端 MQTT 订阅监听器统一消费消息
+- 消息消费后进入业务入库和告警生成流程
+
+本阶段没有复制外部项目代码，没有引入新的权限框架，没有引入 Kafka、WebSocket、Prometheus 或 Grafana。
+
+M1-08 继续保持项目已有命名规范，继续使用 `MineMqttController`、`MineSensorMqttMessage`、`MineSensorMqttListener` 和 Topic `mine/sensor/data`。
+
