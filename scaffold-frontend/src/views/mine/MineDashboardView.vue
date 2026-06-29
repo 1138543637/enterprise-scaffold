@@ -8,12 +8,26 @@
 
       <div class="header-actions">
         <el-button @click="goDashboard">返回首页</el-button>
+
+        <el-switch
+            v-model="autoRefresh"
+            active-text="自动刷新"
+            inactive-text="手动刷新"
+            @change="handleAutoRefreshChange"
+        />
+
         <el-button :loading="actionLoading" type="warning" @click="handleSimulate">
           生成模拟数据
         </el-button>
+
+        <el-button :loading="actionLoading" type="success" @click="handleBatchSimulateMqtt">
+          批量模拟 MQTT 数据
+        </el-button>
+
         <el-button :loading="actionLoading" type="danger" @click="handleGenerateAlarms">
           生成告警事件
         </el-button>
+
         <el-button :loading="loading" type="primary" @click="loadDashboard">
           刷新看板
         </el-button>
@@ -22,12 +36,12 @@
 
     <el-row :gutter="16" v-loading="loading">
       <el-col
-        v-for="item in metricCards"
-        :key="item.title"
-        :xs="24"
-        :sm="12"
-        :md="8"
-        :lg="6"
+          v-for="item in metricCards"
+          :key="item.title"
+          :xs="24"
+          :sm="12"
+          :md="8"
+          :lg="6"
       >
         <div class="metric-card">
           <div class="metric-label">{{ item.title }}</div>
@@ -59,6 +73,37 @@
         </div>
       </el-col>
     </el-row>
+
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title no-margin">最近传感器数据</div>
+          <div class="panel-subtitle">每次刷新读取 mine_sensor_data 最新 10 条记录</div>
+        </div>
+        <div class="last-refresh">最后刷新：{{ lastRefreshTime || '尚未刷新' }}</div>
+      </div>
+
+      <el-table :data="recentSensorData" border stripe>
+        <el-table-column prop="sensorCode" label="传感器编码" min-width="140" />
+        <el-table-column prop="sensorName" label="传感器名称" min-width="180" />
+        <el-table-column prop="sensorType" label="类型" width="120" />
+        <el-table-column prop="areaName" label="区域" min-width="120" />
+        <el-table-column label="采集值" width="120">
+          <template #default="{ row }">
+            {{ row.dataValue }} {{ row.unit }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="alarmThreshold" label="阈值" width="100" />
+        <el-table-column label="告警" width="90">
+          <template #default="{ row }">
+            <el-tag :type="row.alarmFlag === 1 ? 'danger' : 'success'">
+              {{ row.alarmFlag === 1 ? '告警' : '正常' }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="collectTime" label="采集时间" min-width="170" />
+      </el-table>
+    </div>
 
     <el-row :gutter="16" class="table-row">
       <el-col :xs="24" :lg="12">
@@ -123,20 +168,25 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, type S
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import * as echarts from 'echarts'
+
 type ChartInstance = ReturnType<typeof echarts.init>
+
 import {
   generateMineAlarmEventsApi,
   getMineAlarmLevelStatsApi,
   getMineDashboardSummaryApi,
   getMineRecentAlarmsApi,
   getMineRecentWorkOrdersApi,
+  getMineSensorDataPageApi,
   getMineSensorTypeStatsApi,
   getMineWorkOrderStatusStatsApi,
+  simulateMineMqttBatchApi,
   simulateMineSensorDataApi,
   type MineAlarmLevelStatVO,
   type MineDashboardSummaryVO,
   type MineRecentAlarmVO,
   type MineRecentWorkOrderVO,
+  type MineSensorDataVO,
   type MineSensorTypeStatVO,
   type MineWorkOrderStatusStatVO
 } from '../../api/mine/dashboard'
@@ -145,6 +195,9 @@ const router = useRouter()
 
 const loading = ref(false)
 const actionLoading = ref(false)
+const autoRefresh = ref(false)
+const lastRefreshTime = ref('')
+let refreshTimer: ReturnType<typeof setInterval> | null = null
 
 const summary = ref<MineDashboardSummaryVO | null>(null)
 const alarmLevelStats = ref<MineAlarmLevelStatVO[]>([])
@@ -152,6 +205,7 @@ const sensorTypeStats = ref<MineSensorTypeStatVO[]>([])
 const workOrderStatusStats = ref<MineWorkOrderStatusStatVO[]>([])
 const recentAlarms = ref<MineRecentAlarmVO[]>([])
 const recentWorkOrders = ref<MineRecentWorkOrderVO[]>([])
+const recentSensorData = ref<MineSensorDataVO[]>([])
 
 const alarmLevelChartRef = ref<HTMLDivElement | null>(null)
 const sensorTypeChartRef = ref<HTMLDivElement | null>(null)
@@ -165,55 +219,23 @@ const metricCards = computed(() => {
   const data = summary.value
 
   return [
-    {
-      title: '设备总数',
-      value: data?.deviceTotal ?? 0,
-      desc: 'mine_device 台账数量'
-    },
-    {
-      title: '传感器总数',
-      value: data?.sensorTotal ?? 0,
-      desc: 'mine_sensor 台账数量'
-    },
-    {
-      title: '采集数据总数',
-      value: data?.sensorDataTotal ?? 0,
-      desc: 'mine_sensor_data 记录数量'
-    },
-    {
-      title: '告警规则总数',
-      value: data?.alarmRuleTotal ?? 0,
-      desc: 'mine_alarm_rule 规则数量'
-    },
-    {
-      title: '告警事件总数',
-      value: data?.alarmEventTotal ?? 0,
-      desc: 'mine_alarm_event 事件数量'
-    },
-    {
-      title: '未处理告警',
-      value: data?.unhandledAlarmTotal ?? 0,
-      desc: 'handle_status = 0'
-    },
-    {
-      title: '工单总数',
-      value: data?.workOrderTotal ?? 0,
-      desc: 'mine_work_order 记录数量'
-    },
-    {
-      title: '待处理工单',
-      value: data?.pendingWorkOrderTotal ?? 0,
-      desc: 'order_status = 0'
-    },
-    {
-      title: '已关闭工单',
-      value: data?.closedWorkOrderTotal ?? 0,
-      desc: 'order_status = 3'
-    }
+    { title: '设备总数', value: data?.deviceTotal ?? 0, desc: 'mine_device 台账数量' },
+    { title: '传感器总数', value: data?.sensorTotal ?? 0, desc: 'mine_sensor 台账数量' },
+    { title: '采集数据总数', value: data?.sensorDataTotal ?? 0, desc: 'mine_sensor_data 记录数量' },
+    { title: '告警规则总数', value: data?.alarmRuleTotal ?? 0, desc: 'mine_alarm_rule 规则数量' },
+    { title: '告警事件总数', value: data?.alarmEventTotal ?? 0, desc: 'mine_alarm_event 事件数量' },
+    { title: '未处理告警', value: data?.unhandledAlarmTotal ?? 0, desc: 'handle_status = 0' },
+    { title: '工单总数', value: data?.workOrderTotal ?? 0, desc: 'mine_work_order 记录数量' },
+    { title: '待处理工单', value: data?.pendingWorkOrderTotal ?? 0, desc: 'order_status = 0' },
+    { title: '已关闭工单', value: data?.closedWorkOrderTotal ?? 0, desc: 'order_status = 3' }
   ]
 })
 
 async function loadDashboard() {
+  if (loading.value) {
+    return
+  }
+
   loading.value = true
 
   try {
@@ -223,14 +245,19 @@ async function loadDashboard() {
       sensorTypeData,
       workOrderStatusData,
       recentAlarmData,
-      recentWorkOrderData
+      recentWorkOrderData,
+      sensorDataPage
     ] = await Promise.all([
       getMineDashboardSummaryApi(),
       getMineAlarmLevelStatsApi(),
       getMineSensorTypeStatsApi(),
       getMineWorkOrderStatusStatsApi(),
       getMineRecentAlarmsApi(),
-      getMineRecentWorkOrdersApi()
+      getMineRecentWorkOrdersApi(),
+      getMineSensorDataPageApi({
+        pageNo: 1,
+        pageSize: 10
+      })
     ])
 
     summary.value = summaryData
@@ -239,6 +266,8 @@ async function loadDashboard() {
     workOrderStatusStats.value = workOrderStatusData
     recentAlarms.value = recentAlarmData
     recentWorkOrders.value = recentWorkOrderData
+    recentSensorData.value = sensorDataPage.records ?? []
+    lastRefreshTime.value = new Date().toLocaleString()
 
     await nextTick()
     renderCharts()
@@ -262,6 +291,23 @@ async function handleSimulate() {
   }
 }
 
+async function handleBatchSimulateMqtt() {
+  actionLoading.value = true
+
+  try {
+    const data = await simulateMineMqttBatchApi({
+      count: 10,
+      intervalMillis: 100,
+      remark: 'M1-09实时看板批量模拟'
+    })
+
+    ElMessage.success(`已发布 ${data.length} 条 MQTT 模拟消息`)
+    await loadDashboard()
+  } finally {
+    actionLoading.value = false
+  }
+}
+
 async function handleGenerateAlarms() {
   actionLoading.value = true
 
@@ -277,39 +323,62 @@ async function handleGenerateAlarms() {
   }
 }
 
+function startAutoRefresh() {
+  stopAutoRefresh()
+
+  refreshTimer = setInterval(() => {
+    loadDashboard()
+  }, 5000)
+}
+
+function stopAutoRefresh() {
+  if (refreshTimer) {
+    clearInterval(refreshTimer)
+    refreshTimer = null
+  }
+}
+
+function handleAutoRefreshChange(value: boolean | string | number) {
+  if (Boolean(value)) {
+    startAutoRefresh()
+  } else {
+    stopAutoRefresh()
+  }
+}
+
 function renderCharts() {
   renderPieChart(
-    alarmLevelChartRef.value,
-    alarmLevelChart,
-    alarmLevelStats.value.map((item) => ({
-      name: item.alarmLevelName,
-      value: item.total
-    }))
+      alarmLevelChartRef.value,
+      alarmLevelChart,
+      alarmLevelStats.value.map((item) => ({
+        name: item.alarmLevelName,
+        value: item.total
+      }))
   )
 
   renderPieChart(
-    sensorTypeChartRef.value,
-    sensorTypeChart,
-    sensorTypeStats.value.map((item) => ({
-      name: item.sensorTypeName,
-      value: item.total
-    }))
+      sensorTypeChartRef.value,
+      sensorTypeChart,
+      sensorTypeStats.value.map((item) => ({
+        name: item.sensorTypeName,
+        value: item.total
+      }))
   )
 
   renderPieChart(
-    workOrderStatusChartRef.value,
-    workOrderStatusChart,
-    workOrderStatusStats.value.map((item) => ({
-      name: item.orderStatusName,
-      value: item.total
-    }))
+      workOrderStatusChartRef.value,
+      workOrderStatusChart,
+      workOrderStatusStats.value.map((item) => ({
+        name: item.orderStatusName,
+        value: item.total
+      }))
   )
 }
 
 function renderPieChart(
-  dom: HTMLDivElement | null,
-  chartRef: ShallowRef<ChartInstance | null>,
-  data: Array<{ name: string; value: number }>
+    dom: HTMLDivElement | null,
+    chartRef: ShallowRef<ChartInstance | null>,
+    data: Array<{ name: string; value: number }>
 ) {
   if (!dom) {
     return
@@ -388,6 +457,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  stopAutoRefresh()
   window.removeEventListener('resize', resizeCharts)
   alarmLevelChart.value?.dispose()
   sensorTypeChart.value?.dispose()
@@ -476,6 +546,30 @@ onBeforeUnmount(() => {
   color: #101828;
 }
 
+.no-margin {
+  margin-bottom: 0;
+}
+
+.panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.panel-subtitle {
+  margin-top: 4px;
+  color: #667085;
+  font-size: 13px;
+}
+
+.last-refresh {
+  color: #667085;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
 .chart {
   width: 100%;
   height: 320px;
@@ -493,6 +587,15 @@ onBeforeUnmount(() => {
   .header-actions {
     justify-content: flex-start;
     margin-top: 16px;
+  }
+
+  .panel-header {
+    display: block;
+  }
+
+  .last-refresh {
+    margin-top: 8px;
+    white-space: normal;
   }
 }
 </style>

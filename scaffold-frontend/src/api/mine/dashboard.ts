@@ -140,3 +140,65 @@ export async function generateMineAlarmEventsApi(data: MineAlarmGenerateRequest)
   const response = await request.post('/api/mine/alarm-events/generate', data)
   return unwrapApiData<unknown[]>(response)
 }
+
+export interface MineSensorDataVO {
+  id: number
+  sensorId: number
+  sensorCode: string
+  sensorName: string
+  sensorType: string
+  deviceId: number
+  areaName: string
+  location: string
+  dataValue: number
+  unit: string
+  alarmThreshold: number
+  alarmFlag: number
+  collectTime: string
+  status: number
+  createTime: string
+  remark: string
+}
+
+export interface MinePageResult<T> {
+  pageNo: number
+  pageSize: number
+  total: number
+  pages: number
+  records: T[]
+}
+
+export interface MineSensorDataPageQuery {
+  pageNo?: number
+  pageSize?: number
+  sensorType?: string
+  alarmFlag?: number
+}
+
+export interface MineMqttBatchSimulateRequest {
+  sensorType?: string
+  count?: number
+  intervalMillis?: number
+  remark?: string
+}
+
+export interface MineSensorMqttMessage {
+  sensorCode: string
+  dataValue: number
+  collectTime: string
+  remark: string
+}
+
+export function getMineSensorDataPageApi(
+    params: MineSensorDataPageQuery
+): Promise<MinePageResult<MineSensorDataVO>> {
+  return request.get<any, MinePageResult<MineSensorDataVO>>('/api/mine/sensor-data/page', {
+    params
+  })
+}
+
+export function simulateMineMqttBatchApi(
+    data: MineMqttBatchSimulateRequest
+): Promise<MineSensorMqttMessage[]> {
+  return request.post<any, MineSensorMqttMessage[]>('/api/mine/mqtt/simulate-batch', data)
+}
