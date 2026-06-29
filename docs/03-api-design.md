@@ -1284,3 +1284,93 @@ GET /api/mine/dashboard/summary
 
 操作日志注解：`@OperLog(title = "智能矿山-MQTT", businessType = "批量模拟发布")`
 
+## M1-09：实时数据展示增强接口复用说明
+
+M1-09 不新增后端接口，全部复用已有接口。
+
+在 `/mine/dashboard` 页面展示最近传感器数据时，复用 `GET /api/mine/sensor-data/page?pageNo=1&pageSize=10`。该接口需要 JWT 认证，请求头为 `Authorization: Bearer <token>`，返回结构为 `ApiResult<PageResult<MineSensorDataVO>>`，页面读取分页结果中的 `records` 展示最新 10 条传感器数据。
+
+在 `/mine/dashboard` 页面点击“批量模拟 MQTT 数据”时，复用 `POST /api/mine/mqtt/simulate-batch`。该接口需要 JWT 认证，请求头为 `Authorization: Bearer <token>` 和 `Content-Type: application/json`。请求 Body 示例为：`{"count":10,"intervalMillis":100,"remark":"M1-09实时看板批量模拟"}`。返回结构为 `ApiResult<List<MineSensorMqttMessage>>`。
+
+M1-09 继续复用已有看板接口：`GET /api/mine/dashboard/summary`、`GET /api/mine/dashboard/alarm-level-stats`、`GET /api/mine/dashboard/sensor-type-stats`、`GET /api/mine/dashboard/work-order-status-stats`、`GET /api/mine/dashboard/recent-alarms`、`GET /api/mine/dashboard/recent-work-orders`。前端通过手动刷新和 5 秒自动刷新，让这些接口返回的数据在页面上持续更新。
+
+## M1-10：设备健康评分接口
+
+### 设备健康分页查询
+
+接口地址：
+
+```text
+GET /api/mine/device-health/page
+```
+
+认证：
+
+```text
+需要 JWT
+Authorization: Bearer <token>
+```
+
+Query 参数：
+
+```text
+pageNo
+pageSize
+deviceCode
+deviceName
+deviceType
+areaName
+riskLevel
+status
+```
+
+返回结构：
+
+```text
+ApiResult<PageResult<MineDeviceHealthVO>>
+```
+
+风险等级：
+
+```text
+0 = 健康
+1 = 关注
+2 = 风险
+3 = 高危
+```
+
+### 设备健康汇总统计
+
+接口地址：
+
+```text
+GET /api/mine/device-health/summary
+```
+
+认证：
+
+```text
+需要 JWT
+Authorization: Bearer <token>
+```
+
+返回结构：
+
+```text
+ApiResult<MineDeviceHealthSummaryVO>
+```
+
+返回字段：
+
+```text
+deviceTotal
+healthyTotal
+attentionTotal
+riskTotal
+highRiskTotal
+averageHealthScore
+severeUnhandledAlarmTotal
+unclosedWorkOrderTotal
+```
+
+

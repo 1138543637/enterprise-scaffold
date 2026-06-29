@@ -22,7 +22,13 @@ const routes: RouteRecordRaw[] = [
         meta: {
             requiresAuth: true
         }
+    },
+    {
+        path: '/mine/device-health',
+        name: 'MineDeviceHealth',
+        component: () => import('../views/mine/MineDeviceHealthView.vue')
     }
+
 ]
 
 const router = createRouter({

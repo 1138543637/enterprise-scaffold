@@ -531,3 +531,31 @@ M1-08 不新增数据库表，不新增数据库字段，不新增 SQL 文件。
 
 本阶段继续复用已有 `mine_sensor` 表查询正常传感器，按 `sensorType` 过滤传感器类型，按 `status = 0` 过滤正常传感器。
 
+## M1-09：实时数据展示增强数据库说明
+
+M1-09 不新增数据库表，不新增数据库字段，不新增 SQL 文件。本阶段只增强前端展示能力，继续复用已有智能矿山业务表。
+
+复用表包括 `mine_sensor_data`、`mine_alarm_event`、`mine_work_order`、`mine_device`、`mine_sensor`、`mine_alarm_rule`。其中最近传感器数据表格读取 `mine_sensor_data` 最新记录；告警统计继续读取 `mine_alarm_event`；工单统计继续读取 `mine_work_order`；设备、传感器和告警规则数量继续复用原有看板统计逻辑。
+
+批量模拟 MQTT 数据后，数据仍然通过已有链路写入数据库：`mine/sensor/data` Topic -> `MineSensorMqttListener` -> `mine_sensor_data` -> `MineAlarmEventService.generate(...)` -> `mine_alarm_event`。M1-09 不改变已有数据库结构，也不改变已有表字段含义。
+
+## M1-10：设备健康评分数据库说明
+
+M1-10 不新增数据库表。
+
+M1-10 不新增数据库字段。
+
+M1-10 不新增 SQL 文件。
+
+本阶段复用已有表实时计算设备健康评分：
+
+- `mine_device`：设备基础信息
+- `mine_sensor`：设备关联传感器及最后上报时间
+- `mine_alarm_event`：设备关联告警事件
+- `mine_work_order`：设备关联工单状态
+
+健康评分不落库，每次访问接口时由后端根据当前业务数据实时计算。
+
+这样做的好处是避免冗余字段和数据同步问题，后续如果需要保留历史评分趋势，可以在后续阶段新增评分快照表。
+
+

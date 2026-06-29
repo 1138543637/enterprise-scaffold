@@ -1015,3 +1015,68 @@ MQTT Topic 继续固定为 `mine/sensor/data`。
 - `GET http://localhost:8080/api/mine/dashboard/summary`
 
 
+## M1-09：实时数据展示增强部署说明
+
+M1-09 不新增 Docker 服务，不新增环境变量，不新增 SQL 文件。本阶段修改前端页面和前端 API 文件，因此需要重新构建前端。
+
+前端本地构建命令：先进入 `D:\Code\enterprise-scaffold\scaffold-frontend`，再执行 `pnpm build`。如果使用本地 Vite 开发模式，执行目录仍然是 `D:\Code\enterprise-scaffold\scaffold-frontend`，启动命令为 `pnpm dev`，浏览器访问 `http://localhost:5173/mine/dashboard`。
+
+如果使用 Docker Compose 访问前端页面，需要重新构建前端容器。执行目录为 `D:\Code\enterprise-scaffold\scaffold-docker`，执行命令为 `docker compose --env-file .env up -d --build enterprise-scaffold-frontend`。如果希望后端和前端一起重建，可以在同一目录执行 `docker compose --env-file .env up -d --build`。
+
+M1-09 验收地址为 `http://localhost:5173/mine/dashboard`。验收标准：页面可以正常打开；统计卡片显示真实数据；最近传感器数据表格能显示 `mine_sensor_data` 最新记录；点击“刷新看板”后数据刷新；打开“自动刷新”后每 5 秒刷新一次；点击“批量模拟 MQTT 数据”后调用 `POST /api/mine/mqtt/simulate-batch`；批量模拟成功后采集数据总数和最近传感器数据发生变化；离开页面后自动刷新定时器能正常清理；页面布局正常，统计卡片、图表、表格不会一列铺满。
+
+## M1-10：设备健康评分部署和验收
+
+M1-10 不新增 Docker 服务。
+
+M1-10 不新增环境变量。
+
+M1-10 不新增 SQL 文件。
+
+后端编译：
+
+```cmd
+cd /d D:\Code\enterprise-scaffold\scaffold-backend
+mvn -DskipTests compile
+```
+
+前端构建：
+
+```cmd
+cd /d D:\Code\enterprise-scaffold\scaffold-frontend
+pnpm build
+```
+
+Docker Compose 重建：
+
+```cmd
+cd /d D:\Code\enterprise-scaffold\scaffold-docker
+docker compose --env-file .env up -d --build
+docker compose ps
+```
+
+接口验收：
+
+```text
+GET http://localhost:8080/api/mine/device-health/page?pageNo=1&pageSize=10
+GET http://localhost:8080/api/mine/device-health/summary
+```
+
+前端验收：
+
+```text
+http://localhost:5173/mine/device-health
+```
+
+预期：
+
+```text
+1. 页面能显示设备健康汇总卡片
+2. 页面能分页展示每台设备健康评分
+3. 页面能展示健康、关注、风险、高危等级
+4. 查询条件能按设备编码、设备名称、设备类型、区域、风险等级、设备状态筛选
+5. 告警增多后设备健康分下降
+6. 工单关闭后未关闭工单数量减少
+```
+
+

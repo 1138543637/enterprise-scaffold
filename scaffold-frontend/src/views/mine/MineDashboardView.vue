@@ -34,45 +34,30 @@
       </div>
     </div>
 
-    <el-row :gutter="16" v-loading="loading">
-      <el-col
-          v-for="item in metricCards"
-          :key="item.title"
-          :xs="24"
-          :sm="12"
-          :md="8"
-          :lg="6"
-      >
-        <div class="metric-card">
-          <div class="metric-label">{{ item.title }}</div>
-          <div class="metric-value">{{ item.value }}</div>
-          <div class="metric-desc">{{ item.desc }}</div>
-        </div>
-      </el-col>
-    </el-row>
+    <div class="metric-grid" v-loading="loading">
+      <div v-for="item in metricCards" :key="item.title" class="metric-card">
+        <div class="metric-label">{{ item.title }}</div>
+        <div class="metric-value">{{ item.value }}</div>
+        <div class="metric-desc">{{ item.desc }}</div>
+      </div>
+    </div>
 
-    <el-row :gutter="16" class="chart-row">
-      <el-col :xs="24" :md="8">
-        <div class="panel">
-          <div class="panel-title">告警级别分布</div>
-          <div ref="alarmLevelChartRef" class="chart"></div>
-        </div>
-      </el-col>
+    <div class="chart-grid">
+      <div class="panel">
+        <div class="panel-title">告警级别分布</div>
+        <div ref="alarmLevelChartRef" class="chart"></div>
+      </div>
 
-      <el-col :xs="24" :md="8">
-        <div class="panel">
-          <div class="panel-title">传感器类型分布</div>
-          <div ref="sensorTypeChartRef" class="chart"></div>
-        </div>
-      </el-col>
+      <div class="panel">
+        <div class="panel-title">传感器类型分布</div>
+        <div ref="sensorTypeChartRef" class="chart"></div>
+      </div>
 
-      <el-col :xs="24" :md="8">
-        <div class="panel">
-          <div class="panel-title">工单状态分布</div>
-          <div ref="workOrderStatusChartRef" class="chart"></div>
-        </div>
-      </el-col>
-    </el-row>
+      <div class="panel">
+        <div class="panel-title">工单状态分布</div>
+        <div ref="workOrderStatusChartRef" class="chart"></div>
+      </div>
+    </div>
 
     <div class="panel">
       <div class="panel-header">
@@ -83,33 +68,35 @@
         <div class="last-refresh">最后刷新：{{ lastRefreshTime || '尚未刷新' }}</div>
       </div>
 
-      <el-table :data="recentSensorData" border stripe>
-        <el-table-column prop="sensorCode" label="传感器编码" min-width="140" />
-        <el-table-column prop="sensorName" label="传感器名称" min-width="180" />
-        <el-table-column prop="sensorType" label="类型" width="120" />
-        <el-table-column prop="areaName" label="区域" min-width="120" />
-        <el-table-column label="采集值" width="120">
-          <template #default="{ row }">
-            {{ row.dataValue }} {{ row.unit }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="alarmThreshold" label="阈值" width="100" />
-        <el-table-column label="告警" width="90">
-          <template #default="{ row }">
-            <el-tag :type="row.alarmFlag === 1 ? 'danger' : 'success'">
-              {{ row.alarmFlag === 1 ? '告警' : '正常' }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="collectTime" label="采集时间" min-width="170" />
-      </el-table>
+      <div class="table-wrapper">
+        <el-table :data="recentSensorData" border stripe>
+          <el-table-column prop="sensorCode" label="传感器编码" min-width="140" />
+          <el-table-column prop="sensorName" label="传感器名称" min-width="180" />
+          <el-table-column prop="sensorType" label="类型" width="120" />
+          <el-table-column prop="areaName" label="区域" min-width="120" />
+          <el-table-column label="采集值" width="120">
+            <template #default="{ row }">
+              {{ row.dataValue }} {{ row.unit }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="alarmThreshold" label="阈值" width="100" />
+          <el-table-column label="告警" width="90">
+            <template #default="{ row }">
+              <el-tag :type="row.alarmFlag === 1 ? 'danger' : 'success'">
+                {{ row.alarmFlag === 1 ? '告警' : '正常' }}
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column prop="collectTime" label="采集时间" min-width="170" />
+        </el-table>
+      </div>
     </div>
 
-    <el-row :gutter="16" class="table-row">
-      <el-col :xs="24" :lg="12">
-        <div class="panel">
-          <div class="panel-title">最近告警事件</div>
+    <div class="table-grid">
+      <div class="panel">
+        <div class="panel-title">最近告警事件</div>
 
+        <div class="table-wrapper">
           <el-table :data="recentAlarms" border stripe>
             <el-table-column prop="eventCode" label="告警编号" min-width="150" />
             <el-table-column prop="sensorName" label="传感器" min-width="160" />
@@ -131,12 +118,12 @@
             <el-table-column prop="alarmTime" label="告警时间" min-width="170" />
           </el-table>
         </div>
-      </el-col>
+      </div>
 
-      <el-col :xs="24" :lg="12">
-        <div class="panel">
-          <div class="panel-title">最近工单记录</div>
+      <div class="panel">
+        <div class="panel-title">最近工单记录</div>
 
+        <div class="table-wrapper">
           <el-table :data="recentWorkOrders" border stripe>
             <el-table-column prop="workOrderCode" label="工单编号" min-width="150" />
             <el-table-column prop="sensorName" label="传感器" min-width="160" />
@@ -158,8 +145,8 @@
             <el-table-column prop="createTime" label="创建时间" min-width="170" />
           </el-table>
         </div>
-      </el-col>
-    </el-row>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -499,9 +486,15 @@ onBeforeUnmount(() => {
   gap: 8px;
 }
 
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
 .metric-card {
   min-height: 118px;
-  margin-bottom: 16px;
   padding: 18px;
   border: 1px solid #e4e7ec;
   border-radius: 8px;
@@ -526,9 +519,17 @@ onBeforeUnmount(() => {
   color: #98a2b3;
 }
 
-.chart-row,
-.table-row {
-  margin-top: 4px;
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.table-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
 }
 
 .panel {
@@ -537,6 +538,7 @@ onBeforeUnmount(() => {
   border: 1px solid #e4e7ec;
   border-radius: 8px;
   background: #ffffff;
+  min-width: 0;
 }
 
 .panel-title {
@@ -575,6 +577,29 @@ onBeforeUnmount(() => {
   height: 320px;
 }
 
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+@media (max-width: 1200px) {
+  .metric-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .chart-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .metric-grid,
+  .chart-grid,
+  .table-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 768px) {
   .mine-dashboard-page {
     padding: 16px;
@@ -596,6 +621,14 @@ onBeforeUnmount(() => {
   .last-refresh {
     margin-top: 8px;
     white-space: normal;
+  }
+}
+
+@media (max-width: 560px) {
+  .metric-grid,
+  .chart-grid,
+  .table-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>

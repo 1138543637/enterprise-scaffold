@@ -301,4 +301,59 @@ http://localhost:18083
 M1-08 不新增数据库表，不新增数据库字段，不新增 SQL 文件，不新增 Docker 服务，不修改前端页面。
 
 
+## M1-09：实时数据展示增强
+
+当前项目一“智能矿山安全生产与设备预测性维护平台”已完成实时数据展示增强能力。
+
+本阶段在 `/mine/dashboard` 页面新增最近传感器数据展示、手动刷新看板、自动刷新开关、5 秒定时刷新、批量模拟 MQTT 数据按钮、CSS Grid 响应式布局优化。
+
+本阶段复用接口：`GET /api/mine/sensor-data/page`、`POST /api/mine/mqtt/simulate-batch`、`GET /api/mine/dashboard/summary`、`GET /api/mine/dashboard/alarm-level-stats`、`GET /api/mine/dashboard/sensor-type-stats`、`GET /api/mine/dashboard/work-order-status-stats`、`GET /api/mine/dashboard/recent-alarms`、`GET /api/mine/dashboard/recent-work-orders`。
+
+本阶段不新增数据库表，不新增 SQL 文件，不新增 Docker 服务，不引入 WebSocket。M1-09 让智能矿山看板能够实时体现 MQTT 上报后的数据变化，为后续 M1-10 设备健康评分与风险等级提供展示基础。
+
+## M1-10：设备健康评分与风险等级
+
+当前项目一“智能矿山安全生产与设备预测性维护平台”已完成设备健康评分与风险等级能力。
+
+本阶段新增：
+
+```text
+GET /api/mine/device-health/page
+GET /api/mine/device-health/summary
+/mine/device-health
+```
+
+本阶段新增后端类：
+
+```text
+MineDeviceHealthController
+MineDeviceHealthService
+MineDeviceHealthServiceImpl
+MineDeviceHealthPageQuery
+MineDeviceHealthVO
+MineDeviceHealthSummaryVO
+```
+
+本阶段新增前端文件：
+
+```text
+scaffold-frontend/src/api/mine/deviceHealth.ts
+scaffold-frontend/src/views/mine/MineDeviceHealthView.vue
+```
+
+本阶段不新增数据库表，不新增 SQL 文件，不新增 Docker 服务。
+
+设备健康评分复用已有：
+
+```text
+mine_device
+mine_sensor
+mine_sensor_data
+mine_alarm_event
+mine_work_order
+```
+
+M1-10 让项目从“监控告警系统”进一步增强为“预测性维护平台”的基础版本。
+
+
 
