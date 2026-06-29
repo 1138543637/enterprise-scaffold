@@ -1612,4 +1612,22 @@ M1-13 接口验收标准：
 
 
 
+##############################################################################################################################################
+## A2-01 AIOps 模块健康检查接口
+
+接口地址：`GET /api/aiops/health`
+
+认证方式：需要 JWT，请求头固定为 `Authorization: Bearer <token>`。
+
+成功返回：
+
+{
+"code": 0,
+"msg": "success",
+"data": "enterprise-scaffold aiops module running"
+}
+
+该接口用于验证 AIOps 模块已经成功接入后端工程。接口继续使用 `ApiResult` 统一返回结构，并使用 `@OperLog(title = "AIOps智能运维", businessType = "模块健康检查")` 记录操作日志。
+
+
 

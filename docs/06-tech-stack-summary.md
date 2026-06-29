@@ -2677,3 +2677,38 @@ Docker Compose 验收：
 
 
 
+##################################################################################################################################################################
+## A2-01 AIOps 模块骨架
+
+本阶段新增项目二“云网融合 AIOps 智能运维平台”的后端模块骨架。
+
+新增技术与能力：
+
+- 新增业务包：`cn.sxu.enterprise.module.aiops`
+- 新增控制器：`AiopsHealthController`
+- 新增接口：`GET /api/aiops/health`
+- 继续使用：Spring Boot 3、JWT、ApiResult、@OperLog、Docker Compose
+
+后端路径：
+
+- `scaffold-backend/src/main/java/cn/sxu/enterprise/module/aiops/controller/AiopsHealthController.java`
+
+接口路径：
+
+- `GET /api/aiops/health`
+
+验证方式：
+
+- 本地执行 `mvn -DskipTests compile`
+- Docker Compose 执行 `docker compose --env-file .env up -d --build`
+- 带 JWT 访问 `GET http://localhost:8080/api/aiops/health`
+
+简历表达：
+
+- 基于已有企业级脚手架扩展 AIOps 智能运维模块，完成独立业务包、认证接口、统一返回结构和操作日志接入，为后续资源管理、指标采集、告警中心、根因分析和监控看板开发奠定基础。
+
+面试解释：
+
+- A2-01 是 AIOps 项目的模块初始化阶段，主要目的是把第二个业务项目接入统一脚手架。接口不放行，必须走 JWT 认证，说明后续 AIOps 资源、指标、告警和工单接口都会纳入统一安全体系和操作日志审计。
+
+

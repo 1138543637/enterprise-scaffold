@@ -1286,3 +1286,27 @@ EMQX 日志：
 
 
 
+###########################################################################################################################
+## A2-01 部署与验收说明
+
+A2-01 不新增 Docker 服务，不修改 `docker-compose.yml`，但新增了后端代码，因此 Docker Compose 验收时必须重新构建后端镜像。
+
+本地后端编译：
+
+cd /d D:\Code\enterprise-scaffold\scaffold-backend
+mvn -DskipTests compile
+
+Docker Compose 重建：
+
+cd /d D:\Code\enterprise-scaffold\scaffold-docker
+docker compose --env-file .env up -d --build
+docker compose ps
+docker logs -f enterprise-scaffold-backend
+
+验收接口：
+
+GET http://localhost:8080/api/aiops/health
+
+该接口需要 JWT。未登录访问应返回 401，带 token 访问应返回 `enterprise-scaffold aiops module running`。
+
+
