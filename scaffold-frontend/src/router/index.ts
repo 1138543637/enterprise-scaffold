@@ -67,7 +67,24 @@ const routes: RouteRecordRaw[] = [
         meta: {
             requiresAuth: true
         }
+    },
+    {
+        path: '/aiops/alerts',
+        name: 'AiopsAlerts',
+        component: () => import('../views/aiops/AiopsAlertView.vue'),
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/aiops/work-orders',
+        name: 'AiopsWorkOrders',
+        component: () => import('../views/aiops/AiopsWorkOrderView.vue'),
+        meta: {
+            requiresAuth: true
+        }
     }
+
 ]
 
 const router = createRouter({

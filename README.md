@@ -515,3 +515,32 @@ A2-02 继续保持 A2 固定开发规则：后端包名使用 `cn.sxu.enterprise
 
 A2-03 为后续 A2-04 告警规则、告警事件、运维工单闭环，以及 A2-06 AIOps 综合看板提供指标数据基础。
 
+## A2-04：AIOps 告警规则、告警事件、运维工单闭环
+
+当前项目二“云网融合 AIOps 智能运维平台”已完成告警规则、告警事件和运维工单闭环能力。
+
+本阶段新增 `aiops_alert_rule`、`aiops_alert_event`、`aiops_work_order` 三张数据库表，基于 A2-03 已完成的 `aiops_metric_data` 指标数据，实现从指标异常识别、告警规则匹配、告警事件生成、告警转运维工单、工单处理到工单关闭的完整基础闭环。
+
+本阶段新增后端接口：
+
+- `GET /api/aiops/alert-rules/page`
+- `GET /api/aiops/alert-events/page`
+- `POST /api/aiops/alert-events/generate`
+- `GET /api/aiops/work-orders/page`
+- `POST /api/aiops/work-orders/create-from-alert`
+- `POST /api/aiops/work-orders/{id}/handle`
+- `POST /api/aiops/work-orders/{id}/close`
+
+本阶段新增前端页面：
+
+- `/aiops/alerts`
+- `/aiops/work-orders`
+
+所有 A2-04 接口继续需要 JWT 认证，继续使用 `ApiResult` 统一返回结构，分页接口继续使用 `PageResult`，Controller 方法继续使用 `@OperLog` 记录操作日志。
+
+A2-04 不新增 Docker 服务，不修改 Docker Compose 配置，但新增了后端代码、前端代码和数据库表，因此需要执行 SQL 升级、后端编译、前端构建和 Docker Compose 重建镜像验收。
+
+本阶段完成后，AIOps 智能运维平台已经具备以下链路：
+
+`资源台账 -> 指标采集与模拟数据 -> 告警规则 -> 告警事件 -> 运维工单 -> 工单处理 -> 工单关闭`
+

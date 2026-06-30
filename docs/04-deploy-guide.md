@@ -1334,3 +1334,21 @@ Docker Compose 验收不能省略，在 `D:\Code\enterprise-scaffold\scaffold-do
 
 前端页面验收地址为 `http://localhost:5173/aiops/metrics`，页面应能展示最新指标数据、指标历史数据，支持筛选和模拟生成指标数据。
 
+## A2-04：告警规则、告警事件、运维工单闭环部署验收
+
+A2-04 新增 SQL 文件 `scaffold-sql/a2_04_aiops_alert_work_order.sql`，用于创建 `aiops_alert_rule`、`aiops_alert_event`、`aiops_work_order` 三张表并插入初始化告警规则。该 SQL 文件第一行必须为 `SET NAMES utf8mb4;`，第二段固定为 `USE enterprise_scaffold;`。
+
+如果是已有数据库升级，需要在项目根目录 `D:\Code\enterprise-scaffold` 执行 `mysql -u root -p < scaffold-sql\a2_04_aiops_alert_work_order.sql`。如果使用 Docker MySQL，也可以执行 `mysql -h 127.0.0.1 -P 3306 -u root -p < scaffold-sql\a2_04_aiops_alert_work_order.sql`。
+
+SQL 执行完成后，进入 MySQL 执行 `USE enterprise_scaffold;`，再执行 `SHOW TABLES LIKE 'aiops_alert_rule';`、`SHOW TABLES LIKE 'aiops_alert_event';`、`SHOW TABLES LIKE 'aiops_work_order';` 验证三张表是否存在。再执行 `SELECT rule_code, rule_name, resource_type, metric_type, threshold_value, alert_level FROM aiops_alert_rule;`，预期能看到 CPU、内存、磁盘、MySQL、Redis、网络等初始化告警规则。
+
+后端编译验收在 `D:\Code\enterprise-scaffold\scaffold-backend` 目录执行 `mvn -DskipTests compile`，预期出现 `BUILD SUCCESS`。前端构建验收在 `D:\Code\enterprise-scaffold\scaffold-frontend` 目录执行 `pnpm build`，预期构建成功。
+
+A2-04 不新增 Docker 服务，不修改 `scaffold-docker/docker-compose.yml`，不修改 `.env.example`，不修改后端 Dockerfile 和前端 Dockerfile。但是 A2-04 新增了后端代码、前端代码和数据库表，因此 Docker Compose 验收不能省略，必须在 `D:\Code\enterprise-scaffold\scaffold-docker` 目录执行 `docker compose --env-file .env up -d --build`，然后执行 `docker compose ps` 查看容器状态，最后执行 `docker logs -f enterprise-scaffold-backend` 查看后端日志。预期 `enterprise-scaffold-mysql`、`enterprise-scaffold-backend`、`enterprise-scaffold-frontend`、`enterprise-scaffold-emqx` 都处于 running 状态，其中 MySQL 应为 healthy。
+
+接口验收需要先调用 `POST http://localhost:8080/api/auth/login` 使用 `admin / admin123` 登录获取 token，然后在请求头中加入 `Authorization: Bearer <token>`。需要验收的接口包括：`GET http://localhost:8080/api/aiops/alert-rules/page?pageNo=1&pageSize=10`、`POST http://localhost:8080/api/aiops/alert-events/generate`、`GET http://localhost:8080/api/aiops/alert-events/page?pageNo=1&pageSize=10`、`GET http://localhost:8080/api/aiops/work-orders/page?pageNo=1&pageSize=10`、`POST http://localhost:8080/api/aiops/work-orders/create-from-alert`、`POST http://localhost:8080/api/aiops/work-orders/{id}/handle`、`POST http://localhost:8080/api/aiops/work-orders/{id}/close`。
+
+前端页面验收地址为 `http://localhost:5173/aiops/alerts` 和 `http://localhost:5173/aiops/work-orders`。预期告警中心页面能显示告警规则和告警事件，运维工单页面能显示工单列表，并支持告警转工单、工单处理和工单关闭。页面不应出现 `undefined`，不应提示“加载失败”，F12 Network 中接口路径必须带 `/api/aiops/**` 前缀。
+
+如果页面提示“加载失败”，排查顺序固定为：先查 F12 Network，看请求路径是否为 `/api/aiops/**`；再看后端返回是否为 `code = 0`；如果返回 401，重新登录；如果返回 404，检查前端路径是否缺少 `/api` 或 Docker 是否未重新 build；如果返回 500，执行 `docker logs -f enterprise-scaffold-backend` 查看后端日志；如果后端返回正常但页面仍失败，检查前端 API 文件是否正确解包 `ApiResult`。
+

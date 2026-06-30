@@ -2738,3 +2738,21 @@ A2-02 新增 AIOps 资源台账能力，使用 MySQL 表 `aiops_resource` 保存
 
 面试解释：A2-03 没有直接接入 Prometheus，而是先用模拟指标数据打通业务链路。后端根据资源类型生成不同指标，使用 MyBatis-Plus 写入和分页查询，前端通过 Vue3 + Element Plus 展示最新指标和历史指标。这样可以先完成 AIOps 核心业务闭环，再在 A2-07 接入 Prometheus / Grafana。
 
+## A2-04：AIOps 告警中心与运维工单闭环技术总结
+
+A2-04 新增 AIOps 告警规则、告警事件和运维工单闭环能力。本阶段使用 Spring Boot 3、MyBatis-Plus、MySQL、Validation、Spring Security、JWT、Spring 事务、Vue3、TypeScript、Element Plus、CSS Grid 和 Docker Compose，完成从 AIOps 指标数据到告警事件再到运维工单闭环的核心业务链路。
+
+本阶段新增数据库表 `aiops_alert_rule`、`aiops_alert_event`、`aiops_work_order`。`aiops_alert_rule` 用于保存告警规则，`aiops_alert_event` 用于保存根据指标数据和告警规则生成的告警事件，`aiops_work_order` 用于保存由告警事件生成的运维处置工单。三张表继续使用 `deleted` 逻辑删除字段，不设置数据库外键，通过 `rule_id`、`metric_data_id`、`alert_event_id`、`resource_id` 等字段进行逻辑关联。
+
+后端新增 `AiopsAlertRule`、`AiopsAlertEvent`、`AiopsWorkOrder` 三个 Entity，新增 `AiopsAlertRuleMapper`、`AiopsAlertEventMapper`、`AiopsWorkOrderMapper` 三个 Mapper，新增 `AiopsAlertRuleService`、`AiopsAlertEventService`、`AiopsWorkOrderService` 三个 Service，新增对应 ServiceImpl 和 Controller。新增 DTO 包括 `AiopsAlertGenerateRequest`、`AiopsWorkOrderCreateRequest`、`AiopsWorkOrderHandleRequest`、`AiopsWorkOrderCloseRequest`。新增 VO 和 Query 包括 `AiopsAlertRulePageQuery`、`AiopsAlertRulePageVO`、`AiopsAlertEventPageQuery`、`AiopsAlertEventPageVO`、`AiopsWorkOrderPageQuery`、`AiopsWorkOrderPageVO`。
+
+本阶段新增接口包括 `GET /api/aiops/alert-rules/page`、`GET /api/aiops/alert-events/page`、`POST /api/aiops/alert-events/generate`、`GET /api/aiops/work-orders/page`、`POST /api/aiops/work-orders/create-from-alert`、`POST /api/aiops/work-orders/{id}/handle`、`POST /api/aiops/work-orders/{id}/close`。所有接口继续使用 JWT 认证，继续返回 `ApiResult`，分页接口继续返回 `PageResult`，Controller 方法继续使用 `@OperLog` 写入 `sys_oper_log` 操作日志。
+
+前端新增 `scaffold-frontend/src/api/aiops/alert.ts`、`scaffold-frontend/src/api/aiops/workOrder.ts`、`scaffold-frontend/src/views/aiops/AiopsAlertView.vue`、`scaffold-frontend/src/views/aiops/AiopsWorkOrderView.vue`，并在路由中新增 `/aiops/alerts` 和 `/aiops/work-orders`。前端 API 文件使用 `unwrapApiResult` 兼容 `AxiosResponse<ApiResult<T>>`、`ApiResult<T>` 和 `T` 三种返回层级，避免页面读取 `records`、`total`、`eventCode`、`workOrderCode` 时出现 `undefined`。前端查询条件和关键布局继续使用 CSS Grid，避免桌面端布局一项铺满整行。
+
+本阶段不新增 Docker 服务，不修改 Docker Compose 配置，但新增后端代码和前端代码，因此必须执行 Docker Compose 重建镜像验收。固定命令为：在 `D:\Code\enterprise-scaffold\scaffold-docker` 目录执行 `docker compose --env-file .env up -d --build`，再执行 `docker compose ps`，最后执行 `docker logs -f enterprise-scaffold-backend` 查看后端日志。
+
+简历表达：实现 AIOps 智能运维平台告警中心与运维工单闭环，基于资源指标数据完成告警规则匹配、告警事件生成、告警转工单、工单处理和关闭，实现从指标异常到运维处置的完整业务链路。
+
+面试解释：A2-04 参考企业后台常见的规则表、事件表和工单表建模方式，先通过 `aiops_alert_rule` 定义指标阈值和告警级别，再扫描 `aiops_metric_data` 生成 `aiops_alert_event`，最后把告警事件转成 `aiops_work_order`，通过处理和关闭接口形成状态闭环。实现过程中使用 `@Transactional` 保证告警事件和工单状态联动一致，使用唯一约束避免重复生成告警事件和重复生成工单。
+

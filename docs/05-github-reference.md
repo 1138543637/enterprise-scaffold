@@ -572,3 +572,13 @@ A2-03 参考 RuoYi-Vue、RuoYi-Vue-Pro、RuoYi-Vue3、Vue Vben Admin 和 MyBatis
 
 本阶段不能直接复制若依代码，不能引入若依代码生成器，不能改变已有 `ApiResult`、`PageResult`、JWT、`@OperLog` 和 Docker Compose 契约。
 
+## A2-04：GitHub 参考说明
+
+A2-04 继续参考 RuoYi-Vue、RuoYi-Vue-Pro、RuoYi-Vue3、Vue Vben Admin 和 MyBatis-Plus 的工程组织方式。参考重点包括企业后台项目中的 Controller / Service / Mapper / Entity 分层方式、分页查询接口设计、操作日志注解思想、MyBatis-Plus BaseMapper、Page、LambdaQueryWrapper 用法，以及前端中后台页面的查询表单、表格、分页和操作按钮布局。
+
+A2-04 可以参考 RuoYi 系列项目的模块分层思想、操作日志思想、分页查询习惯和前后端接口组织方式，但不能直接复制若依代码，不能引入若依代码生成器，不能把包名改成若依包名，不能把接口路径改成若依系统模块路径。本项目 A2 模块必须继续保持 `cn.sxu.enterprise.module.aiops` 包名、`/api/aiops/**` 接口路径、`aiops_` 数据库表前缀和 `/aiops/**` 前端路由前缀。
+
+A2-04 还复用了项目一 M1 阶段已经验证过的“规则表 + 事件表 + 工单表”建模思想，以及告警事件和工单状态联动、`@Transactional` 事务控制、`ApiResult` 统一返回、`PageResult` 分页返回、`@OperLog` 操作日志审计等工程经验。但 AIOps 模块不能直接复用 `mine_alarm_event` 或 `mine_work_order`，因为这些表具有智能矿山业务语义。A2-04 必须使用独立的 `aiops_alert_rule`、`aiops_alert_event`、`aiops_work_order`，保证 AIOps 模块边界清晰。
+
+MyBatis-Plus 参考重点是 `BaseMapper`、`Page`、`LambdaQueryWrapper` 和条件查询写法。前端参考重点是 Vue3、TypeScript、Element Plus 表格页面和 CSS Grid 布局。新增前端 API 文件时继续使用 `unwrapApiResult` 或 `request.get<any, T>()` 防止 `AxiosResponse<T>` 和 `T` 类型不匹配。
+

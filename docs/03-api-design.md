@@ -1652,4 +1652,22 @@ A2-03 新增三个接口，统一使用 `/api/aiops/metric-data` 前缀，所有
 
 本阶段 Controller 方法统一使用 `@OperLog(title = "AIOps指标数据", businessType = "...")` 记录操作日志。
 
+## A2-04：AIOps 告警规则、告警事件、运维工单接口
+
+A2-04 新增 AIOps 告警中心和运维工单闭环接口，所有接口都需要 JWT 认证，请求头固定使用 `Authorization: Bearer <token>`。所有接口继续使用 `ApiResult` 统一返回结构，分页接口继续使用 `PageResult` 分页结构，Controller 方法继续使用 `@OperLog` 记录操作日志。
+
+`GET /api/aiops/alert-rules/page` 用于分页查询 AIOps 告警规则，返回结构为 `ApiResult<PageResult<AiopsAlertRulePageVO>>`。支持查询参数：`pageNo`、`pageSize`、`ruleCode`、`ruleName`、`resourceType`、`metricType`、`alertLevel`、`status`。其中 `ruleCode` 和 `ruleName` 为模糊查询，`resourceType`、`metricType`、`alertLevel`、`status` 为精确查询。操作日志固定为 `@OperLog(title = "AIOps告警规则", businessType = "分页查询")`。
+
+`GET /api/aiops/alert-events/page` 用于分页查询 AIOps 告警事件，返回结构为 `ApiResult<PageResult<AiopsAlertEventPageVO>>`。支持查询参数：`pageNo`、`pageSize`、`eventCode`、`ruleCode`、`resourceCode`、`resourceName`、`resourceType`、`ipAddr`、`metricCode`、`metricType`、`alertLevel`、`handleStatus`、`status`。其中编码和名称类字段为模糊查询，类型、级别和状态类字段为精确查询。排序规则固定为 `alertTime` 倒序、`id` 倒序。操作日志固定为 `@OperLog(title = "AIOps告警事件", businessType = "分页查询")`。
+
+`POST /api/aiops/alert-events/generate` 用于根据 AIOps 指标数据生成告警事件，返回结构为 `ApiResult<List<AiopsAlertEventPageVO>>`。请求体字段包括 `metricDataId`、`resourceType`、`metricType`、`limit`。生成逻辑为：查询最近的 `aiops_metric_data` 指标数据，查询启用状态的 `aiops_alert_rule` 告警规则，根据 `resourceType` 和 `metricType` 匹配规则，再根据 `compareOperator` 和 `thresholdValue` 判断是否触发告警，触发后写入 `aiops_alert_event`。系统使用 `rule_id + metric_data_id` 去重，避免重复生成同一告警事件。操作日志固定为 `@OperLog(title = "AIOps告警事件", businessType = "生成告警事件")`。
+
+`GET /api/aiops/work-orders/page` 用于分页查询 AIOps 运维工单，返回结构为 `ApiResult<PageResult<AiopsWorkOrderPageVO>>`。支持查询参数：`pageNo`、`pageSize`、`workOrderCode`、`eventCode`、`alertLevel`、`resourceCode`、`resourceName`、`resourceType`、`ipAddr`、`metricType`、`orderStatus`、`status`。排序规则固定为 `createTime` 倒序、`id` 倒序。操作日志固定为 `@OperLog(title = "AIOps运维工单", businessType = "分页查询")`。
+
+`POST /api/aiops/work-orders/create-from-alert` 用于将告警事件生成运维工单，返回结构为 `ApiResult<AiopsWorkOrderPageVO>`。请求体字段包括 `alertEventId` 和 `remark`。生成逻辑为：根据 `alertEventId` 查询 `aiops_alert_event`，如果告警事件不存在则抛出业务异常，如果该告警事件已经关闭则不能生成工单，如果该告警事件已经生成过工单则直接返回已有工单，否则创建 `aiops_work_order`，并将 `aiops_alert_event.handle_status` 更新为 `1 = 已派单`。操作日志固定为 `@OperLog(title = "AIOps运维工单", businessType = "告警转工单")`。
+
+`POST /api/aiops/work-orders/{id}/handle` 用于处理 AIOps 运维工单，返回结构为 `ApiResult<AiopsWorkOrderPageVO>`。请求体字段包括 `handleResult` 和 `remark`。处理成功后 `aiops_work_order.order_status` 更新为 `2 = 已处理`，并记录处理人和处理时间。操作日志固定为 `@OperLog(title = "AIOps运维工单", businessType = "工单处理")`。
+
+`POST /api/aiops/work-orders/{id}/close` 用于关闭 AIOps 运维工单，返回结构为 `ApiResult<AiopsWorkOrderPageVO>`。请求体字段包括 `closeResult` 和 `remark`。关闭成功后 `aiops_work_order.order_status` 更新为 `3 = 已关闭`，同时将对应 `aiops_alert_event.handle_status` 更新为 `2 = 已关闭`，形成告警事件和运维工单状态联动。操作日志固定为 `@OperLog(title = "AIOps运维工单", businessType = "工单关闭")`。
+
 

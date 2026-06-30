@@ -1,0 +1,13 @@
+import request from '../request'
+
+export interface PageResult<T> { pageNo: number; pageSize: number; total: number; pages: number; records: T[] }
+export interface AiopsWorkOrderPageQuery { pageNo?: number; pageSize?: number; workOrderCode?: string; eventCode?: string; alertLevel?: number; resourceCode?: string; resourceName?: string; resourceType?: string; ipAddr?: string; metricType?: string; orderStatus?: number; status?: number }
+export interface AiopsWorkOrderPageVO { id: number; workOrderCode: string; alertEventId: number; eventCode: string; alertLevel: number; workOrderTitle: string; workOrderContent: string; resourceId: number; resourceCode: string; resourceName: string; resourceType: string; ipAddr: string; metricCode: string; metricName: string; metricType: string; orderStatus: number; handlerUserId?: number; handlerUsername?: string; handleTime?: string; handleResult?: string; closeUserId?: number; closeUsername?: string; closeTime?: string; closeResult?: string; status: number; createTime: string; remark?: string }
+export interface AiopsWorkOrderCreateRequest { alertEventId: number; remark?: string }
+export interface AiopsWorkOrderHandleRequest { handleResult: string; remark?: string }
+export interface AiopsWorkOrderCloseRequest { closeResult: string; remark?: string }
+function unwrapApiResult<T>(response: any): T { const payload = response && response.data !== undefined ? response.data : response; if (payload && typeof payload === 'object' && 'code' in payload && 'data' in payload) { if (payload.code !== 0) throw new Error(payload.msg || '请求失败'); return payload.data as T } return payload as T }
+export async function getAiopsWorkOrderPageApi(params: AiopsWorkOrderPageQuery): Promise<PageResult<AiopsWorkOrderPageVO>> { const r = await request.get<any, PageResult<AiopsWorkOrderPageVO>>('/api/aiops/work-orders/page', { params }); return unwrapApiResult<PageResult<AiopsWorkOrderPageVO>>(r) }
+export async function createAiopsWorkOrderFromAlertApi(data: AiopsWorkOrderCreateRequest): Promise<AiopsWorkOrderPageVO> { const r = await request.post<any, AiopsWorkOrderPageVO>('/api/aiops/work-orders/create-from-alert', data); return unwrapApiResult<AiopsWorkOrderPageVO>(r) }
+export async function handleAiopsWorkOrderApi(id: number, data: AiopsWorkOrderHandleRequest): Promise<AiopsWorkOrderPageVO> { const r = await request.post<any, AiopsWorkOrderPageVO>(`/api/aiops/work-orders/${id}/handle`, data); return unwrapApiResult<AiopsWorkOrderPageVO>(r) }
+export async function closeAiopsWorkOrderApi(id: number, data: AiopsWorkOrderCloseRequest): Promise<AiopsWorkOrderPageVO> { const r = await request.post<any, AiopsWorkOrderPageVO>(`/api/aiops/work-orders/${id}/close`, data); return unwrapApiResult<AiopsWorkOrderPageVO>(r) }
