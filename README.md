@@ -499,3 +499,9 @@ A2-01 已新增后端业务模块：
 该接口需要 JWT 认证，继续使用 `ApiResult` 统一返回结构，并通过 `@OperLog` 记录操作日志。本阶段不新增数据库表、不新增 SQL 文件、不新增前端页面、不新增 Docker 服务。
 
 
+## A2-02：AIOps 资源管理
+
+当前项目二“云网融合 AIOps 智能运维平台”已完成资源管理基础能力。已新增 `aiops_resource` 资源台账表，已新增 `GET /api/aiops/resources/page` 资源分页查询接口，已新增前端页面 `/aiops/resources`。资源类型覆盖 `SERVER`、`DATABASE`、`MIDDLEWARE`、`NETWORK`，环境类型覆盖 `DEV`、`TEST`、`PROD`。接口需要 JWT 认证，继续使用 `ApiResult + PageResult` 返回结构，并通过 `@OperLog` 写入操作日志。
+
+A2-02 继续保持 A2 固定开发规则：后端包名使用 `cn.sxu.enterprise.module.aiops`，接口路径使用 `/api/aiops/**`，数据库表使用 `aiops_` 前缀，前端路由使用 `/aiops/**`。本阶段不新增 Docker 服务，但新增了后端和前端代码，因此需要通过 Docker Compose 重新 build 后端和前端镜像完成验收。A2-02 为后续 A2-03 指标采集与模拟数据提供资源台账基础。
+

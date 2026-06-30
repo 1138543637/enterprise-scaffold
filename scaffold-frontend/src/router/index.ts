@@ -49,6 +49,14 @@ const routes: RouteRecordRaw[] = [
         meta: {
             requiresAuth: true
         }
+    },
+    {
+        path: '/aiops/resources',
+        name: 'AiopsResource',
+        component: () => import('../views/aiops/AiopsResourceView.vue'),
+        meta: {
+            requiresAuth: true
+        }
     }
 
 ]

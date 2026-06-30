@@ -1630,4 +1630,14 @@ M1-13 接口验收标准：
 该接口用于验证 AIOps 模块已经成功接入后端工程。接口继续使用 `ApiResult` 统一返回结构，并使用 `@OperLog(title = "AIOps智能运维", businessType = "模块健康检查")` 记录操作日志。
 
 
+## A2-02：AIOps 资源管理接口
+
+A2-02 新增资源分页查询接口 `GET /api/aiops/resources/page`，用于查询 AIOps 资源台账列表。该接口属于项目二“云网融合 AIOps 智能运维平台”的资源管理能力，接口路径固定使用 `/api/aiops/resources/page`，不能改成 `/api/aiops/resource/page`，也不能改成 `/api/ops/resources/page` 或 `/api/monitor/resources/page`。
+
+该接口需要 JWT 认证，请求头固定为 `Authorization: Bearer <token>`。不带 token 访问时应返回 `code = 401`，提示“请先登录或登录已过期”。带 token 正常访问时返回 `ApiResult<PageResult<AiopsResourcePageVO>>`。分页结构继续使用项目统一 `PageResult`，字段包括 `pageNo`、`pageSize`、`total`、`pages`、`records`。成功响应继续使用项目统一 `ApiResult`，字段包括 `code`、`msg`、`data`。
+
+接口支持 query 参数 `pageNo`、`pageSize`、`resourceCode`、`resourceName`、`resourceType`、`ipAddr`、`envType`、`systemName`、`ownerName`、`collectEnabled`、`status`。其中 `resourceCode`、`resourceName`、`ipAddr`、`systemName`、`ownerName` 使用模糊查询，`resourceType`、`envType`、`collectEnabled`、`status` 使用精确查询。默认按照 `createTime` 倒序、`id` 倒序排序。
+
+返回对象 `AiopsResourcePageVO` 字段包括 `id`、`resourceCode`、`resourceName`、`resourceType`、`ipAddr`、`port`、`envType`、`systemName`、`ownerName`、`collectEnabled`、`lastCollectTime`、`status`、`createTime`、`remark`。接口使用操作日志注解 `@OperLog(title = "AIOps资源管理", businessType = "分页查询")`，访问成功后可在 `GET /api/system/oper-logs/page?pageNo=1&pageSize=20&title=AIOps资源管理` 中查询到对应操作日志。
+
 

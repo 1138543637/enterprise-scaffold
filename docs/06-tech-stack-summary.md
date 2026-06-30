@@ -2712,3 +2712,13 @@ Docker Compose 验收：
 - A2-01 是 AIOps 项目的模块初始化阶段，主要目的是把第二个业务项目接入统一脚手架。接口不放行，必须走 JWT 认证，说明后续 AIOps 资源、指标、告警和工单接口都会纳入统一安全体系和操作日志审计。
 
 
+## A2-02：AIOps 资源管理技术总结
+
+A2-02 新增 AIOps 资源台账能力，使用 MySQL 表 `aiops_resource` 保存服务器、数据库、中间件、网络设备等基础运维资源信息。该能力解决了 AIOps 项目后续指标采集、告警事件、运维工单、根因分析和看板统计缺少资源基础数据的问题。资源类型固定为 `SERVER`、`DATABASE`、`MIDDLEWARE`、`NETWORK`，环境类型固定为 `DEV`、`TEST`、`PROD`，采集状态使用 `collectEnabled` 表示，资源状态使用 `status` 表示。
+
+后端在 `cn.sxu.enterprise.module.aiops` 包下新增 `AiopsResource`、`AiopsResourceMapper`、`AiopsResourceService`、`AiopsResourceServiceImpl`、`AiopsResourceController`、`AiopsResourcePageQuery`、`AiopsResourcePageVO`。技术实现继续使用 MyBatis-Plus `BaseMapper`、`Page`、`LambdaQueryWrapper`，分页结果继续使用 `PageResult`，接口返回继续使用 `ApiResult`，接口安全继续使用 JWT，操作审计继续使用 `@OperLog` 写入 `sys_oper_log`。新增接口为 `GET /api/aiops/resources/page`，支持资源编码、资源名称、资源类型、IP 地址、环境类型、所属系统、负责人、采集状态和资源状态筛选。
+
+前端新增 `scaffold-frontend/src/api/aiops/resource.ts` 和 `scaffold-frontend/src/views/aiops/AiopsResourceView.vue`，新增路由 `/aiops/resources`。前端 API 路径固定为 `/api/aiops/resources/page`。新增 API 文件中使用 `unwrapApiResult` 兼容 `AxiosResponse<ApiResult<T>>`、`ApiResult<T>` 和 `T` 三种返回层级，避免出现字段 `undefined` 或 `AxiosResponse<T>` 与 `T` 类型不匹配问题。页面查询条件和关键布局使用 CSS Grid，避免桌面端布局一列铺满。
+
+本阶段验证方式包括执行 `scaffold-sql/a2_02_aiops_resource.sql`，执行后端 `mvn -DskipTests compile`，执行前端 `pnpm build`，通过 `GET /api/aiops/resources/page?pageNo=1&pageSize=10` 验证接口，通过 `http://localhost:5173/aiops/resources` 验证页面，通过 `docker compose --env-file .env up -d --build`、`docker compose ps`、`docker logs -f enterprise-scaffold-backend` 完成 Docker Compose 验收。简历表达：实现 AIOps 智能运维资源台账模块，支持服务器、数据库、中间件和网络设备统一管理，为后续指标采集、告警分析、工单闭环和根因定位提供资源基础。面试解释：A2-02 是 AIOps 项目的资源基础层，我没有另起项目，而是在公共脚手架中继续扩展 `cn.sxu.enterprise.module.aiops`，复用统一认证、统一返回、分页结构和操作日志，保证后续 AIOps 能力可以在同一工程体系内持续演进。
+

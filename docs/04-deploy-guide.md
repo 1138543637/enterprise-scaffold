@@ -1310,3 +1310,13 @@ GET http://localhost:8080/api/aiops/health
 该接口需要 JWT。未登录访问应返回 401，带 token 访问应返回 `enterprise-scaffold aiops module running`。
 
 
+## A2-02：AIOps 资源管理部署与验收
+
+A2-02 新增 SQL 文件 `scaffold-sql/a2_02_aiops_resource.sql`，该 SQL 文件第一行必须是 `SET NAMES utf8mb4;`，第二段固定使用 `USE enterprise_scaffold;`。已有数据库需要手动执行该 SQL 文件。执行目录为 `D:\Code\enterprise-scaffold`，执行命令为 `mysql -u root -p < scaffold-sql\a2_02_aiops_resource.sql`。如果使用 Docker MySQL，可以执行 `mysql -h 127.0.0.1 -P 3306 -u root -p < scaffold-sql\a2_02_aiops_resource.sql`。同时必须将 `aiops_resource` 建表 SQL 追加到 `scaffold-sql/enterprise_scaffold_init.sql`，确保 Docker MySQL 空数据卷全新初始化时也能自动创建该表。
+
+后端编译验收在 `D:\Code\enterprise-scaffold\scaffold-backend` 目录执行，命令为 `mvn -DskipTests compile`，预期结果为 `BUILD SUCCESS`。前端构建验收在 `D:\Code\enterprise-scaffold\scaffold-frontend` 目录执行，命令为 `pnpm build`，预期结果为构建成功。接口验收前先调用 `POST http://localhost:8080/api/auth/login` 使用 `admin / admin123` 登录获取 token，然后带请求头 `Authorization: Bearer <token>` 访问 `GET http://localhost:8080/api/aiops/resources/page?pageNo=1&pageSize=10`。预期返回 `code = 0`，`msg = success`，`data.records` 中能看到初始化资源数据。
+
+A2-02 不新增 Docker 服务，不修改 `scaffold-docker/docker-compose.yml`，不修改 `.env.example`，不修改后端 Dockerfile，不修改前端 Dockerfile，也不修改 Nginx 配置。但是 A2-02 新增了后端 Java 代码和前端 Vue 页面，所以必须重新 build 后端和前端镜像。Docker Compose 验收执行目录为 `D:\Code\enterprise-scaffold\scaffold-docker`，执行命令为 `docker compose --env-file .env up -d --build`，然后执行 `docker compose ps` 查看容器状态，并执行 `docker logs -f enterprise-scaffold-backend` 查看后端日志。预期 `enterprise-scaffold-mysql`、`enterprise-scaffold-backend`、`enterprise-scaffold-frontend`、`enterprise-scaffold-emqx` 均正常运行。
+
+前端页面验收地址为 `http://localhost:5173/aiops/resources`。预期页面可以正常打开，资源列表可以正常显示，查询条件可以正常筛选，F12 Network 中接口路径为 `/api/aiops/resources/page`，页面不出现 `undefined`，不提示“加载失败”。如果页面提示加载失败，先查 F12 Network，再查 ApiResult 解包，再查 `docker logs -f enterprise-scaffold-backend`。
+

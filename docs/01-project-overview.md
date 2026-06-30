@@ -410,3 +410,13 @@ M1-13 建议在首页 `/dashboard` 增加项目一入口导航，方便演示智
 
 A2-01 开始进入项目二“云网融合 AIOps 智能运维平台”的开发。本阶段新增后端业务包 `cn.sxu.enterprise.module.aiops`，用于承载后续资源台账、指标采集、告警中心、运维工单、根因分析、AIOps 综合看板以及 Prometheus / Grafana 接入等能力。本阶段只新增模块骨架和健康检查接口，不新增数据库表、不新增 SQL 文件、不新增前端页面、不新增 Docker 服务。
 
+## A2-02：AIOps 资源管理
+
+A2-02 完成了项目二“云网融合 AIOps 智能运维平台”的资源台账基础能力。本阶段新增 AIOps 资源表 `aiops_resource`，用于记录云主机、数据库、中间件、网络设备等基础运维资源信息。资源台账是 AIOps 后续指标采集、告警识别、运维工单、根因分析和综合看板的基础数据来源。
+
+本阶段后端继续在固定业务包 `cn.sxu.enterprise.module.aiops` 下开发，新增 `AiopsResource`、`AiopsResourceMapper`、`AiopsResourceService`、`AiopsResourceServiceImpl`、`AiopsResourceController`、`AiopsResourcePageQuery` 和 `AiopsResourcePageVO`。新增接口 `GET /api/aiops/resources/page`，用于分页查询资源台账。该接口需要 JWT 认证，继续使用 `ApiResult` 统一返回结构和 `PageResult` 分页结构，并通过 `@OperLog(title = "AIOps资源管理", businessType = "分页查询")` 写入操作日志。
+
+本阶段前端新增 `scaffold-frontend/src/api/aiops/resource.ts` 和 `scaffold-frontend/src/views/aiops/AiopsResourceView.vue`，新增路由 `/aiops/resources`。页面支持按资源编码、资源名称、资源类型、IP 地址、环境类型、所属系统、负责人、采集状态和资源状态进行筛选。前端接口路径固定使用 `/api/aiops/resources/page`，不能写成 `/aiops/resources/page`。页面查询条件和关键布局使用 CSS Grid，避免桌面端布局变成一列铺满。
+
+A2-02 不新增 Docker 服务，不修改 `docker-compose.yml`，但由于新增了后端和前端代码，必须通过 Docker Compose 重新 build 后端和前端镜像完成验收。A2-02 完成后，AIOps 模块已经具备资源台账基础能力，下一步可以进入 A2-03：指标采集与模拟数据。
+

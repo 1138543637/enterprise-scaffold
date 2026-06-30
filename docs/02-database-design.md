@@ -688,6 +688,16 @@ Docker MySQL 验收执行目录：
 A2-01 不新增数据库表，不新增数据库字段，不新增 SQL 文件。本阶段只新增 `cn.sxu.enterprise.module.aiops` 后端模块骨架和 `GET /api/aiops/health` 健康检查接口。A2 后续数据库表统一使用 `aiops_` 前缀，数据库名继续固定为 `enterprise_scaffold`。
 
 
+## A2-02：aiops_resource AIOps 资源台账表
+
+A2-02 新增数据库表 `aiops_resource`，用于记录 AIOps 智能运维平台中的服务器、数据库、中间件、网络设备等资源台账。该表属于项目二“云网融合 AIOps 智能运维平台”的基础业务表，后续 `aiops_metric_data`、`aiops_alert_event`、`aiops_work_order`、`aiops_root_cause_record` 都会围绕资源台账进行关联和扩展。
+
+表名固定为 `aiops_resource`。字段固定包括 `id`、`resource_code`、`resource_name`、`resource_type`、`ip_addr`、`port`、`env_type`、`system_name`、`owner_name`、`collect_enabled`、`last_collect_time`、`status`、`create_by`、`create_time`、`update_by`、`update_time`、`deleted`、`remark`。其中 `resource_code` 表示资源编码，`resource_name` 表示资源名称，`resource_type` 表示资源类型，`ip_addr` 表示 IP 地址，`port` 表示端口，`env_type` 表示环境类型，`system_name` 表示所属系统，`owner_name` 表示负责人，`collect_enabled` 表示是否启用采集，`last_collect_time` 表示最后采集时间，`status` 表示资源状态，`deleted` 表示逻辑删除。
+
+`resource_type` 固定取值为 `SERVER`、`DATABASE`、`MIDDLEWARE`、`NETWORK`，分别表示服务器、数据库、中间件、网络设备。`env_type` 固定取值为 `DEV`、`TEST`、`PROD`，分别表示开发环境、测试环境、生产环境。`collect_enabled` 固定含义为 `0 = 启用采集`，`1 = 停止采集`。`status` 固定含义为 `0 = 正常`，`1 = 停用`，`2 = 异常`。`deleted` 继续沿用项目统一逻辑删除规则，`0 = 未删除`，`1 = 已删除`。
+
+`aiops_resource` 表固定使用唯一索引 `uk_resource_code(resource_code)`，避免资源编码重复。查询索引包括 `idx_resource_type(resource_type)`、`idx_ip_addr(ip_addr)`、`idx_env_type(env_type)`、`idx_system_name(system_name)`、`idx_collect_enabled(collect_enabled)`、`idx_status(status)`。A2-02 暂不设置数据库外键，避免测试数据导入、Docker 初始化和后续演示时受到外键约束影响。后续如果需要资源与指标、告警、工单关联，优先使用逻辑关联字段，例如 `resource_id`、`resource_code`、`resource_name`。
+
 
 
 
