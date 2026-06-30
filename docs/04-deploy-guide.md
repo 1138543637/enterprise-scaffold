@@ -1516,3 +1516,19 @@ Docker Compose 验收命令：
 
 `docker logs -f enterprise-scaffold-backend`
 
+## A2-07：Prometheus / Grafana Docker Compose 部署说明
+
+A2-07 新增 Prometheus 和 Grafana Docker Compose 服务。
+
+本阶段需要修改 `scaffold-backend/pom.xml`、`scaffold-backend/src/main/resources/application.yml`、`scaffold-backend/src/main/java/cn/sxu/enterprise/common/security/config/SecurityConfig.java`、`scaffold-docker/docker-compose.yml`、`scaffold-docker/.env.example` 和本地 `scaffold-docker/.env`，并新增 `scaffold-docker/prometheus/prometheus.yml`。
+
+本阶段新增容器名固定为 `enterprise-scaffold-prometheus` 和 `enterprise-scaffold-grafana`。Prometheus 端口固定为 `9090`，Grafana 端口固定为 `3000`。新增 Docker volume 固定为 `enterprise-scaffold-prometheus-data` 和 `enterprise-scaffold-grafana-data`。
+
+部署验收时，进入目录 `D:\Code\enterprise-scaffold\scaffold-docker`，执行 `docker compose --env-file .env up -d --build`，然后执行 `docker compose ps` 查看容器状态，最后执行 `docker logs -f enterprise-scaffold-backend` 查看后端日志。
+
+预期容器包括 `enterprise-scaffold-mysql`、`enterprise-scaffold-backend`、`enterprise-scaffold-frontend`、`enterprise-scaffold-emqx`、`enterprise-scaffold-prometheus`、`enterprise-scaffold-grafana`。
+
+验收地址包括 `http://localhost:8080/actuator/health`、`http://localhost:8080/actuator/prometheus`、`http://localhost:9090`、`http://localhost:3000`。
+
+Prometheus 的 `Status -> Targets` 中 `enterprise-scaffold-backend` 应显示 `UP`。Grafana 使用 `.env` 中的 `GRAFANA_ADMIN_USER` 和 `GRAFANA_ADMIN_PASSWORD` 登录，并在 Explore 中选择 `enterprise-scaffold-prometheus` 数据源，查询 `up`、`up{job="enterprise-scaffold-backend"}`、`jvm_memory_used_bytes` 等指标验证监控链路。
+

@@ -476,3 +476,18 @@ A2-06 不新增数据库表、不新增数据库字段、不新增 SQL 文件、
 
 本阶段完成后，AIOps 模块形成了从资源管理、指标采集、告警事件、运维工单、根因分析到综合看板的完整展示链路，为后续 A2-07 Prometheus / Grafana 接入提供可视化基础。
 
+
+
+## A2-07：Prometheus / Grafana 接入
+
+A2-07 完成了云网融合 AIOps 智能运维平台的监控组件接入能力。
+
+本阶段在后端引入 Spring Boot Actuator 和 Micrometer Prometheus Registry，通过 `/actuator/health` 提供服务健康检查，通过 `/actuator/prometheus` 提供 Prometheus 可抓取的指标数据。
+
+Docker Compose 中新增 Prometheus 和 Grafana 服务。Prometheus 用于抓取 `enterprise-scaffold-backend` 后端服务指标，Grafana 用于后续可视化展示监控数据。
+
+本阶段新增容器名固定为 `enterprise-scaffold-prometheus` 和 `enterprise-scaffold-grafana`。Prometheus 端口固定为 `9090`，Grafana 端口固定为 `3000`。
+
+A2-07 不新增业务数据库表，不新增业务 Controller、Service、Mapper，也不新增前端页面。本阶段重点是让 AIOps 项目具备真实监控体系接入能力，为 A2-08 项目二总体验收提供监控能力基础。
+
+

@@ -42,3 +42,15 @@ enterprise:
       topic: ${MINE_MQTT_TOPIC:mine/sensor/data}
       qos: ${MINE_MQTT_QOS:1}
       completion-timeout: ${MINE_MQTT_COMPLETION_TIMEOUT:5000}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      application: enterprise-scaffold

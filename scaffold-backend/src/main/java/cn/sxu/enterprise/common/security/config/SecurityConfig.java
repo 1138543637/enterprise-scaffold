@@ -33,7 +33,9 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/health",
                                 "/api/health/db",
-                                "/api/auth/login"
+                                "/api/auth/login",
+                                "/actuator/health",
+                                "/actuator/prometheus"
                         ).permitAll()
                         .requestMatchers("/files/**").permitAll()
                         .anyRequest().authenticated()

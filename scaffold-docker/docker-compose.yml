@@ -71,5 +71,39 @@ services:
       - "1883:1883"
       - "18083:18083"
 
+  enterprise-scaffold-prometheus:
+    image: prom/prometheus:v2.55.1
+    container_name: enterprise-scaffold-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - enterprise-scaffold-prometheus-data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.enable-lifecycle"
+    depends_on:
+      enterprise-scaffold-backend:
+        condition: service_started
+
+  enterprise-scaffold-grafana:
+    image: grafana/grafana:11.5.2
+    container_name: enterprise-scaffold-grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+    volumes:
+      - enterprise-scaffold-grafana-data:/var/lib/grafana
+    depends_on:
+      enterprise-scaffold-prometheus:
+        condition: service_started
+
 volumes:
   enterprise-scaffold-mysql-data:
+  enterprise-scaffold-prometheus-data:
+  enterprise-scaffold-grafana-data:

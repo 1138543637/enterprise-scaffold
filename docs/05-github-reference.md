@@ -631,3 +631,15 @@ ECharts 主要参考折线图和饼图的初始化、数据更新、窗口 resiz
 
 A2-06 不能直接复制开源项目代码，不能引入新的权限框架，不能替换现有 JWT、`ApiResult`、`PageResult`，不能重命名已有 A2 表、类和接口，不能把 `/api/aiops/dashboard/**` 改成 `/api/ops/**` 或其他路径。
 
+## A2-07：Prometheus / Grafana 接入参考说明
+
+A2-07 参考 Spring Boot Actuator、Micrometer、Prometheus 和 Grafana 的官方实践，同时继续保持本项目自己的工程结构和命名契约。
+
+本阶段可以参考 Spring Boot 官方文档中 Actuator 和 Prometheus 指标暴露方式，参考 Prometheus 官方 `scrape_configs` 和 `static_configs` 配置方式，参考 Grafana 官方 Docker 镜像、数据源配置和环境变量配置方式。
+
+也可以参考 RuoYi-Vue、RuoYi-Vue-Pro 等企业后台项目中对监控、日志、权限和模块化的组织思想。
+
+本项目不能直接复制其他项目的完整 `docker-compose.yml`，不能修改 `enterprise-scaffold-backend`、`enterprise-scaffold-frontend`、`enterprise-scaffold-mysql`、`enterprise-scaffold-emqx` 等已有容器名，不能改变 `/api/aiops/**`、`/api/mine/**`、`aiops_*`、`mine_*` 等已固定命名。
+
+本阶段只接入轻量级 Prometheus / Grafana 监控链路，不引入 Kubernetes、复杂告警规则、云服务器部署和生产级权限配置。
+

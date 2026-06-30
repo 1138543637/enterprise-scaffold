@@ -1827,4 +1827,18 @@ Controller 方法继续使用 `@OperLog` 记录操作日志。
 
 `@OperLog(title = "AIOps综合看板", businessType = "最近根因分析查询")`
 
+## A2-07：Prometheus / Grafana 接入接口说明
+
+A2-07 新增的是 Spring Boot Actuator 端点，不新增自定义业务 Controller 接口。
+
+本阶段新增可访问端点 `GET /actuator/health` 和 `GET /actuator/prometheus`。
+
+`GET /actuator/health` 用于检查后端服务健康状态。本阶段在 `SecurityConfig` 中放行该路径，不需要 JWT。成功时返回服务健康状态，例如 `status = UP`。
+
+`GET /actuator/prometheus` 用于向 Prometheus 暴露后端应用指标。本阶段在 `SecurityConfig` 中放行该路径，不需要 JWT。Prometheus 通过该端点抓取 JVM、HTTP 请求、进程、线程、HikariCP 数据库连接池等运行指标。
+
+A2 业务接口继续使用 `/api/aiops/**` 前缀，继续需要 JWT 认证，继续使用 `ApiResult` 和 `PageResult`。
+
+不要把 Actuator 端点改成 `/api/aiops/prometheus`，也不要改动已经完成的 `/api/aiops/dashboard/**` 接口。
+
 

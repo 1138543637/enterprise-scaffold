@@ -644,3 +644,15 @@ A2-06 推荐提交信息：
 
 `feat: implement aiops dashboard`
 
+## A2-07：Prometheus / Grafana 接入
+
+当前项目二“云网融合 AIOps 智能运维平台”已完成 Prometheus / Grafana 接入能力。
+
+本阶段已新增 Spring Boot Actuator 和 Micrometer Prometheus Registry，后端支持通过 `/actuator/health` 查看服务健康状态，通过 `/actuator/prometheus` 暴露 Prometheus 指标数据。
+
+Docker Compose 已新增 Prometheus 服务 `enterprise-scaffold-prometheus` 和 Grafana 服务 `enterprise-scaffold-grafana`。Prometheus 端口为 `9090`，Grafana 端口为 `3000`。Prometheus 用于抓取 `enterprise-scaffold-backend` 后端服务指标，Grafana 用于后续可视化展示监控数据。
+
+本阶段不新增数据库表，不新增 SQL 文件，不新增业务接口，不新增前端页面。
+
+A2-07 使 AIOps 项目从业务模拟运维平台进一步具备真实监控组件接入能力。
+

@@ -121,6 +121,17 @@
 			<artifactId>org.eclipse.paho.client.mqttv3</artifactId>
 			<version>1.2.5</version>
 		</dependency>
+		<!-- A2-07：Spring Boot Actuator，用于暴露 /actuator/health、/actuator/metrics、/actuator/prometheus 等运维端点 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<!-- A2-07：Micrometer Prometheus Registry，用于把 Spring Boot 指标转换成 Prometheus 可抓取格式 -->
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+		</dependency>
 
 
 	</dependencies>

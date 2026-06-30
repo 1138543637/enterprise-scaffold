@@ -2892,3 +2892,23 @@ Docker 执行 `docker compose --env-file .env up -d --build`、`docker compose p
 
 A2-06 没有新增数据库表，而是复用 A2-02 到 A2-05 已有业务表进行聚合统计。后端通过 MyBatis-Plus 完成数量统计、分组统计和最近记录查询，前端通过 Vue3 + ECharts 展示综合看板，并通过 `unwrapApiResult` 解决 AxiosResponse 和 ApiResult 返回层级不一致问题。
 
+## A2-07：Prometheus / Grafana 接入技术总结
+
+本阶段新增 Spring Boot Actuator、Micrometer Prometheus Registry、Prometheus 和 Grafana。
+
+Spring Boot Actuator 用于暴露后端服务运行状态和运行指标，Micrometer Prometheus Registry 用于将 Spring Boot 指标转换为 Prometheus 可抓取格式。Prometheus 通过 `/actuator/prometheus` 抓取 `enterprise-scaffold-backend` 后端指标，Grafana 用于后续对 Prometheus 数据进行可视化展示。
+
+本阶段涉及的后端文件包括 `scaffold-backend/pom.xml`、`scaffold-backend/src/main/resources/application.yml`、`scaffold-backend/src/main/java/cn/sxu/enterprise/common/security/config/SecurityConfig.java`。
+
+本阶段涉及的 Docker 文件包括 `scaffold-docker/docker-compose.yml`、`scaffold-docker/.env.example`、`scaffold-docker/.env` 和 `scaffold-docker/prometheus/prometheus.yml`。
+
+本阶段新增 Docker 容器 `enterprise-scaffold-prometheus` 和 `enterprise-scaffold-grafana`，新增端口 `9090` 和 `3000`，新增 Docker volume `enterprise-scaffold-prometheus-data` 和 `enterprise-scaffold-grafana-data`。
+
+本阶段不新增数据库表，不新增 SQL 文件，不新增业务 Controller、Service、Mapper，不新增前端页面。
+
+验收方式包括访问 `/actuator/health`、`/actuator/prometheus`、Prometheus 页面 `http://localhost:9090` 和 Grafana 页面 `http://localhost:3000`，并在 Grafana Explore 中查询 `up`、`up{job="enterprise-scaffold-backend"}`、`jvm_memory_used_bytes` 等指标。
+
+简历表达：在 AIOps 智能运维平台中接入 Spring Boot Actuator、Micrometer、Prometheus 和 Grafana，实现后端服务运行指标暴露、Prometheus 指标抓取和 Grafana 可视化监控能力，完善云网融合运维平台的监控体系。
+
+面试解释：A2-07 不是新增业务表，而是接入监控基础设施。后端通过 Actuator 和 Micrometer 暴露 `/actuator/prometheus`，Prometheus 通过 Docker 网络访问 `enterprise-scaffold-backend:8080` 抓取指标，Grafana 再连接 Prometheus 展示监控数据。这样 AIOps 项目不仅有资源、指标、告警、工单和根因分析业务链路，也具备监控组件接入能力。
+
