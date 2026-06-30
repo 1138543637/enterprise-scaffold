@@ -582,3 +582,28 @@ A2-04 还复用了项目一 M1 阶段已经验证过的“规则表 + 事件表 
 
 MyBatis-Plus 参考重点是 `BaseMapper`、`Page`、`LambdaQueryWrapper` 和条件查询写法。前端参考重点是 Vue3、TypeScript、Element Plus 表格页面和 CSS Grid 布局。新增前端 API 文件时继续使用 `unwrapApiResult` 或 `request.get<any, T>()` 防止 `AxiosResponse<T>` 和 `T` 类型不匹配。
 
+## A2-05：根因分析简化版参考说明
+
+A2-05 继续参考 RuoYi-Vue、RuoYi-Vue-Pro、RuoYi-Vue3、Vue Vben Admin 和 MyBatis-Plus。
+
+参考内容包括 Controller / Service / Mapper / Entity 分层方式、
+分页查询接口组织方式、操作日志注解思想、Vue3 + Element Plus 后台列表页写法、
+MyBatis-Plus BaseMapper、Page、LambdaQueryWrapper 条件查询方式。
+
+本项目自己的实现固定为 cn.sxu.enterprise.module.aiops 包下的
+AiopsRootCauseRecord、AiopsRootCauseRecordMapper、AiopsRootCauseService、
+AiopsRootCauseServiceImpl、AiopsRootCauseController、AiopsRootCauseAnalyzeRequest、
+AiopsRootCausePageQuery、AiopsRootCauseVO，
+以及 /api/aiops/root-causes/** 接口和 /aiops/root-causes 前端页面。
+
+A2-05 只能参考开源项目的工程组织和后台管理思想，不能复制若依源码，
+不能引入若依代码生成器，不能引入新的权限框架。
+
+不能改变已有 aiops_resource、aiops_metric_data、aiops_alert_rule、
+aiops_alert_event、aiops_work_order 表和接口命名。
+
+也不能把根因分析接口改成 /api/aiops/root-cause/** 或 /api/aiops/rca/**。
+
+本阶段重点是用自己的代码实现可解释的简化根因分析能力，
+并保持与当前 enterprise-scaffold 工程命名契约一致。
+

@@ -83,6 +83,14 @@ const routes: RouteRecordRaw[] = [
         meta: {
             requiresAuth: true
         }
+    },
+    {
+        path: '/aiops/root-causes',
+        name: 'AiopsRootCauses',
+        component: () => import('../views/aiops/AiopsRootCauseView.vue'),
+        meta: {
+            requiresAuth: true
+        }
     }
 
 ]

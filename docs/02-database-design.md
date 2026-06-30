@@ -726,6 +726,41 @@ A2-04 新增三张数据库表：`aiops_alert_rule`、`aiops_alert_event`、`aio
 
 A2-04 暂不设置数据库外键，继续采用逻辑关联方式。`aiops_alert_event.rule_id` 逻辑关联 `aiops_alert_rule.id`，`aiops_alert_event.metric_data_id` 逻辑关联 `aiops_metric_data.id`，`aiops_alert_event.resource_id` 逻辑关联 `aiops_resource.id`，`aiops_work_order.alert_event_id` 逻辑关联 `aiops_alert_event.id`，`aiops_work_order.resource_id` 逻辑关联 `aiops_resource.id`。不设置数据库外键的原因是避免测试数据导入、删除和 Docker 初始化时受到外键约束影响。
 
+## A2-05：aiops_root_cause_record 根因分析记录表
+
+A2-05 新增 aiops_root_cause_record 表，用于保存 AIOps 根因分析记录。
+
+该表记录某个告警事件对应的分析编码、告警事件信息、资源信息、根因类型、根因描述、
+分析证据、处理建议、置信度、分析时间和状态信息。
+
+字段包括 id、analysis_code、alert_event_id、event_code、resource_id、resource_code、
+resource_name、resource_type、ip_addr、root_cause_type、root_cause_desc、evidence、
+suggestion、confidence_score、analysis_time、status、create_by、create_time、update_by、
+update_time、deleted、remark。
+
+root_cause_type 固定支持 CPU_HIGH、MEMORY_HIGH、DISK_FULL、NETWORK_ABNORMAL、
+DATABASE_SLOW、UNKNOWN。
+
+confidence_score 表示根因分析置信度，范围为 0 到 100。
+
+status = 0 表示有效，status = 1 表示无效。
+
+deleted = 0 表示未删除，deleted = 1 表示已删除。
+
+aiops_root_cause_record.alert_event_id 逻辑关联 aiops_alert_event.id。
+
+aiops_root_cause_record.resource_id 逻辑关联 aiops_resource.id。
+
+aiops_root_cause_record.resource_code 逻辑关联 aiops_resource.resource_code。
+
+本阶段暂不设置数据库外键，继续采用逻辑关联方式，
+避免测试数据导入、删除和 Docker 初始化时受外键约束影响。
+
+A2-05 新增 SQL 文件 scaffold-sql/a2_05_aiops_root_cause.sql，
+第一行固定为 SET NAMES utf8mb4;，
+第二段固定使用 USE enterprise_scaffold;，
+并且必须将 aiops_root_cause_record 建表语句同步追加到 scaffold-sql/enterprise_scaffold_init.sql。
+
 
 
 
