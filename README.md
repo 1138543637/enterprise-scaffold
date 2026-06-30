@@ -656,3 +656,24 @@ Docker Compose 已新增 Prometheus 服务 `enterprise-scaffold-prometheus` 和 
 
 A2-07 使 AIOps 项目从业务模拟运维平台进一步具备真实监控组件接入能力。
 
+## A2：云网融合 AIOps 智能运维平台
+
+项目二“云网融合 AIOps 智能运维平台”已完成 A2-01 至 A2-07，并进入 A2-08 总体验收与收尾阶段。当前 AIOps 模块已完成资源台账、指标采集与模拟数据、告警规则、告警事件、运维工单闭环、根因分析简化版、AIOps 综合看板、Prometheus / Grafana 接入。
+
+A2 完整业务链路为：资源台账 -> 指标采集 -> 指标异常识别 -> 告警事件生成 -> 告警转运维工单 -> 工单处理 -> 工单关闭 -> 根因分析 -> AIOps 综合看板 -> Spring Boot Actuator 指标暴露 -> Prometheus 指标抓取 -> Grafana 指标查询与可视化基础。
+
+前端页面包括 `/aiops/dashboard`、`/aiops/resources`、`/aiops/metrics`、`/aiops/alerts`、`/aiops/work-orders`、`/aiops/root-causes`。监控组件访问地址包括 Prometheus `http://localhost:9090` 和 Grafana `http://localhost:3000`。首页 `/dashboard` 已增加项目一和项目二入口，展示顺序为：公共脚手架概览、项目一智能矿山入口、项目一验收链路、项目二 AIOps 入口、A2 项目验收链路。
+
+Docker Compose 启动命令为：进入 `D:\Code\enterprise-scaffold\scaffold-docker`，执行 `docker compose --env-file .env up -d --build` 和 `docker compose ps`。
+
+A2 项目可以用于简历描述：基于 Spring Boot 3、MyBatis-Plus、MySQL、Vue3、Element Plus、ECharts、Docker Compose、Prometheus 和 Grafana，完成云网融合 AIOps 智能运维平台，覆盖资源台账、指标采集、告警中心、运维工单、根因分析、综合看板和监控组件接入等完整链路。
+
+
+
+
+
+
+
+################################################################################################################################################################################
+
+

@@ -1,112 +1,153 @@
-<!--<template>-->
-<!--  <div class="dashboard-page">-->
-<!--    <el-container class="layout">-->
-<!--      <el-header class="header">-->
-<!--        <div class="logo">Enterprise Scaffold</div>-->
+<template>
+  <div class="dashboard-page">
+    <header class="dashboard-header">
+      <div>
+        <p class="page-subtitle">Enterprise Scaffold</p>
+        <h1>企业级项目演示首页</h1>
+        <p class="page-desc">
+          当前脚手架已经完成系统基础能力、项目一智能矿山平台，并已推进项目二云网融合 AIOps 智能运维平台。
+          首页展示顺序固定为：公共脚手架 -> 项目一 -> 项目二。
+        </p>
+      </div>
 
-<!--        <div class="user-area">-->
-<!--          <span v-if="authStore.user">-->
-<!--            当前用户：{{ authStore.user.nickname }}（{{ authStore.user.username }}）-->
-<!--          </span>-->
+      <div class="user-panel">
+        <div class="user-info">
+          <span class="user-label">当前用户</span>
+          <strong>{{ displayName }}</strong>
+        </div>
+        <el-button type="danger" plain @click="handleLogout">退出登录</el-button>
+      </div>
+    </header>
 
-<!--          <el-button type="danger" plain @click="handleLogout">-->
-<!--            退出登录-->
-<!--          </el-button>-->
-<!--        </div>-->
-<!--      </el-header>-->
+    <section class="summary-grid">
+      <el-card shadow="hover" class="summary-card">
+        <div class="summary-title">公共脚手架</div>
+        <div class="summary-value">S0 已完成</div>
+        <div class="summary-desc">登录认证、RBAC、日志、字典、文件上传、Docker Compose。</div>
+      </el-card>
 
-<!--      <el-main class="main">-->
-<!--        <el-card>-->
-<!--          <template #header>-->
-<!--            <span>S0-07 前端初始化完成</span>-->
-<!--          </template>-->
+      <el-card shadow="hover" class="summary-card">
+        <div class="summary-title">项目一</div>
+        <div class="summary-value">M1 已完成</div>
+        <div class="summary-desc">智能矿山安全生产与设备预测性维护平台。</div>
+      </el-card>
 
-<!--          <el-descriptions :column="1" border>-->
-<!--            <el-descriptions-item label="项目名称">-->
-<!--              Enterprise Scaffold-->
-<!--            </el-descriptions-item>-->
+      <el-card shadow="hover" class="summary-card">
+        <div class="summary-title">项目二</div>
+        <div class="summary-value">A2-08 收尾验收</div>
+        <div class="summary-desc">云网融合 AIOps 智能运维平台。</div>
+      </el-card>
+    </section>
 
-<!--            <el-descriptions-item label="当前阶段">-->
-<!--              S0-07：初始化 Vue3 前端-->
-<!--            </el-descriptions-item>-->
+    <section class="project-section">
+      <div class="section-title">
+        <h2>项目一：智能矿山安全生产与设备预测性维护平台</h2>
+        <p>
+          项目一已经完成，应放在项目二上方，作为第一个完整项目演示入口。
+        </p>
+      </div>
 
-<!--            <el-descriptions-item label="前端技术">-->
-<!--              Vue3 + Vite + TypeScript + Element Plus-->
-<!--            </el-descriptions-item>-->
+      <div class="entry-grid">
+        <el-card
+          v-for="entry in mineEntries"
+          :key="entry.path"
+          shadow="hover"
+          class="entry-card"
+        >
+          <div class="entry-content">
+            <div>
+              <div class="entry-title">{{ entry.title }}</div>
+              <div class="entry-desc">{{ entry.desc }}</div>
+            </div>
+            <el-button type="primary" plain @click="goPage(entry.path)">进入</el-button>
+          </div>
+        </el-card>
+      </div>
+    </section>
 
-<!--            <el-descriptions-item label="后端接口">-->
-<!--              POST /api/auth/login，GET /api/auth/me-->
-<!--            </el-descriptions-item>-->
+    <section class="project-section">
+      <div class="section-title">
+        <h2>项目一验收链路</h2>
+        <p>
+          按下面顺序演示，能体现智能矿山从设备、传感器、MQTT、告警、工单到预测性维护的完整闭环。
+        </p>
+      </div>
 
-<!--            <el-descriptions-item label="登录状态">-->
-<!--              已登录-->
-<!--            </el-descriptions-item>-->
-<!--          </el-descriptions>-->
-<!--        </el-card>-->
-<!--      </el-main>-->
-<!--    </el-container>-->
-<!--  </div>-->
-<!--</template>-->
+      <div class="flow-grid">
+        <div v-for="(item, index) in mineFlow" :key="item" class="flow-item">
+          <span class="flow-index">{{ index + 1 }}</span>
+          <span>{{ item }}</span>
+        </div>
+      </div>
+    </section>
 
-<!--<script setup lang="ts">-->
-<!--import { onMounted } from 'vue'-->
-<!--import { useRouter } from 'vue-router'-->
-<!--import { useAuthStore } from '../../stores/auth'-->
+    <section class="project-section">
+      <div class="section-title">
+        <h2>项目二：云网融合 AIOps 智能运维平台</h2>
+        <p>
+          A2-08 收尾阶段用于验收资源台账、指标采集、告警事件、运维工单、根因分析、综合看板、Prometheus 和 Grafana。
+        </p>
+      </div>
 
-<!--const router = useRouter()-->
-<!--const authStore = useAuthStore()-->
+      <div class="entry-grid">
+        <el-card
+          v-for="entry in aiopsEntries"
+          :key="entry.path"
+          shadow="hover"
+          class="entry-card"
+        >
+          <div class="entry-content">
+            <div>
+              <div class="entry-title">{{ entry.title }}</div>
+              <div class="entry-desc">{{ entry.desc }}</div>
+            </div>
+            <el-button type="primary" @click="goPage(entry.path)">进入</el-button>
+          </div>
+        </el-card>
 
-<!--onMounted(async () => {-->
-<!--  if (!authStore.user) {-->
-<!--    try {-->
-<!--      await authStore.loadMe()-->
-<!--    } catch {-->
-<!--      authStore.logout()-->
-<!--      await router.push('/login')-->
-<!--    }-->
-<!--  }-->
-<!--})-->
+        <el-card shadow="hover" class="entry-card monitor-card">
+          <div class="entry-content">
+            <div>
+              <div class="entry-title">Prometheus</div>
+              <div class="entry-desc">查看 Targets 是否 UP，验证后端 /actuator/prometheus 指标抓取。</div>
+            </div>
+            <el-button type="success" @click="openExternal('http://localhost:9090')">
+              打开
+            </el-button>
+          </div>
+        </el-card>
 
-<!--async function handleLogout() {-->
-<!--  authStore.logout()-->
-<!--  await router.push('/login')-->
-<!--}-->
-<!--</script>-->
+        <el-card shadow="hover" class="entry-card monitor-card">
+          <div class="entry-content">
+            <div>
+              <div class="entry-title">Grafana</div>
+              <div class="entry-desc">验证 Prometheus 数据源，使用 Explore 查询 up、jvm_memory_used_bytes 等指标。</div>
+            </div>
+            <el-button type="success" @click="openExternal('http://localhost:3000')">
+              打开
+            </el-button>
+          </div>
+        </el-card>
+      </div>
+    </section>
 
-<!--<style scoped>-->
-<!--.dashboard-page {-->
-<!--  width: 100%;-->
-<!--  height: 100%;-->
-<!--}-->
+    <section class="project-section">
+      <div class="section-title">
+        <h2>项目二验收链路</h2>
+        <p>
+          按下面顺序演示，能体现 AIOps 从资源、指标、告警、工单、根因到监控组件的完整闭环。
+        </p>
+      </div>
 
-<!--.layout {-->
-<!--  min-height: 100vh;-->
-<!--}-->
-
-<!--.header {-->
-<!--  height: 60px;-->
-<!--  display: flex;-->
-<!--  align-items: center;-->
-<!--  justify-content: space-between;-->
-<!--  background: #1f2d3d;-->
-<!--  color: #ffffff;-->
-<!--}-->
-
-<!--.logo {-->
-<!--  font-size: 20px;-->
-<!--  font-weight: 700;-->
-<!--}-->
-
-<!--.user-area {-->
-<!--  display: flex;-->
-<!--  align-items: center;-->
-<!--  gap: 16px;-->
-<!--}-->
-
-<!--.main {-->
-<!--  padding: 24px;-->
-<!--}-->
-<!--</style>-->
+      <div class="flow-grid">
+        <div v-for="(item, index) in aiopsFlow" :key="item" class="flow-item">
+          <span class="flow-index">{{ index + 1 }}</span>
+          <span>{{ item }}</span>
+        </div>
+      </div>
+    </section>
+  </div>
+</template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
@@ -116,167 +157,229 @@ import { useAuthStore } from '../../stores/auth'
 const router = useRouter()
 const authStore = useAuthStore()
 
-const userText = computed(() => {
-  if (!authStore.user) {
-    return '未登录'
+const displayName = computed(() => {
+  const user = authStore.user as { nickname?: string; username?: string } | null
+
+  if (user?.nickname && user?.username) {
+    return `${user.nickname}（${user.username}）`
   }
-  return `${authStore.user.nickname}（${authStore.user.username}）`
+
+  if (user?.username) {
+    return user.username
+  }
+
+  return '系统管理员（admin）'
 })
 
 const mineEntries = [
   {
     title: '智能矿山综合看板',
-    path: '/mine/dashboard',
-    stage: 'M1-06 / M1-09',
-    desc: '展示设备、传感器、采集数据、告警事件、工单状态和最近实时数据。'
+    desc: '设备、传感器、采集数据、告警、工单综合展示。',
+    path: '/mine/dashboard'
   },
   {
     title: '设备健康评分',
-    path: '/mine/device-health',
-    stage: 'M1-10',
-    desc: '根据告警、工单、传感器状态实时计算设备健康分和风险等级。'
+    desc: '设备健康分、风险等级和异常识别。',
+    path: '/mine/device-health'
   },
   {
     title: '预测性维护任务',
-    path: '/mine/maintenance-tasks',
-    stage: 'M1-11',
-    desc: '基于设备健康风险生成维护任务，并完成安排、处理、关闭闭环。'
+    desc: '维护任务生成、安排、处理、关闭。',
+    path: '/mine/maintenance-tasks'
   },
   {
     title: '维护看板与风险趋势',
-    path: '/mine/maintenance-dashboard',
-    stage: 'M1-12',
-    desc: '展示维护任务统计、优先级分布、风险等级分布和最近 7 天风险趋势。'
+    desc: '维护任务统计和最近 7 天风险趋势。',
+    path: '/mine/maintenance-dashboard'
   }
+]
+
+const aiopsEntries = [
+  {
+    title: 'AIOps 综合看板',
+    desc: '资源、指标、告警、工单、根因分析综合统计展示。',
+    path: '/aiops/dashboard'
+  },
+  {
+    title: '资源管理',
+    desc: '服务器、数据库、中间件、网络设备统一台账。',
+    path: '/aiops/resources'
+  },
+  {
+    title: '指标采集',
+    desc: 'CPU、内存、磁盘、网络、MySQL、Redis 指标模拟采集。',
+    path: '/aiops/metrics'
+  },
+  {
+    title: '告警中心',
+    desc: '告警规则、告警事件和指标异常识别。',
+    path: '/aiops/alerts'
+  },
+  {
+    title: '运维工单',
+    desc: '告警转工单、工单处理、工单关闭闭环。',
+    path: '/aiops/work-orders'
+  },
+  {
+    title: '根因分析',
+    desc: '基于告警、指标、工单生成疑似根因和处理建议。',
+    path: '/aiops/root-causes'
+  }
+]
+
+const mineFlow = [
+  '设备台账 mine_device',
+  '传感器台账 mine_sensor',
+  'MQTT 数据上报 mine/sensor/data',
+  '数据入库 mine_sensor_data',
+  '告警生成 mine_alarm_event',
+  '工单闭环 mine_work_order',
+  '智能矿山综合看板 /mine/dashboard',
+  '设备健康评分 /mine/device-health',
+  '预测性维护任务 mine_maintenance_task',
+  '维护看板 /mine/maintenance-dashboard',
+  '最近 7 天风险趋势分析'
+]
+
+const aiopsFlow = [
+  '资源台账 aiops_resource',
+  '指标采集 aiops_metric_data',
+  '指标异常识别 alarm_flag',
+  '告警事件 aiops_alert_event',
+  '告警转运维工单 aiops_work_order',
+  '工单处理与关闭',
+  '根因分析 aiops_root_cause_record',
+  'AIOps 综合看板 /aiops/dashboard',
+  'Actuator 指标 /actuator/prometheus',
+  'Prometheus Targets UP',
+  'Grafana 数据源与 Explore 查询'
 ]
 
 const goPage = (path: string) => {
   router.push(path)
 }
 
-const logout = () => {
+const openExternal = (url: string) => {
+  window.open(url, '_blank')
+}
+
+const handleLogout = () => {
   authStore.logout()
   router.push('/login')
 }
 </script>
 
-<template>
-  <div class="dashboard-page">
-    <el-card class="welcome-card" shadow="never">
-      <div class="welcome-content">
-        <div>
-          <h2>Enterprise Scaffold</h2>
-          <p>当前用户：{{ userText }}</p>
-          <p class="sub-title">
-            面向央国企信息化场景的企业级后台脚手架，当前已完成项目一智能矿山模块。
-          </p>
-        </div>
-
-        <div class="welcome-actions">
-          <el-button type="primary" @click="goPage('/mine/dashboard')">
-            进入智能矿山看板
-          </el-button>
-          <el-button @click="logout">
-            退出登录
-          </el-button>
-        </div>
-      </div>
-    </el-card>
-
-    <el-card class="project-card" shadow="never">
-      <template #header>
-        <div class="card-header">
-          <span>项目一：智能矿山安全生产与设备预测性维护平台</span>
-          <el-tag type="success">M1 已进入总体验收</el-tag>
-        </div>
-      </template>
-
-      <div class="entry-grid">
-        <div
-            v-for="entry in mineEntries"
-            :key="entry.path"
-            class="entry-card"
-            @click="goPage(entry.path)"
-        >
-          <div class="entry-title">
-            {{ entry.title }}
-          </div>
-          <div class="entry-stage">
-            {{ entry.stage }}
-          </div>
-          <div class="entry-desc">
-            {{ entry.desc }}
-          </div>
-          <el-button class="entry-button" type="primary" plain>
-            进入页面
-          </el-button>
-        </div>
-      </div>
-    </el-card>
-
-    <el-card class="summary-card" shadow="never">
-      <template #header>
-        <div class="card-header">
-          <span>项目一完整业务链路</span>
-        </div>
-      </template>
-
-      <div class="chain-box">
-        设备台账 → 传感器台账 → MQTT 数据上报 → 传感器数据入库 →
-        告警事件生成 → 工单闭环 → 设备健康评分 → 预测性维护任务 →
-        维护看板与风险趋势分析
-      </div>
-    </el-card>
-  </div>
-</template>
-
 <style scoped>
 .dashboard-page {
   min-height: 100vh;
-  padding: 24px;
-  background: #f5f7fa;
+  padding: 28px;
+  background: #f5f7fb;
+  color: #1f2937;
 }
 
-.welcome-card,
-.project-card,
-.summary-card {
-  margin-bottom: 16px;
-}
-
-.welcome-content {
-  display: flex;
+.dashboard-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+  margin-bottom: 20px;
+  padding: 28px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ffffff 0%, #eef5ff 100%);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
 }
 
-.welcome-content h2 {
+.page-subtitle {
   margin: 0 0 8px;
-  font-size: 24px;
-  color: #1f2d3d;
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.welcome-content p {
-  margin: 0 0 6px;
-  color: #606266;
+.dashboard-header h1 {
+  margin: 0;
+  font-size: 30px;
+  color: #111827;
 }
 
-.sub-title {
+.page-desc {
+  margin: 12px 0 0;
+  color: #4b5563;
+  line-height: 1.7;
+}
+
+.user-panel {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: right;
+}
+
+.user-label {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.summary-card {
+  border-radius: 12px;
+}
+
+.summary-title {
+  color: #6b7280;
   font-size: 14px;
 }
 
-.welcome-actions {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
+.summary-value {
+  margin-top: 10px;
+  color: #111827;
+  font-size: 24px;
+  font-weight: 800;
 }
 
-.card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  font-weight: 600;
+.summary-desc {
+  margin-top: 8px;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.project-section {
+  margin-bottom: 20px;
+  padding: 24px;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+}
+
+.section-title {
+  margin-bottom: 18px;
+}
+
+.section-title h2 {
+  margin: 0;
+  font-size: 22px;
+  color: #111827;
+}
+
+.section-title p {
+  margin: 8px 0 0;
+  color: #6b7280;
+  line-height: 1.7;
 }
 
 .entry-grid {
@@ -286,66 +389,83 @@ const logout = () => {
 }
 
 .entry-card {
-  min-height: 170px;
-  padding: 18px;
-  border: 1px solid #e4e7ed;
-  border-radius: 8px;
-  background: #ffffff;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  border-radius: 12px;
 }
 
-.entry-card:hover {
-  border-color: #409eff;
-  box-shadow: 0 8px 20px rgb(0 0 0 / 8%);
-  transform: translateY(-2px);
+.entry-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
 }
 
 .entry-title {
   margin-bottom: 8px;
+  color: #111827;
   font-size: 17px;
-  font-weight: 600;
-  color: #303133;
-}
-
-.entry-stage {
-  margin-bottom: 10px;
-  font-size: 13px;
-  color: #409eff;
+  font-weight: 700;
 }
 
 .entry-desc {
-  min-height: 48px;
-  margin-bottom: 16px;
+  color: #6b7280;
   line-height: 1.6;
-  color: #606266;
 }
 
-.entry-button {
-  width: 100%;
+.monitor-card {
+  background: #fbfffb;
 }
 
-.chain-box {
-  line-height: 1.8;
-  color: #303133;
+.flow-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.flow-item {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #f9fafb;
+  color: #374151;
+  line-height: 1.5;
+}
+
+.flow-index {
+  display: inline-flex;
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
 }
 
 @media (max-width: 768px) {
   .dashboard-page {
-    padding: 12px;
+    padding: 16px;
   }
 
-  .welcome-content {
-    align-items: flex-start;
-    flex-direction: column;
+  .dashboard-header {
+    grid-template-columns: 1fr;
   }
 
-  .welcome-actions {
-    width: 100%;
+  .user-panel {
+    justify-content: flex-start;
   }
 
-  .welcome-actions .el-button {
-    flex: 1;
+  .user-info {
+    text-align: left;
+  }
+
+  .entry-content {
+    grid-template-columns: 1fr;
   }
 }
 </style>

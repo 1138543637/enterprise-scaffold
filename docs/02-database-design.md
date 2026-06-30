@@ -800,5 +800,32 @@ A2-07 继续复用已有 AIOps 业务表：`aiops_resource`、`aiops_metric_data
 
 
 
+## A2-08：数据库设计说明
 
+A2-08 不新增数据库表，不新增数据库字段，不新增 SQL 文件，不修改 `enterprise_scaffold_init.sql`。本阶段只做 A2 项目总体验收与收尾，继续复用 A2 已有业务表。
+
+A2 项目当前数据库表包括：`aiops_resource`、`aiops_metric_data`、`aiops_alert_rule`、`aiops_alert_event`、`aiops_work_order`、`aiops_root_cause_record`。
+
+其中，`aiops_resource` 记录资源台账，`aiops_metric_data` 记录指标数据，`aiops_alert_rule` 记录告警规则，`aiops_alert_event` 记录告警事件，`aiops_work_order` 记录运维工单，`aiops_root_cause_record` 记录根因分析结果。Prometheus 和 Grafana 的数据不写入 `enterprise_scaffold` 业务数据库，Prometheus 使用自身时序数据目录，Grafana 使用自身 Docker volume 保存数据源和面板配置。A2-08 阶段的验收重点是确认这些表已经能支撑资源、指标、告警、工单、根因分析和综合看板完整链路，不再额外扩展数据库结构。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#############################################################################################################################################################
 

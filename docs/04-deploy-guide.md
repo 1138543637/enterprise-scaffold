@@ -1532,3 +1532,37 @@ A2-07 新增 Prometheus 和 Grafana Docker Compose 服务。
 
 Prometheus 的 `Status -> Targets` 中 `enterprise-scaffold-backend` 应显示 `UP`。Grafana 使用 `.env` 中的 `GRAFANA_ADMIN_USER` 和 `GRAFANA_ADMIN_PASSWORD` 登录，并在 Explore 中选择 `enterprise-scaffold-prometheus` 数据源，查询 `up`、`up{job="enterprise-scaffold-backend"}`、`jvm_memory_used_bytes` 等指标验证监控链路。
 
+
+## A2-08：A2 项目总体验收部署说明
+
+A2-08 不新增 Docker 服务，不修改 `docker-compose.yml`，不修改 `.env.example`，不修改后端 Dockerfile，不修改前端 Dockerfile，不修改 Nginx 配置。但本阶段修改了前端首页 `/dashboard`，因此仍然必须重新构建前端镜像，并统一执行 Docker Compose 重建验收。
+
+后端编译命令：进入 `D:\Code\enterprise-scaffold\scaffold-backend`，执行 `mvn -DskipTests compile`，预期结果是 `BUILD SUCCESS`。
+
+前端构建命令：进入 `D:\Code\enterprise-scaffold\scaffold-frontend`，执行 `pnpm build`，预期结果是构建成功。
+
+Docker Compose 验收命令：进入 `D:\Code\enterprise-scaffold\scaffold-docker`，依次执行 `docker compose --env-file .env up -d --build`、`docker compose ps`、`docker logs -f enterprise-scaffold-backend`。预期容器包括 `enterprise-scaffold-mysql`、`enterprise-scaffold-backend`、`enterprise-scaffold-frontend`、`enterprise-scaffold-emqx`、`enterprise-scaffold-prometheus`、`enterprise-scaffold-grafana`，并且都应处于 running 状态，其中 MySQL 应为 healthy。
+
+A2-08 需要验收的页面包括 `http://localhost:5173/dashboard`、`http://localhost:5173/aiops/dashboard`、`http://localhost:5173/aiops/resources`、`http://localhost:5173/aiops/metrics`、`http://localhost:5173/aiops/alerts`、`http://localhost:5173/aiops/work-orders`、`http://localhost:5173/aiops/root-causes`、`http://localhost:9090`、`http://localhost:3000`。如果页面提示加载失败，先查 F12 Network，再查 ApiResult 解包，再查 `docker logs -f enterprise-scaffold-backend`。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#######################################################################################################################################################################################
+
+
+

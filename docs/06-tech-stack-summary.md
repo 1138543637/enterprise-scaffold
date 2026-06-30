@@ -2912,3 +2912,31 @@ Spring Boot Actuator 用于暴露后端服务运行状态和运行指标，Micro
 
 面试解释：A2-07 不是新增业务表，而是接入监控基础设施。后端通过 Actuator 和 Micrometer 暴露 `/actuator/prometheus`，Prometheus 通过 Docker 网络访问 `enterprise-scaffold-backend:8080` 抓取指标，Grafana 再连接 Prometheus 展示监控数据。这样 AIOps 项目不仅有资源、指标、告警、工单和根因分析业务链路，也具备监控组件接入能力。
 
+
+## A2-08：A2 项目总体验收与收尾技术总结
+
+A2-08 完成项目二“云网融合 AIOps 智能运维平台”的总体验收与收尾。本阶段不新增数据库表、不新增后端业务接口、不新增 Docker 服务，主要完成首页入口导航、A2 完整业务链路梳理、接口验收、页面验收、Prometheus / Grafana 验收、Docker Compose 一键部署验收、README 和 docs 总结更新。
+
+本阶段修改前端文件 `scaffold-frontend/src/views/dashboard/DashboardView.vue`，首页展示顺序固定为：公共脚手架概览、项目一智能矿山入口、项目一验收链路、项目二 AIOps 入口、A2 项目验收链路。首页增加 AIOps 项目入口，包括 `/aiops/dashboard`、`/aiops/resources`、`/aiops/metrics`、`/aiops/alerts`、`/aiops/work-orders`、`/aiops/root-causes`，并增加 Prometheus `http://localhost:9090` 和 Grafana `http://localhost:3000` 入口。
+
+A2 项目完整链路为：资源台账 -> 指标采集 -> 指标异常识别 -> 告警事件生成 -> 告警转运维工单 -> 工单处理 -> 工单关闭 -> 根因分析 -> AIOps 综合看板 -> Spring Boot Actuator 指标暴露 -> Prometheus 指标抓取 -> Grafana 指标查询与可视化基础。
+
+本阶段涉及技术包括 Vue3、Vue Router、Pinia、Element Plus、CSS Grid、Docker Compose、Spring Boot Actuator、Micrometer、Prometheus、Grafana。可以写进简历的一句话：基于 Spring Boot 3、MyBatis-Plus、MySQL、Vue3、Element Plus、ECharts、Docker Compose、Prometheus 和 Grafana，完成云网融合 AIOps 智能运维平台，覆盖资源台账、指标采集、告警中心、运维工单、根因分析、综合看板和监控组件接入等完整链路。面试时可以解释：A2 项目不是单纯页面展示，而是从资源台账开始，生成指标数据，再根据指标异常生成告警事件，告警事件可以转为运维工单，工单完成处理和关闭后，根因分析模块会结合告警、指标和工单给出疑似原因和处理建议，最后由 AIOps 综合看板、Prometheus 和 Grafana 完成业务可视化与监控组件接入。
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################################
+
+
+
+
+

@@ -491,3 +491,33 @@ Docker Compose 中新增 Prometheus 和 Grafana 服务。Prometheus 用于抓取
 A2-07 不新增业务数据库表，不新增业务 Controller、Service、Mapper，也不新增前端页面。本阶段重点是让 AIOps 项目具备真实监控体系接入能力，为 A2-08 项目二总体验收提供监控能力基础。
 
 
+## A2-08：A2 项目总体验收与收尾
+
+A2-08 完成项目二“云网融合 AIOps 智能运维平台”的总体验收与收尾。本阶段不新增数据库表、不新增 SQL 文件、不新增后端业务接口、不新增 Docker 服务，重点是把 AIOps 项目整理成可以演示、可以部署、可以写入简历、可以在面试中讲清楚的完整项目。
+
+A2 项目完整业务链路为：资源台账 -> 指标采集 -> 指标异常识别 -> 告警事件生成 -> 告警转运维工单 -> 工单处理 -> 工单关闭 -> 根因分析 -> AIOps 综合看板 -> Spring Boot Actuator 指标暴露 -> Prometheus 指标抓取 -> Grafana 指标查询与可视化基础。
+
+本阶段修改首页 `/dashboard`，首页展示顺序固定为：公共脚手架概览、项目一智能矿山入口、项目一验收链路、项目二 AIOps 入口、A2 项目验收链路。这样可以先展示已经完整完成的项目一，再展示当前收尾的项目二，符合项目推进顺序，也方便面试演示。A2 页面入口包括 `/aiops/dashboard`、`/aiops/resources`、`/aiops/metrics`、`/aiops/alerts`、`/aiops/work-orders`、`/aiops/root-causes`，监控组件入口包括 Prometheus `http://localhost:9090` 和 Grafana `http://localhost:3000`。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+############################################################################################
+
+
