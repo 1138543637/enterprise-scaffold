@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
+const TOKEN_KEY = 'enterprise_scaffold_token'
+
 const routes: RouteRecordRaw[] = [
     {
         path: '/',
@@ -57,13 +59,41 @@ const routes: RouteRecordRaw[] = [
         meta: {
             requiresAuth: true
         }
+    },
+    {
+        path: '/aiops/metrics',
+        name: 'AiopsMetricData',
+        component: () => import('../views/aiops/AiopsMetricDataView.vue'),
+        meta: {
+            requiresAuth: true
+        }
     }
-
 ]
 
 const router = createRouter({
     history: createWebHistory(),
     routes
+})
+
+router.beforeEach((to, _from, next) => {
+    const token = localStorage.getItem(TOKEN_KEY)
+
+    if (to.meta.requiresAuth && !token) {
+        next({
+            path: '/login',
+            query: {
+                redirect: to.fullPath
+            }
+        })
+        return
+    }
+
+    if (to.path === '/login' && token) {
+        next('/dashboard')
+        return
+    }
+
+    next()
 })
 
 export default router

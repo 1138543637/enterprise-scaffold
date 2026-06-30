@@ -1640,4 +1640,16 @@ A2-02 新增资源分页查询接口 `GET /api/aiops/resources/page`，用于查
 
 返回对象 `AiopsResourcePageVO` 字段包括 `id`、`resourceCode`、`resourceName`、`resourceType`、`ipAddr`、`port`、`envType`、`systemName`、`ownerName`、`collectEnabled`、`lastCollectTime`、`status`、`createTime`、`remark`。接口使用操作日志注解 `@OperLog(title = "AIOps资源管理", businessType = "分页查询")`，访问成功后可在 `GET /api/system/oper-logs/page?pageNo=1&pageSize=20&title=AIOps资源管理` 中查询到对应操作日志。
 
+## A2-03：AIOps 指标采集与模拟数据接口
+
+A2-03 新增三个接口，统一使用 `/api/aiops/metric-data` 前缀，所有接口都需要 JWT 认证，并继续使用 `ApiResult` 统一返回结构。
+
+`POST /api/aiops/metric-data/simulate` 用于基于 `aiops_resource` 中启用采集且状态正常的资源，模拟生成 CPU、内存、磁盘、网络、MySQL、Redis 等指标数据，并写入 `aiops_metric_data`。请求体字段包括 `resourceId`、`resourceType`、`metricType`、`count`、`remark`。其中 `resourceId` 可选，用于指定某个资源；`resourceType` 可选，用于指定资源类型；`metricType` 可选，用于指定指标类型；`count` 表示每个资源生成几轮指标数据，默认 1，最大 20；`remark` 为备注。返回结构为 `ApiResult<List<AiopsMetricDataVO>>`。
+
+`GET /api/aiops/metric-data/latest` 用于查询每个资源每类指标的最新一条数据，支持查询参数 `resourceId`、`resourceCode`、`resourceName`、`resourceType`、`ipAddr`、`metricCode`、`metricType`、`alarmFlag`、`status`，返回结构为 `ApiResult<List<AiopsMetricDataVO>>`。
+
+`GET /api/aiops/metric-data/page` 用于分页查询 AIOps 指标历史数据，支持查询参数 `pageNo`、`pageSize`、`resourceId`、`resourceCode`、`resourceName`、`resourceType`、`ipAddr`、`metricCode`、`metricType`、`alarmFlag`、`status`，返回结构为 `ApiResult<PageResult<AiopsMetricDataVO>>`。
+
+本阶段 Controller 方法统一使用 `@OperLog(title = "AIOps指标数据", businessType = "...")` 记录操作日志。
+
 

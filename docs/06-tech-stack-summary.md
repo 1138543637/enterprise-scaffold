@@ -2722,3 +2722,19 @@ A2-02 新增 AIOps 资源台账能力，使用 MySQL 表 `aiops_resource` 保存
 
 本阶段验证方式包括执行 `scaffold-sql/a2_02_aiops_resource.sql`，执行后端 `mvn -DskipTests compile`，执行前端 `pnpm build`，通过 `GET /api/aiops/resources/page?pageNo=1&pageSize=10` 验证接口，通过 `http://localhost:5173/aiops/resources` 验证页面，通过 `docker compose --env-file .env up -d --build`、`docker compose ps`、`docker logs -f enterprise-scaffold-backend` 完成 Docker Compose 验收。简历表达：实现 AIOps 智能运维资源台账模块，支持服务器、数据库、中间件和网络设备统一管理，为后续指标采集、告警分析、工单闭环和根因定位提供资源基础。面试解释：A2-02 是 AIOps 项目的资源基础层，我没有另起项目，而是在公共脚手架中继续扩展 `cn.sxu.enterprise.module.aiops`，复用统一认证、统一返回、分页结构和操作日志，保证后续 AIOps 能力可以在同一工程体系内持续演进。
 
+## A2-03：AIOps 指标采集与模拟数据技术总结
+
+本阶段新增 AIOps 指标采集与模拟数据能力，核心目标是基于 A2-02 的 `aiops_resource` 资源台账生成 CPU、内存、磁盘、网络、MySQL、Redis 等指标数据，并写入 `aiops_metric_data` 表。
+
+新增后端路径包括 `cn.sxu.enterprise.module.aiops.entity.AiopsMetricData`、`cn.sxu.enterprise.module.aiops.mapper.AiopsMetricDataMapper`、`cn.sxu.enterprise.module.aiops.service.AiopsMetricDataService`、`cn.sxu.enterprise.module.aiops.service.impl.AiopsMetricDataServiceImpl`、`cn.sxu.enterprise.module.aiops.controller.AiopsMetricDataController`、`cn.sxu.enterprise.module.aiops.dto.AiopsMetricDataSimulateRequest`、`cn.sxu.enterprise.module.aiops.vo.AiopsMetricDataPageQuery`、`cn.sxu.enterprise.module.aiops.vo.AiopsMetricDataVO`。
+
+新增前端路径包括 `scaffold-frontend/src/api/aiops/metricData.ts` 和 `scaffold-frontend/src/views/aiops/AiopsMetricDataView.vue`。新增前端路由为 `/aiops/metrics`。新增数据库表为 `aiops_metric_data`。新增 SQL 文件为 `scaffold-sql/a2_03_aiops_metric_data.sql`。新增接口包括 `POST /api/aiops/metric-data/simulate`、`GET /api/aiops/metric-data/latest`、`GET /api/aiops/metric-data/page`。
+
+本阶段继续使用 Java 17、Spring Boot 3、MyBatis-Plus、MySQL、Validation、JWT、ApiResult、PageResult、@OperLog、Vue3、TypeScript、Axios、Element Plus、CSS Grid 和 Docker Compose。前端 API 文件继续使用 `unwrapApiResult` 兼容 ApiResult 和 AxiosResponse 返回层级，避免页面出现 undefined 或加载失败。
+
+验证方式包括执行 `mvn -DskipTests compile`、执行 `pnpm build`、执行 `docker compose --env-file .env up -d --build`、访问 `/api/aiops/metric-data/**` 接口、访问 `/aiops/metrics` 页面。
+
+简历表达：实现 AIOps 智能运维指标采集与模拟数据模块，基于资源台账模拟生成 CPU、内存、磁盘、网络、MySQL、Redis 等运维指标，支持最新指标查询、历史指标分页查询和前端可视化展示，为后续告警中心、根因分析和综合看板提供数据基础。
+
+面试解释：A2-03 没有直接接入 Prometheus，而是先用模拟指标数据打通业务链路。后端根据资源类型生成不同指标，使用 MyBatis-Plus 写入和分页查询，前端通过 Vue3 + Element Plus 展示最新指标和历史指标。这样可以先完成 AIOps 核心业务闭环，再在 A2-07 接入 Prometheus / Grafana。
+

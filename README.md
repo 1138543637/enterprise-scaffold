@@ -505,3 +505,13 @@ A2-01 已新增后端业务模块：
 
 A2-02 继续保持 A2 固定开发规则：后端包名使用 `cn.sxu.enterprise.module.aiops`，接口路径使用 `/api/aiops/**`，数据库表使用 `aiops_` 前缀，前端路由使用 `/aiops/**`。本阶段不新增 Docker 服务，但新增了后端和前端代码，因此需要通过 Docker Compose 重新 build 后端和前端镜像完成验收。A2-02 为后续 A2-03 指标采集与模拟数据提供资源台账基础。
 
+## A2-03：AIOps 指标采集与模拟数据
+
+当前项目二“云网融合 AIOps 智能运维平台”已完成指标采集与模拟数据能力。
+
+本阶段新增 `aiops_metric_data` 指标数据表，新增 `POST /api/aiops/metric-data/simulate`、`GET /api/aiops/metric-data/latest`、`GET /api/aiops/metric-data/page` 三个接口，支持基于 AIOps 资源台账模拟生成 CPU、内存、磁盘、网络、MySQL、Redis 等指标数据。
+
+本阶段新增前端页面 `/aiops/metrics`，用于展示最新指标数据、指标历史数据，并支持模拟生成指标数据。接口继续需要 JWT 认证，继续使用 `ApiResult` 统一返回，分页接口继续使用 `PageResult`，Controller 方法继续使用 `@OperLog` 记录操作日志。
+
+A2-03 为后续 A2-04 告警规则、告警事件、运维工单闭环，以及 A2-06 AIOps 综合看板提供指标数据基础。
+
