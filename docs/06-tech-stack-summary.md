@@ -2810,3 +2810,85 @@ A2-05 没有直接做复杂 AI 模型，
 通过整合告警、指标、资源和工单数据，
 形成能落库、能查询、能展示、能说明原因的工程化 AIOps 分析能力。
 
+### A2-06：AIOps 综合看板技术总结
+
+A2-06 新增 AIOps 综合看板能力，用于统一展示资源、指标、告警、工单和根因分析数据。
+
+本阶段新增后端类：
+
+- `AiopsDashboardController`
+- `AiopsDashboardService`
+- `AiopsDashboardServiceImpl`
+- `AiopsDashboardSummaryVO`
+- `AiopsResourceTypeStatVO`
+- `AiopsAlertLevelStatVO`
+- `AiopsWorkOrderStatusStatVO`
+- `AiopsMetricTrendVO`
+- `AiopsRecentAlertVO`
+- `AiopsRecentWorkOrderVO`
+- `AiopsRecentRootCauseVO`
+
+本阶段新增接口：
+
+- `GET /api/aiops/dashboard/summary`
+- `GET /api/aiops/dashboard/resource-type-stats`
+- `GET /api/aiops/dashboard/alert-level-stats`
+- `GET /api/aiops/dashboard/work-order-status-stats`
+- `GET /api/aiops/dashboard/metric-trend`
+- `GET /api/aiops/dashboard/recent-alerts`
+- `GET /api/aiops/dashboard/recent-work-orders`
+- `GET /api/aiops/dashboard/recent-root-causes`
+
+本阶段复用数据库表：
+
+- `aiops_resource`
+- `aiops_metric_data`
+- `aiops_alert_rule`
+- `aiops_alert_event`
+- `aiops_work_order`
+- `aiops_root_cause_record`
+
+本阶段不新增数据库表，不新增 SQL 文件，不新增 Docker 服务。
+
+本阶段新增前端文件：
+
+- `scaffold-frontend/src/api/aiops/dashboard.ts`
+- `scaffold-frontend/src/views/aiops/AiopsDashboardView.vue`
+
+本阶段新增前端路由：
+
+- `/aiops/dashboard`
+
+本阶段使用技术：
+
+- Spring Boot 3
+- MyBatis-Plus `LambdaQueryWrapper`
+- MyBatis-Plus `QueryWrapper`
+- `selectMaps` 分组统计
+- Java record
+- Vue3
+- TypeScript
+- Element Plus
+- ECharts
+- CSS Grid
+- AxiosResponse / ApiResult 兼容解包
+- Docker Compose 重建验收
+
+验证方式：
+
+后端执行 `mvn -DskipTests compile`。
+
+前端执行 `pnpm build`。
+
+Docker 执行 `docker compose --env-file .env up -d --build`、`docker compose ps`、`docker logs -f enterprise-scaffold-backend`。
+
+页面访问 `http://localhost:5173/aiops/dashboard`。
+
+简历表达：
+
+基于 Spring Boot 3、MyBatis-Plus、Vue3、Element Plus、ECharts 和 Docker Compose 实现 AIOps 综合看板，整合资源台账、指标采集、告警事件、运维工单和根因分析数据，支持资源类型分布、告警级别分布、工单状态分布、指标趋势和最近事件展示。
+
+面试解释：
+
+A2-06 没有新增数据库表，而是复用 A2-02 到 A2-05 已有业务表进行聚合统计。后端通过 MyBatis-Plus 完成数量统计、分组统计和最近记录查询，前端通过 Vue3 + ECharts 展示综合看板，并通过 `unwrapApiResult` 解决 AxiosResponse 和 ApiResult 返回层级不一致问题。
+

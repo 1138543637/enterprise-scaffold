@@ -460,3 +460,19 @@ A2-05 使 AIOps 项目从“发现告警、生成工单”进一步扩展到
 “解释告警原因、沉淀分析记录、辅助运维处置”的能力，
 为后续 A2-06 AIOps 综合看板提供根因分析数据基础。
 
+### A2-06：AIOps 综合看板
+
+A2-06 完成了云网融合 AIOps 智能运维平台的综合看板能力。
+
+本阶段基于已经完成的 AIOps 资源台账、指标数据、告警规则、告警事件、运维工单和根因分析记录，新增综合统计接口和前端看板页面，用于统一展示资源总数、异常资源、指标数据总数、异常指标数量、告警规则数量、告警事件数量、未处理告警数量、运维工单数量、待处理工单数量、根因分析记录数量和高置信根因分析数量。
+
+后端新增 `AiopsDashboardController`、`AiopsDashboardService`、`AiopsDashboardServiceImpl`，并新增 `AiopsDashboardSummaryVO`、`AiopsResourceTypeStatVO`、`AiopsAlertLevelStatVO`、`AiopsWorkOrderStatusStatVO`、`AiopsMetricTrendVO`、`AiopsRecentAlertVO`、`AiopsRecentWorkOrderVO`、`AiopsRecentRootCauseVO` 等返回对象。
+
+前端新增 `scaffold-frontend/src/api/aiops/dashboard.ts` 和 `scaffold-frontend/src/views/aiops/AiopsDashboardView.vue`，新增访问路由 `/aiops/dashboard`。
+
+页面使用 Vue3、TypeScript、Element Plus、ECharts 和 CSS Grid 展示统计卡片、最近 7 天指标趋势图、资源类型分布图、告警级别分布图、工单状态分布图、最近告警事件表格、最近运维工单表格和最近根因分析表格。
+
+A2-06 不新增数据库表、不新增数据库字段、不新增 SQL 文件、不新增 Docker 服务，继续复用 `aiops_resource`、`aiops_metric_data`、`aiops_alert_rule`、`aiops_alert_event`、`aiops_work_order`、`aiops_root_cause_record`。
+
+本阶段完成后，AIOps 模块形成了从资源管理、指标采集、告警事件、运维工单、根因分析到综合看板的完整展示链路，为后续 A2-07 Prometheus / Grafana 接入提供可视化基础。
+

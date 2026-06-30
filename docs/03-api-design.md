@@ -1705,4 +1705,126 @@ businessType 分别为执行分析、分页查询、详情查询。
 成功响应继续使用 ApiResult，分页响应继续使用 PageResult，
 不允许改变统一返回结构。
 
+### A2-06：AIOps 综合看板接口
+
+A2-06 新增 AIOps 综合看板接口，统一接口前缀为 `/api/aiops/dashboard`。
+
+所有接口都需要 JWT 认证，请求头固定为 `Authorization: Bearer <token>`。
+
+所有接口继续使用 `ApiResult` 统一返回结构。
+
+Controller 方法继续使用 `@OperLog` 记录操作日志。
+
+#### 汇总统计
+
+`GET /api/aiops/dashboard/summary`
+
+用于获取资源总数、异常资源数、指标数据总数、异常指标数、告警规则数、告警事件数、未处理告警数、运维工单数、待处理工单数、根因分析数和高置信根因分析数。
+
+返回结构：
+
+`ApiResult<AiopsDashboardSummaryVO>`
+
+操作日志：
+
+`@OperLog(title = "AIOps综合看板", businessType = "汇总统计")`
+
+#### 资源类型统计
+
+`GET /api/aiops/dashboard/resource-type-stats`
+
+用于按资源类型统计资源数量。
+
+返回结构：
+
+`ApiResult<List<AiopsResourceTypeStatVO>>`
+
+操作日志：
+
+`@OperLog(title = "AIOps综合看板", businessType = "资源类型统计")`
+
+#### 告警级别统计
+
+`GET /api/aiops/dashboard/alert-level-stats`
+
+用于按告警级别统计告警事件数量。
+
+返回结构：
+
+`ApiResult<List<AiopsAlertLevelStatVO>>`
+
+操作日志：
+
+`@OperLog(title = "AIOps综合看板", businessType = "告警级别统计")`
+
+#### 工单状态统计
+
+`GET /api/aiops/dashboard/work-order-status-stats`
+
+用于按工单状态统计运维工单数量。
+
+返回结构：
+
+`ApiResult<List<AiopsWorkOrderStatusStatVO>>`
+
+操作日志：
+
+`@OperLog(title = "AIOps综合看板", businessType = "工单状态统计")`
+
+#### 最近 7 天指标趋势
+
+`GET /api/aiops/dashboard/metric-trend`
+
+用于统计最近 7 天指标数量、异常指标数量和平均指标值。
+
+返回结构：
+
+`ApiResult<List<AiopsMetricTrendVO>>`
+
+操作日志：
+
+`@OperLog(title = "AIOps综合看板", businessType = "指标趋势分析")`
+
+#### 最近告警事件
+
+`GET /api/aiops/dashboard/recent-alerts`
+
+用于查询最近 10 条告警事件。
+
+返回结构：
+
+`ApiResult<List<AiopsRecentAlertVO>>`
+
+操作日志：
+
+`@OperLog(title = "AIOps综合看板", businessType = "最近告警查询")`
+
+#### 最近运维工单
+
+`GET /api/aiops/dashboard/recent-work-orders`
+
+用于查询最近 10 条运维工单。
+
+返回结构：
+
+`ApiResult<List<AiopsRecentWorkOrderVO>>`
+
+操作日志：
+
+`@OperLog(title = "AIOps综合看板", businessType = "最近工单查询")`
+
+#### 最近根因分析
+
+`GET /api/aiops/dashboard/recent-root-causes`
+
+用于查询最近 10 条根因分析记录。
+
+返回结构：
+
+`ApiResult<List<AiopsRecentRootCauseVO>>`
+
+操作日志：
+
+`@OperLog(title = "AIOps综合看板", businessType = "最近根因分析查询")`
+
 

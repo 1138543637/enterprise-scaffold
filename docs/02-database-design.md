@@ -762,6 +762,30 @@ A2-05 新增 SQL 文件 scaffold-sql/a2_05_aiops_root_cause.sql，
 并且必须将 aiops_root_cause_record 建表语句同步追加到 scaffold-sql/enterprise_scaffold_init.sql。
 
 
+### A2-06：AIOps 综合看板数据库说明
+
+A2-06 不新增数据库表，不新增数据库字段，不新增 SQL 文件。
+
+本阶段只做看板统计和可视化展示，继续复用 A2-02 至 A2-05 已经完成的 AIOps 业务表。
+
+`aiops_resource` 用于统计资源总数、异常资源数量和资源类型分布。
+
+`aiops_metric_data` 用于统计指标数据总数、异常指标数量和最近 7 天指标趋势。
+
+`aiops_alert_rule` 用于统计告警规则数量。
+
+`aiops_alert_event` 用于统计告警事件数量、未处理告警数量、告警级别分布和最近告警事件。
+
+`aiops_work_order` 用于统计运维工单数量、待处理工单数量、工单状态分布和最近运维工单。
+
+`aiops_root_cause_record` 用于统计根因分析记录数量、高置信根因分析数量和最近根因分析记录。
+
+本阶段所有统计均基于已有表的查询和聚合完成，不改变任何表结构，不新增外键，不新增索引，不改变已有字段含义。
+
+A2-06 继续遵守数据库名固定为 `enterprise_scaffold`、A2 表名前缀固定为 `aiops_`、逻辑删除字段固定为 `deleted`、统一状态字段固定为 `status` 的工程约定。
+
+后续如需接入 Prometheus / Grafana 或 Spring Boot Actuator，将在 A2-07 中单独处理部署和监控配置。
+
 
 
 

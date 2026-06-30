@@ -607,3 +607,27 @@ aiops_alert_event、aiops_work_order 表和接口命名。
 本阶段重点是用自己的代码实现可解释的简化根因分析能力，
 并保持与当前 enterprise-scaffold 工程命名契约一致。
 
+### A2-06：AIOps 综合看板 GitHub 参考说明
+
+A2-06 参考 RuoYi-Vue-Pro、RuoYi-Vue、RuoYi-Vue3、Vue Vben Admin、MyBatis-Plus 和 ECharts 的设计思想。
+
+RuoYi 系列项目主要参考后台管理系统的 Controller、Service、Mapper 分层方式、操作日志设计思想和后台首页统计接口组织方式。
+
+MyBatis-Plus 主要参考 `BaseMapper`、`LambdaQueryWrapper`、`QueryWrapper`、`selectMaps` 的聚合统计写法。
+
+Vue3 中后台项目主要参考看板页面的统计卡片、图表区域和表格区域布局方式。
+
+ECharts 主要参考折线图和饼图的初始化、数据更新、窗口 resize 和组件销毁方式。
+
+本项目自己的实现固定为后端包名 `cn.sxu.enterprise.module.aiops`，接口路径 `/api/aiops/dashboard/**`，前端路由 `/aiops/dashboard`。
+
+数据库继续复用 `aiops_resource`、`aiops_metric_data`、`aiops_alert_rule`、`aiops_alert_event`、`aiops_work_order`、`aiops_root_cause_record`。
+
+返回结构继续使用 `ApiResult`。
+
+前端 API 文件继续使用 `unwrapApiResult` 兼容 `AxiosResponse<ApiResult<T>>`、`ApiResult<T>` 和 `T` 三种返回情况。
+
+前端统计卡片、图表区和表格区继续使用 CSS Grid。
+
+A2-06 不能直接复制开源项目代码，不能引入新的权限框架，不能替换现有 JWT、`ApiResult`、`PageResult`，不能重命名已有 A2 表、类和接口，不能把 `/api/aiops/dashboard/**` 改成 `/api/ops/**` 或其他路径。
+

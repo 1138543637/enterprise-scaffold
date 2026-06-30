@@ -91,6 +91,14 @@ const routes: RouteRecordRaw[] = [
         meta: {
             requiresAuth: true
         }
+    },
+    {
+        path: '/aiops/dashboard',
+        name: 'AiopsDashboard',
+        component: () => import('../views/aiops/AiopsDashboardView.vue'),
+        meta: {
+            requiresAuth: true
+        }
     }
 
 ]

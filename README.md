@@ -571,3 +571,76 @@ Vue3、Element Plus 和 Docker Compose。
 根因分析能力使 AIOps 模块从告警发现和工单处理进一步扩展到故障解释和处置建议，
 为后续 A2-06 AIOps 综合看板提供分析数据基础。
 
+## A2-06：AIOps 综合看板
+
+当前项目二“云网融合 AIOps 智能运维平台”已完成 AIOps 综合看板能力。
+
+本阶段新增后端接口：
+
+- `GET /api/aiops/dashboard/summary`
+- `GET /api/aiops/dashboard/resource-type-stats`
+- `GET /api/aiops/dashboard/alert-level-stats`
+- `GET /api/aiops/dashboard/work-order-status-stats`
+- `GET /api/aiops/dashboard/metric-trend`
+- `GET /api/aiops/dashboard/recent-alerts`
+- `GET /api/aiops/dashboard/recent-work-orders`
+- `GET /api/aiops/dashboard/recent-root-causes`
+
+本阶段新增后端类：
+
+- `AiopsDashboardController`
+- `AiopsDashboardService`
+- `AiopsDashboardServiceImpl`
+- `AiopsDashboardSummaryVO`
+- `AiopsResourceTypeStatVO`
+- `AiopsAlertLevelStatVO`
+- `AiopsWorkOrderStatusStatVO`
+- `AiopsMetricTrendVO`
+- `AiopsRecentAlertVO`
+- `AiopsRecentWorkOrderVO`
+- `AiopsRecentRootCauseVO`
+
+本阶段新增前端文件：
+
+- `scaffold-frontend/src/api/aiops/dashboard.ts`
+- `scaffold-frontend/src/views/aiops/AiopsDashboardView.vue`
+
+本阶段新增前端路由：
+
+- `/aiops/dashboard`
+
+A2-06 复用已有数据库表：
+
+- `aiops_resource`
+- `aiops_metric_data`
+- `aiops_alert_rule`
+- `aiops_alert_event`
+- `aiops_work_order`
+- `aiops_root_cause_record`
+
+A2-06 不新增数据库表，不新增数据库字段，不新增 SQL 文件，不新增 Docker 服务，不新增 Docker 环境变量。
+
+本阶段使用 ECharts 展示资源类型分布、告警级别分布、工单状态分布和最近 7 天指标趋势。
+
+本阶段使用 Element Plus 展示统计卡片、最近告警事件、最近运维工单和最近根因分析记录。
+
+本阶段前端继续使用 CSS Grid 做统计卡片、图表区域和表格区域布局，避免桌面端统计卡片一张铺满一整行。
+
+本阶段前端 API 文件继续使用 `unwrapApiResult` 兼容 `AxiosResponse<ApiResult<T>>`、`ApiResult<T>` 和 `T` 三种返回情况，避免页面出现 `undefined` 或“加载失败”。
+
+A2-06 完成后，AIOps 模块已经具备从资源台账、指标采集、告警事件、运维工单、根因分析到综合看板的完整展示链路。
+
+Docker Compose 验收仍然必须执行：
+
+`cd /d D:\Code\enterprise-scaffold\scaffold-docker`
+
+`docker compose --env-file .env up -d --build`
+
+`docker compose ps`
+
+`docker logs -f enterprise-scaffold-backend`
+
+A2-06 推荐提交信息：
+
+`feat: implement aiops dashboard`
+

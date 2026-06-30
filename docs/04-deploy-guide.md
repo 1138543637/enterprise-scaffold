@@ -1425,3 +1425,94 @@ http://localhost:5173/aiops/root-causes
 
 F12 Network 中接口路径必须是 /api/aiops/root-causes/**。
 
+### A2-06：AIOps 综合看板部署与验收
+
+A2-06 不新增 Docker 服务，不修改 `scaffold-docker/docker-compose.yml`，不修改 `scaffold-docker/.env.example`，不新增 Docker 环境变量，不新增 Docker volume。
+
+Docker 服务仍固定为：
+
+- `enterprise-scaffold-mysql`
+- `enterprise-scaffold-backend`
+- `enterprise-scaffold-frontend`
+- `enterprise-scaffold-emqx`
+
+但是本阶段新增了后端接口和前端页面，所以必须重新构建后端和前端镜像。
+
+后端编译执行目录：
+
+`D:\Code\enterprise-scaffold\scaffold-backend`
+
+后端编译命令：
+
+`mvn -DskipTests compile`
+
+预期结果：
+
+`BUILD SUCCESS`
+
+前端构建执行目录：
+
+`D:\Code\enterprise-scaffold\scaffold-frontend`
+
+前端构建命令：
+
+`pnpm build`
+
+预期结果：
+
+构建成功。
+
+Docker Compose 验收执行目录：
+
+`D:\Code\enterprise-scaffold\scaffold-docker`
+
+Docker Compose 验收命令：
+
+`docker compose --env-file .env up -d --build`
+
+`docker compose ps`
+
+`docker logs -f enterprise-scaffold-backend`
+
+预期容器状态：
+
+- `enterprise-scaffold-mysql` running / healthy
+- `enterprise-scaffold-backend` running
+- `enterprise-scaffold-frontend` running
+- `enterprise-scaffold-emqx` running
+
+接口验收需要先通过 `POST http://localhost:8080/api/auth/login` 使用 `admin / admin123` 登录获取 token。
+
+登录后请求头携带：
+
+`Authorization: Bearer <token>`
+
+需要验收的接口包括：
+
+- `GET http://localhost:8080/api/aiops/dashboard/summary`
+- `GET http://localhost:8080/api/aiops/dashboard/resource-type-stats`
+- `GET http://localhost:8080/api/aiops/dashboard/alert-level-stats`
+- `GET http://localhost:8080/api/aiops/dashboard/work-order-status-stats`
+- `GET http://localhost:8080/api/aiops/dashboard/metric-trend`
+- `GET http://localhost:8080/api/aiops/dashboard/recent-alerts`
+- `GET http://localhost:8080/api/aiops/dashboard/recent-work-orders`
+- `GET http://localhost:8080/api/aiops/dashboard/recent-root-causes`
+
+预期接口返回：
+
+`code = 0`
+
+`msg = success`
+
+`data` 不为 null。
+
+前端页面验收地址：
+
+`http://localhost:5173/aiops/dashboard`
+
+预期页面正常打开，统计卡片一行多张显示，ECharts 图表正常展示，最近告警事件、最近运维工单、最近根因分析表格正常展示，页面不出现 `undefined`，不提示 `AIOps 综合看板加载失败`。
+
+如果页面加载失败，先查 F12 Network，再查前端 `ApiResult` 解包，再查 Docker 后端日志：
+
+`docker logs -f enterprise-scaffold-backend`
+
