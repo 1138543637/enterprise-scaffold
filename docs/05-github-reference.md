@@ -672,3 +672,9 @@ A2-08 继续保持本项目自己的实现：公共脚手架为 `enterprise-scaf
 
 
 
+## R3-01 GitHub 参考说明
+
+R3-01 参考 RuoYi-Vue-Pro、RuoYi-Vue、RuoYi-Vue3、vue-element-admin、Vue Vben Admin 和 MyBatis-Plus 的企业后台组织方式，但只参考模块拆分、Controller 命名、统一返回、操作日志和后台项目结构，不复制业务代码，不复制完整权限系统，不复制代码生成器，不把其他项目改名后作为本项目内容。R3-01 的实际代码必须沿用 enterprise-scaffold 已有 MineHealthController、AiopsHealthController、ApiResult 和 @OperLog 的写法，保持包名 cn.sxu.enterprise.module.risk、接口路径 /api/risk/** 和返回结构一致。
+
+
+

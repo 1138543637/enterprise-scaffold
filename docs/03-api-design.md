@@ -1884,4 +1884,9 @@ A2-07 已接入 Spring Boot Actuator 和 Micrometer Prometheus Registry，需要
 ######################################################################################################################
 
 
+## R3-01 接口设计
+
+R3-01 新增银行风控模块健康检查接口 GET /api/risk/health。该接口需要 JWT 认证，不加入 SecurityConfig 放行列表。请求时需要携带 Authorization: Bearer token。接口成功时继续使用 ApiResult 统一返回结构，code 为 0，msg 为 success，data 为 enterprise-scaffold risk module running。该接口由 cn.sxu.enterprise.module.risk.controller.RiskHealthController 提供，并使用 @OperLog(title = "银行风控", businessType = "模块健康检查") 记录操作日志。本阶段不新增分页接口，因此不涉及 PageResult。
+
+
 

@@ -829,3 +829,9 @@ A2 项目当前数据库表包括：`aiops_resource`、`aiops_metric_data`、`ai
 
 #############################################################################################################################################################
 
+## R3-01 数据库设计说明
+
+R3-01 不新增数据库表，不新增数据库字段，不新增 SQL 文件，也不修改 scaffold-sql/enterprise_scaffold_init.sql。原因是本阶段只新增银行风控模块骨架和健康检查接口，不涉及交易流水、规则命中、风险评分或人工审核等业务数据持久化。R3 后续数据库表前缀固定为 risk_，后续阶段规划新增 risk_transaction、risk_rule、risk_rule_hit、risk_review_order。后续新增 SQL 文件时，第一行必须是 SET NAMES utf8mb4;，第二段必须使用 USE enterprise_scaffold;，并且新增 SQL 必须同步追加到 scaffold-sql/enterprise_scaffold_init.sql。
+
+
+

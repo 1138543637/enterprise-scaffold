@@ -2939,4 +2939,9 @@ A2 项目完整链路为：资源台账 -> 指标采集 -> 指标异常识别 ->
 
 
 
+## R3-01 技术栈更新：银行风控模块骨架
+
+R3-01 在现有 Spring Boot 3、JWT、ApiResult、@OperLog、Docker Compose 技术基础上新增银行实时交易风控与反欺诈平台模块骨架。新增后端业务包 cn.sxu.enterprise.module.risk，新增 RiskHealthController，新增 GET /api/risk/health 健康检查接口。该接口继续受 JWT 保护，继续使用 ApiResult 返回结构，并继续写入操作日志。本阶段不新增 SQL 文件，不新增数据库表，不新增前端 API 文件，不新增业务页面，不新增 Docker 服务。完成本阶段后，R3 项目后续将继续在同一模块中扩展交易模拟、规则引擎、风险评分、人工审核、Kafka 实时交易消息接入和风控看板。
+
+
 

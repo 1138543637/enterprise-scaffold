@@ -1565,4 +1565,9 @@ A2-08 需要验收的页面包括 `http://localhost:5173/dashboard`、`http://lo
 #######################################################################################################################################################################################
 
 
+## R3-01 部署与验收说明
+
+R3-01 新增了后端 Java 代码，因此需要重新编译后端并重建 enterprise-scaffold-backend 镜像。本阶段不新增 Docker 服务，不修改 docker-compose.yml，不修改 .env.example，不新增 volume，也不新增端口。后端本地编译命令为 cd /d D:\Code\enterprise-scaffold\scaffold-backend，然后执行 mvn -DskipTests compile。Docker Compose 验收仍然不能省略，必须执行 cd /d D:\Code\enterprise-scaffold\scaffold-docker，docker compose --env-file .env up -d --build，docker compose ps，docker logs -f enterprise-scaffold-backend。验收时确认 enterprise-scaffold-mysql、enterprise-scaffold-backend、enterprise-scaffold-frontend、enterprise-scaffold-emqx、enterprise-scaffold-prometheus、enterprise-scaffold-grafana 正常运行。R3-01 不新增 enterprise-scaffold-kafka，Kafka 将在 R3-05 接入。
+
+
 
