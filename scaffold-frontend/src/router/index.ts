@@ -99,6 +99,13 @@ const routes: RouteRecordRaw[] = [
         meta: {
             requiresAuth: true
         }
+    },
+    {
+        path: '/risk/transactions',
+        name: 'RiskTransactions',
+        component: () => import('../views/risk/RiskTransactionView.vue'),
+        meta: {
+            requiresAuth: true}
     }
 
 ]
