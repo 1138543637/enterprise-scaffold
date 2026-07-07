@@ -1936,3 +1936,9 @@ R3-03 新增接口继续使用 `/api/risk/**` 前缀，继续需要 JWT，继续
 
 
 
+## R3-04：风险评分和人工审核接口
+
+R3-04 新增接口全部位于 `/api/risk/review-orders` 下，继续需要 JWT。`GET /api/risk/review-orders/page` 用于分页查询人工审核单，返回 `ApiResult<PageResult<RiskReviewOrderPageVO>>`。`GET /api/risk/review-orders/summary` 用于查询审核单汇总统计，返回 `ApiResult<RiskReviewSummaryVO>`。`POST /api/risk/review-orders/create-from-transaction` 用于基于 `risk_transaction` 和 `risk_rule_hit` 生成审核单，请求体为 `RiskReviewOrderCreateRequest`，返回 `ApiResult<List<RiskReviewOrderPageVO>>`。`POST /api/risk/review-orders/{id}/approve` 用于审核通过，请求体为 `RiskReviewApproveRequest`。`POST /api/risk/review-orders/{id}/reject` 用于审核拒绝，请求体为 `RiskReviewRejectRequest`。所有 Controller 方法继续使用 `@OperLog` 记录操作日志。
+
+
+

@@ -1653,5 +1653,10 @@ Docker 前端验收地址：`http://localhost:5173/risk/rules`
 验收标准：页面不空白，Console 没有红色 TypeError，Network 中 `/api/risk/rules/page`、`/api/risk/rule-hits/generate`、`/api/risk/rule-hits/page` 正常返回，点击“生成规则命中”后命中记录列表能刷新。
 
 
+## R3-04：风险评分和人工审核部署验收
+
+R3-04 新增 SQL 文件 `scaffold-sql/r3_04_risk_review_order.sql`，第一行必须是 `SET NAMES utf8mb4;`，第二段必须是 `USE enterprise_scaffold;`。本地 MySQL 执行命令：在 `D:\Code\enterprise-scaffold` 执行 `mysql -u root -p enterprise_scaffold < scaffold-sql\r3_04_risk_review_order.sql`。Docker MySQL 执行命令：在 `D:\Code\enterprise-scaffold` 执行 `docker exec -i enterprise-scaffold-mysql sh -c "mysql -uroot -p$MYSQL_PASSWORD enterprise_scaffold" < scaffold-sql\r3_04_risk_review_order.sql`。本阶段不新增 Docker 服务，不修改 Docker Compose 配置，但新增了后端和前端代码，所以必须重建 `enterprise-scaffold-backend` 和 `enterprise-scaffold-frontend` 镜像。固定验收命令：进入 `D:\Code\enterprise-scaffold\scaffold-docker`，执行 `docker compose --env-file .env up -d --build`，再执行 `docker compose ps`，最后执行 `docker logs -f enterprise-scaffold-backend` 查看后端日志。前端验收地址为 `http://localhost:5173/risk/review-orders`。
+
+
 
 

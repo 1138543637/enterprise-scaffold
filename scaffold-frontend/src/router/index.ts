@@ -116,6 +116,12 @@ const routes: RouteRecordRaw[] = [
             requiresAuth: true,
             title: '风控规则引擎',
         },
+    },
+    {
+        path: '/risk/review-orders',
+        name: 'riskReviewOrders',
+        component: () => import('../views/risk/RiskReviewOrderView.vue'),
+        meta: { title: '风险人工审核' },
     }
 
 ]

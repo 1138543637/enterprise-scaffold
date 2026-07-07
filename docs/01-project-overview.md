@@ -544,3 +544,7 @@ R3-03 不新增 Docker 服务，不修改 Docker 配置，但新增 SQL、后端
 
 
 
+## R3-04：风险评分和人工审核
+
+R3-04 在 R3-02 交易流水和 R3-03 规则命中基础上，新增风险评分和人工审核能力。系统会读取 `risk_transaction` 交易记录和 `risk_rule_hit` 规则命中记录，按同一笔交易的命中规则分值汇总得到 `total_score`，当风险总分达到人工审核阈值时生成 `risk_review_order` 审核单。前端新增 `/risk/review-orders` 页面，用于查看审核单、生成审核单、执行审核通过和审核拒绝操作。本阶段继续复用 JWT、`ApiResult`、`PageResult`、MyBatis-Plus、`@OperLog`、Vue3、TypeScript 和 Element Plus；不新增 Docker 服务，不修改 Docker Compose 配置。
+

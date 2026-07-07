@@ -700,3 +700,8 @@ R3-03 可以参考 GitHub 上的 Java 风控和规则引擎项目，但只能参
 本项目必须继续保持固定命名：后端包名 `cn.sxu.enterprise.module.risk`，接口路径 `/api/risk/**`，表名前缀 `risk_`，前端路由 `/risk/**`，返回结构 `ApiResult` 和 `PageResult`。
 
 
+## R3-04：GitHub 参考项目
+
+R3-04 可以参考 GitHub 上 Java 风控、反欺诈、风险评分和审核流相关项目的分层思想。例如 `yasinkabboura/FraudDetectionBased` 可参考 Kafka 交易流和欺诈识别的整体链路，GitHub `fraud-detection` Java 主题可参考规则评分、告警分诊和管理后台的常见组织方式，Redis 的 Transaction Risk Scoring 示例可参考交易风险评分的概念和阈值思想。只能参考业务拆分、交易风险评分、审核流、列表页面和看板思路，不能照搬它们的包名、表名、字段名、接口路径、模型依赖或前端结构。本项目继续固定使用 `cn.sxu.enterprise.module.risk`、`/api/risk/**`、`risk_` 表前缀、`ApiResult`、`PageResult` 和 JWT。
+
+

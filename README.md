@@ -717,3 +717,7 @@ R3-02 已新增银行交易模拟能力，新增 `risk_transaction` 交易流水
 R3-03 不新增 Docker 服务，不修改 Docker 配置，但新增 SQL、后端代码和前端页面，因此需要执行本地 MySQL、本地后端、Docker MySQL 和 Docker Compose 验收。Docker Compose 验收固定命令为：进入 `D:\Code\enterprise-scaffold\scaffold-docker`，执行 `docker compose --env-file .env up -d --build`，再执行 `docker compose ps`，最后查看 `docker logs -f enterprise-scaffold-backend`。
 
 
+## R3-04：风险评分和人工审核
+
+R3-04 新增银行风控风险评分和人工审核能力。系统基于 `risk_transaction` 交易流水和 `risk_rule_hit` 规则命中记录计算风险总分，达到审核阈值后生成 `risk_review_order` 人工审核单。新增接口包括 `GET /api/risk/review-orders/page`、`GET /api/risk/review-orders/summary`、`POST /api/risk/review-orders/create-from-transaction`、`POST /api/risk/review-orders/{id}/approve`、`POST /api/risk/review-orders/{id}/reject`。新增前端页面 `/risk/review-orders`。本阶段新增 SQL 文件 `scaffold-sql/r3_04_risk_review_order.sql`，需要同时在本地 MySQL 和 Docker MySQL 执行。本阶段不新增 Docker 服务，不修改 Docker Compose 配置，但需要执行 `docker compose --env-file .env up -d --build` 重建并验收后端和前端。
+
