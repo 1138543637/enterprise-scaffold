@@ -689,3 +689,31 @@ R3-02 已新增银行交易模拟能力，新增 `risk_transaction` 交易流水
 本阶段不新增 Docker 服务，不修改 Docker Compose 配置，但因为新增 SQL、后端代码和前端页面，完成后必须执行后端编译、前端构建和 Docker Compose 重建验收。推荐提交信息：`feat: implement risk transaction simulation`。
 
 
+## R3-03：银行风控规则引擎第一版
+
+当前项目三“银行实时交易风控与反欺诈平台”已完成 R3-03 规则引擎第一版。
+
+本阶段新增数据库表 `risk_rule` 和 `risk_rule_hit`，基于 R3-02 已完成的 `risk_transaction` 交易流水，实现大额交易、高频交易、异地交易、异常设备、夜间交易和黑名单规则匹配。
+
+新增后端接口：
+
+| 方法 | 路径 | 说明 |
+| --- | --- | --- |
+| GET | /api/risk/rules/page | 风控规则分页查询 |
+| POST | /api/risk/rule-hits/generate | 执行规则引擎并生成规则命中 |
+| GET | /api/risk/rule-hits/page | 规则命中记录分页查询 |
+
+新增前端文件：
+
+| 文件 | 说明 |
+| --- | --- |
+| scaffold-frontend/src/api/risk/rule.ts | 风控规则和规则命中 API |
+| scaffold-frontend/src/views/risk/RiskRuleView.vue | 风控规则引擎页面 |
+
+新增前端路由：`/risk/rules`
+
+本阶段继续保持后端包名 `cn.sxu.enterprise.module.risk`，接口路径 `/api/risk/**`，数据库名 `enterprise_scaffold`，表名前缀 `risk_`，统一返回结构 `ApiResult`，统一分页结构 `PageResult`，受保护接口继续需要 JWT，Controller 继续使用 `@OperLog`。
+
+R3-03 不新增 Docker 服务，不修改 Docker 配置，但新增 SQL、后端代码和前端页面，因此需要执行本地 MySQL、本地后端、Docker MySQL 和 Docker Compose 验收。Docker Compose 验收固定命令为：进入 `D:\Code\enterprise-scaffold\scaffold-docker`，执行 `docker compose --env-file .env up -d --build`，再执行 `docker compose ps`，最后查看 `docker logs -f enterprise-scaffold-backend`。
+
+

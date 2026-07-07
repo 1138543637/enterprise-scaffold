@@ -844,3 +844,61 @@ R3-02 新增 SQL 文件 `scaffold-sql/r3_02_risk_transaction.sql`，第一行固
 其中 `transaction_type` 固定为 `PAYMENT / TRANSFER / WITHDRAW / CONSUME`，`channel` 固定为 `APP / WEB / ATM / POS`，`transaction_status` 固定为 `0成功、1失败、2处理中`，`risk_flag` 固定为 `0未命中风险、1命中风险`，`status` 固定为 `0正常、1异常`。本表使用 `transaction_no` 唯一约束，并为账户号、客户ID、商户ID、交易类型、渠道、交易时间、交易状态、风险标记和状态建立索引。
 
 
+## R3-03：规则引擎数据表设计
+
+R3-03 新增 SQL 文件为 `scaffold-sql/r3_03_risk_rule_hit.sql`。该 SQL 文件第一行固定为 `SET NAMES utf8mb4;`，第二段固定为 `USE enterprise_scaffold;`，并且 SQL 内容必须同步追加到 `scaffold-sql/enterprise_scaffold_init.sql`。
+
+### risk_rule 风控规则表
+
+| 字段名 | 含义 |
+| --- | --- |
+| id | 主键ID |
+| rule_code | 规则编码，唯一 |
+| rule_name | 规则名称 |
+| rule_type | 规则类型，固定为 AMOUNT、FREQUENCY、LOCATION、DEVICE、TIME、BLACKLIST |
+| condition_type | 条件类型 |
+| compare_operator | 比较操作符，支持 GT、GTE、LT、LTE、EQ、CONTAINS、NIGHT |
+| threshold_value | 规则阈值 |
+| risk_level | 风险等级，1低风险，2中风险，3高风险 |
+| risk_score | 风险分 |
+| rule_content | 规则内容 |
+| status | 状态，0启用，1停用 |
+| create_by | 创建人 |
+| create_time | 创建时间 |
+| update_by | 更新人 |
+| update_time | 更新时间 |
+| deleted | 逻辑删除，0未删除，1已删除 |
+| remark | 备注 |
+
+### risk_rule_hit 规则命中表
+
+| 字段名 | 含义 |
+| --- | --- |
+| id | 主键ID |
+| hit_code | 命中编码，唯一 |
+| transaction_id | 交易ID |
+| transaction_no | 交易流水号 |
+| account_no | 账号 |
+| customer_id | 客户ID |
+| customer_name | 客户姓名 |
+| rule_id | 规则ID |
+| rule_code | 规则编码 |
+| rule_name | 规则名称 |
+| rule_type | 规则类型 |
+| hit_value | 命中值 |
+| threshold_value | 命中阈值 |
+| risk_level | 风险等级，1低风险，2中风险，3高风险 |
+| risk_score | 风险分 |
+| hit_time | 命中时间 |
+| status | 状态，0未处理，1已处理 |
+| create_by | 创建人 |
+| create_time | 创建时间 |
+| update_by | 更新人 |
+| update_time | 更新时间 |
+| deleted | 逻辑删除，0未删除，1已删除 |
+| remark | 备注 |
+
+`risk_rule_hit` 使用 `transaction_id + rule_id` 唯一约束，避免同一笔交易对同一条规则重复生成命中记录。生成命中记录后，后端会把对应 `risk_transaction.risk_flag` 更新为 1，并把 `risk_transaction.status` 更新为 1。
+
+
+

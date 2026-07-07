@@ -105,7 +105,17 @@ const routes: RouteRecordRaw[] = [
         name: 'RiskTransactions',
         component: () => import('../views/risk/RiskTransactionView.vue'),
         meta: {
-            requiresAuth: true}
+            requiresAuth: true,
+            title: '银行交易模拟' }
+    },
+    {
+        path: '/risk/rules',
+        name: 'RiskRules',
+        component: () => import('../views/risk/RiskRuleView.vue'),
+        meta: {
+            requiresAuth: true,
+            title: '风控规则引擎',
+        },
     }
 
 ]

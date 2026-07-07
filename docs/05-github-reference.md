@@ -685,3 +685,18 @@ R3-02 继续参考 RuoYi-Vue、RuoYi-Vue-Pro、RuoYi-Vue3、vue-element-admin、
 本项目自己的实现固定为 `cn.sxu.enterprise.module.risk`、`risk_transaction`、`RiskTransaction*` 类、`/api/risk/transactions/**` 接口和 `/risk/transactions` 前端页面。不能复制若依代码，不能引入若依代码生成器，不能改变已有 JWT、ApiResult、PageResult、@OperLog、Docker Compose 和上传目录挂载规则。
 
 
+## R3-03：规则引擎 GitHub 参考项目
+
+R3-03 可以参考 GitHub 上的 Java 风控和规则引擎项目，但只能参考分层思路、规则抽象方式、规则匹配流程和页面组织，不能照搬包名、表名、接口路径、业务命名和返回结构。
+
+可参考 GitHub Topics：`fraud-detection` Java 项目列表，用于了解反欺诈项目常见的交易、规则、告警、评分和看板组织方式。
+
+可参考 GitHub Topics：`risk-analysis` 项目列表，其中 `wfh45678/radar` 是实时风控引擎项目，可参考“规则引擎服务独立于业务入口”的思路，但不要引入它的脚本规则系统。
+
+可参考 `j-easy/easy-rules` 或相关 Easy Rules fork，理解轻量规则引擎通常由“规则条件 + 规则动作 + 规则执行器”组成。本项目 R3-03 不引入 Easy Rules 依赖，只用普通 Java 代码实现第一版规则匹配。
+
+可参考 `gitshishirkarki/spring-SpEL-rule-engine` 的规则表达式思路，但 R3-03 不使用 SpEL 动态表达式，避免新手阶段引入额外复杂度。
+
+本项目必须继续保持固定命名：后端包名 `cn.sxu.enterprise.module.risk`，接口路径 `/api/risk/**`，表名前缀 `risk_`，前端路由 `/risk/**`，返回结构 `ApiResult` 和 `PageResult`。
+
+

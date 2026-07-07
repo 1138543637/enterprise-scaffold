@@ -1900,4 +1900,39 @@ R3-02 新增交易流水接口，所有接口都需要 JWT，继续使用 `ApiRe
 `GET /api/risk/transactions/page` 用于分页查询交易流水，查询参数使用 `RiskTransactionPageQuery`，支持 `pageNo`、`pageSize`、`transactionNo`、`accountNo`、`customerName`、`merchantName`、`transactionType`、`channel`、`transactionStatus`、`riskFlag`、`status`、`beginTime`、`endTime`。返回 `ApiResult<PageResult<RiskTransactionPageVO>>`。
 
 
+## R3-03：规则引擎接口设计
+
+R3-03 新增接口继续使用 `/api/risk/**` 前缀，继续需要 JWT，继续返回 `ApiResult`，分页接口继续返回 `PageResult`。
+
+### GET /api/risk/rules/page
+
+作用：分页查询风控规则。
+
+请求参数：`pageNo`、`pageSize`、`ruleCode`、`ruleName`、`ruleType`、`riskLevel`、`status`。
+
+返回结构：`ApiResult<PageResult<RiskRulePageVO>>`。
+
+用途：前端 `/risk/rules` 页面展示规则列表和规则统计。
+
+### POST /api/risk/rule-hits/generate
+
+作用：执行规则引擎，基于 `risk_transaction` 交易流水和启用状态的 `risk_rule` 生成 `risk_rule_hit` 命中记录。
+
+请求体：`RiskRuleHitGenerateRequest`。请求体可以传 `{}`，也可以传 `transactionId` 只处理指定交易，或传 `limit` 控制批量处理最近多少条交易。
+
+返回结构：`ApiResult<List<RiskRuleHitPageVO>>`。
+
+注意：前端调用必须传 JSON 请求体，至少传 `{}`，并设置 `Content-Type: application/json`，避免空 body 导致参数绑定异常。
+
+### GET /api/risk/rule-hits/page
+
+作用：分页查询规则命中记录。
+
+请求参数：`pageNo`、`pageSize`、`hitCode`、`transactionNo`、`accountNo`、`customerName`、`ruleCode`、`ruleName`、`ruleType`、`riskLevel`、`status`、`beginTime`、`endTime`。
+
+返回结构：`ApiResult<PageResult<RiskRuleHitPageVO>>`。
+
+用途：前端 `/risk/rules` 页面展示规则命中记录。
+
+
 

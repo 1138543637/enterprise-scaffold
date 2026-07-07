@@ -2954,3 +2954,18 @@ R3-02 新增银行交易流水模拟能力，后端继续使用 Spring Boot 3、
 R3-02 不新增 Docker 服务，不修改 Docker Compose 配置，但新增后端代码和前端页面，因此必须执行 Docker Compose 重建和验收。
 
 
+## R3-03：规则引擎第一版技术栈补充
+
+R3-03 在银行实时交易风控与反欺诈平台中新增规则引擎第一版。后端继续使用 Java 17、Spring Boot 3、Spring Web、Spring Security、JWT、MyBatis-Plus、MySQL、Spring AOP 和 `@Transactional`。
+
+本阶段新增 `risk_rule` 和 `risk_rule_hit` 两张表，使用 MyBatis-Plus `BaseMapper`、`Page`、`LambdaQueryWrapper` 完成规则分页、命中分页、规则匹配、重复命中检查和交易风险标记更新。
+
+规则引擎第一版使用普通 Java 代码实现，不引入 Drools。当前支持大额交易、十分钟高频交易、异地交易、异常设备、夜间交易和黑名单规则。命中后写入 `risk_rule_hit`，并同步更新 `risk_transaction.risk_flag = 1` 和 `risk_transaction.status = 1`。
+
+前端继续使用 Vue3、Vite、TypeScript、Vue Router、Axios、Element Plus。新增 `scaffold-frontend/src/api/risk/rule.ts` 和 `scaffold-frontend/src/views/risk/RiskRuleView.vue`，新增前端路由 `/risk/rules`。新增前端 API 文件继续使用 `request.get<any, T>()`、`request.post<any, T>()` 和兼容解包，避免 `AxiosResponse<T>` 与 `T` 类型不匹配。
+
+页面统计卡片、查询条件和关键布局继续使用 CSS Grid。用于表格和 `.filter()` 的变量必须始终保持数组，接口返回后必须使用 `Array.isArray` 防护，不能把 `ApiResult`、`AxiosResponse` 或 `PageResult` 整体赋给数组变量。
+
+R3-03 不新增 Docker 服务，不修改 Docker 配置，但新增 SQL、后端代码和前端页面，因此必须执行本地 MySQL、本地后端、Docker MySQL 和 Docker Compose 双路径验收，并重建后端和前端镜像。
+
+
