@@ -526,3 +526,9 @@ A2 项目完整业务链路为：资源台账 -> 指标采集 -> 指标异常识
 R3-01 新增项目三“银行实时交易风控与反欺诈平台”的后端模块骨架。该模块继续基于 enterprise-scaffold 公共脚手架扩展，不新建仓库，不改变已有 M1 智能矿山模块和 A2 AIOps 模块。后端包名固定为 cn.sxu.enterprise.module.risk，接口路径固定使用 /api/risk/**，数据库表前缀固定使用 risk_，前端路由前缀固定使用 /risk/**。本阶段新增 RiskHealthController 和 GET /api/risk/health 健康检查接口，用于验证银行风控模块已经被 Spring Boot 正常扫描，并继续复用 JWT 认证、ApiResult 统一返回结构和 @OperLog 操作日志。本阶段不新增 SQL 文件，不新增数据库表，不新增 Docker 服务，不修改 Docker 配置。
 
 
+### R3-02：银行交易模拟
+
+R3-02 在项目三“银行实时交易风控与反欺诈平台”中新增交易流水模拟能力。本阶段继续沿用公共脚手架，不新建系统，不改变已有 M1 和 A2 模块。后端固定使用 `cn.sxu.enterprise.module.risk` 包，接口固定使用 `/api/risk/**`，数据库表固定使用 `risk_` 前缀，前端路由固定使用 `/risk/**`。
+
+本阶段新增 `risk_transaction` 交易流水表，用于保存模拟出来的银行交易数据。交易流水会作为后续 R3-03 风控规则、规则命中记录、风险评分、人工审核和 Kafka 实时交易接入的基础数据。新增接口包括 `POST /api/risk/transactions/simulate`、`GET /api/risk/transactions/latest`、`GET /api/risk/transactions/page`。新增前端页面为 `/risk/transactions`，用于模拟交易、查看最新交易和分页查询交易流水。
+

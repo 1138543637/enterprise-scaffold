@@ -1570,4 +1570,13 @@ A2-08 需要验收的页面包括 `http://localhost:5173/dashboard`、`http://lo
 R3-01 新增了后端 Java 代码，因此需要重新编译后端并重建 enterprise-scaffold-backend 镜像。本阶段不新增 Docker 服务，不修改 docker-compose.yml，不修改 .env.example，不新增 volume，也不新增端口。后端本地编译命令为 cd /d D:\Code\enterprise-scaffold\scaffold-backend，然后执行 mvn -DskipTests compile。Docker Compose 验收仍然不能省略，必须执行 cd /d D:\Code\enterprise-scaffold\scaffold-docker，docker compose --env-file .env up -d --build，docker compose ps，docker logs -f enterprise-scaffold-backend。验收时确认 enterprise-scaffold-mysql、enterprise-scaffold-backend、enterprise-scaffold-frontend、enterprise-scaffold-emqx、enterprise-scaffold-prometheus、enterprise-scaffold-grafana 正常运行。R3-01 不新增 enterprise-scaffold-kafka，Kafka 将在 R3-05 接入。
 
 
+### R3-02：部署与验收
+
+R3-02 新增 SQL、后端代码和前端页面，不新增 Docker 服务，不修改 Docker Compose 配置。由于新增了后端 Java 代码和前端 Vue 页面，必须重建 `enterprise-scaffold-backend` 和 `enterprise-scaffold-frontend` 镜像。为了避免漏构建，统一执行完整 Docker Compose 重建。
+
+先在 MySQL 中执行 `scaffold-sql/r3_02_risk_transaction.sql`，并确认 `enterprise_scaffold` 数据库中已经存在 `risk_transaction` 表。后端本地编译命令为 `cd /d D:\Code\enterprise-scaffold\scaffold-backend`，然后执行 `mvn -DskipTests compile`。前端本地构建命令为 `cd /d D:\Code\enterprise-scaffold\scaffold-frontend`，然后执行 `pnpm build`。
+
+Docker Compose 验收固定执行：`cd /d D:\Code\enterprise-scaffold\scaffold-docker`，然后执行 `docker compose --env-file .env up -d --build`、`docker compose ps`、`docker logs -f enterprise-scaffold-backend`。预期 MySQL、后端、前端、EMQX、Prometheus、Grafana 容器正常运行。本阶段不应该新增 Kafka 容器。
+
+
 

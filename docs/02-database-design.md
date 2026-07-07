@@ -835,3 +835,12 @@ R3-01 不新增数据库表，不新增数据库字段，不新增 SQL 文件，
 
 
 
+### R3-02：risk_transaction 交易流水表
+
+R3-02 新增 SQL 文件 `scaffold-sql/r3_02_risk_transaction.sql`，第一行固定为 `SET NAMES utf8mb4;`，第二段固定为 `USE enterprise_scaffold;`。同时需要把建表语句追加到 `scaffold-sql/enterprise_scaffold_init.sql`。
+
+新增表 `risk_transaction`，字段固定为 `id`、`transaction_no`、`account_no`、`customer_id`、`customer_name`、`merchant_id`、`merchant_name`、`transaction_type`、`channel`、`amount`、`currency`、`ip_addr`、`device_id`、`location`、`transaction_time`、`transaction_status`、`risk_flag`、`status`、`create_by`、`create_time`、`update_by`、`update_time`、`deleted`、`remark`。
+
+其中 `transaction_type` 固定为 `PAYMENT / TRANSFER / WITHDRAW / CONSUME`，`channel` 固定为 `APP / WEB / ATM / POS`，`transaction_status` 固定为 `0成功、1失败、2处理中`，`risk_flag` 固定为 `0未命中风险、1命中风险`，`status` 固定为 `0正常、1异常`。本表使用 `transaction_no` 唯一约束，并为账户号、客户ID、商户ID、交易类型、渠道、交易时间、交易状态、风险标记和状态建立索引。
+
+

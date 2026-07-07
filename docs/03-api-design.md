@@ -1889,4 +1889,15 @@ A2-07 已接入 Spring Boot Actuator 和 Micrometer Prometheus Registry，需要
 R3-01 新增银行风控模块健康检查接口 GET /api/risk/health。该接口需要 JWT 认证，不加入 SecurityConfig 放行列表。请求时需要携带 Authorization: Bearer token。接口成功时继续使用 ApiResult 统一返回结构，code 为 0，msg 为 success，data 为 enterprise-scaffold risk module running。该接口由 cn.sxu.enterprise.module.risk.controller.RiskHealthController 提供，并使用 @OperLog(title = "银行风控", businessType = "模块健康检查") 记录操作日志。本阶段不新增分页接口，因此不涉及 PageResult。
 
 
+### R3-02：交易模拟接口
+
+R3-02 新增交易流水接口，所有接口都需要 JWT，继续使用 `ApiResult` 统一返回，分页接口继续使用 `PageResult`，Controller 方法继续使用 `@OperLog`。
+
+`POST /api/risk/transactions/simulate` 用于模拟生成交易流水，请求体使用 `RiskTransactionSimulateRequest`，可传 `count`、`accountNo`、`customerName`、`transactionType`、`channel`、`minAmount`、`maxAmount`、`riskFlag`、`remark`。返回 `ApiResult<List<RiskTransactionVO>>`。
+
+`GET /api/risk/transactions/latest` 用于查询最近 10 条交易流水，返回 `ApiResult<List<RiskTransactionVO>>`。
+
+`GET /api/risk/transactions/page` 用于分页查询交易流水，查询参数使用 `RiskTransactionPageQuery`，支持 `pageNo`、`pageSize`、`transactionNo`、`accountNo`、`customerName`、`merchantName`、`transactionType`、`channel`、`transactionStatus`、`riskFlag`、`status`、`beginTime`、`endTime`。返回 `ApiResult<PageResult<RiskTransactionPageVO>>`。
+
+
 

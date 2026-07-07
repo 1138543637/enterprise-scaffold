@@ -678,3 +678,10 @@ R3-01 参考 RuoYi-Vue-Pro、RuoYi-Vue、RuoYi-Vue3、vue-element-admin、Vue Vb
 
 
 
+### R3-02：GitHub 参考说明
+
+R3-02 继续参考 RuoYi-Vue、RuoYi-Vue-Pro、RuoYi-Vue3、vue-element-admin、Vue Vben Admin 和 MyBatis-Plus。参考点仅限企业后台目录组织方式、Controller / Service / Mapper / Entity 分层方式、分页查询接口组织方式、操作日志思想、Vue3 + Element Plus 页面组织方式和 MyBatis-Plus 的 `BaseMapper`、`Page`、`LambdaQueryWrapper` 用法。
+
+本项目自己的实现固定为 `cn.sxu.enterprise.module.risk`、`risk_transaction`、`RiskTransaction*` 类、`/api/risk/transactions/**` 接口和 `/risk/transactions` 前端页面。不能复制若依代码，不能引入若依代码生成器，不能改变已有 JWT、ApiResult、PageResult、@OperLog、Docker Compose 和上传目录挂载规则。
+
+
