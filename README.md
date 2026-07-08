@@ -801,3 +801,16 @@ Java 17、Spring Boot 3、MyBatis-Plus、MySQL、Spring Security、JWT、Spring 
 
 
 
+## D4-01：国企 / 政务数据治理与共享交换平台启动
+
+当前项目已进入项目四“国企 / 政务数据治理与共享交换平台”开发阶段。
+
+本阶段新增后端业务包 `cn.sxu.enterprise.module.datahub`，新增 `DatahubHealthController`，新增 `GET /api/datahub/health` 健康检查接口。
+
+该接口需要 JWT 认证，继续使用 `ApiResult` 统一返回结构，并通过 `@OperLog` 记录操作日志。
+
+本阶段不新增数据库表、不新增 SQL 文件、不新增前端页面、不新增 Docker 服务。
+
+D4 后续将继续建设数据源管理、元数据采集、数据质量检测、敏感数据识别与脱敏、API 共享发布和数据治理看板能力。
+
+

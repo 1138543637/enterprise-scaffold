@@ -3113,3 +3113,45 @@ docker logs -f enterprise-scaffold-backend
 
 
 
+## D4-01：国企 / 政务数据治理模块骨架
+
+本阶段新增项目四“国企 / 政务数据治理与共享交换平台”的后端模块骨架。
+
+新增后端业务包 `cn.sxu.enterprise.module.datahub`，新增 `DatahubHealthController`，新增 `GET /api/datahub/health` 健康检查接口。
+
+该接口继续复用 Spring Boot 3、JWT、`ApiResult` 和 `@OperLog`，说明 `datahub` 模块已经纳入现有统一认证、统一返回和操作日志审计体系。
+
+本阶段不新增数据库表、不新增 SQL 文件、不新增前端页面、不新增 Docker 服务。
+
+但是本阶段新增了后端代码，所以必须通过 Docker Compose 重新构建后端镜像并验收。
+
+对应后端文件：
+
+`scaffold-backend/src/main/java/cn/sxu/enterprise/module/datahub/controller/DatahubHealthController.java`
+
+对应接口：
+
+`GET /api/datahub/health`
+
+对应数据库表：
+
+本阶段无新增表。
+
+启动和验证：
+
+本地执行 `mvn -DskipTests compile`。
+
+登录后带 token 访问 `/api/datahub/health`，预期返回 `enterprise-scaffold datahub module running`。
+
+Docker Compose 验收时执行 `docker compose --env-file .env up -d --build`、`docker compose ps`、`docker logs -f enterprise-scaffold-backend`。
+
+简历表达：
+
+基于 Spring Boot 3 企业级脚手架扩展国企 / 政务数据治理模块，完成 datahub 独立业务包、健康检查接口、JWT 认证接入、统一返回结构和操作日志审计，为后续数据源管理、元数据采集、数据质量检测、敏感数据识别和 API 共享发布奠定基础。
+
+面试解释：
+
+D4-01 是数据治理项目的模块初始化阶段。我没有另起新项目，而是在 `enterprise-scaffold` 中新增 `cn.sxu.enterprise.module.datahub` 模块，继续复用 JWT、`ApiResult` 和 `@OperLog`，保证后续数据治理能力都能纳入统一认证、统一返回和审计体系。
+
+
+
