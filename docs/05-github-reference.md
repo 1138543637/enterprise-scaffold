@@ -1031,4 +1031,9 @@ metaData.getPrimaryKeys(...);
 7. 遇到报错先查 Network，再查 Docker 后端日志，再查数据库真实字段。
 
 
+## D4-04 GitHub 参考项目
+
+D4-04 数据质量检测可参考 Apache Griffin、AWS Deequ 和 Great Expectations 的设计思想。Apache Griffin 可参考其“质量规则、执行、报告”的模型驱动数据质量平台思路；AWS Deequ 可参考其“约束定义、指标计算、质量验证”的规则检测思路；Great Expectations 可参考其“期望规则、验证结果、可读报告”的数据质量验证思路。以上项目只能参考思想，不能照搬代码，因为当前项目固定使用 Java 17、Spring Boot 3、MyBatis-Plus、MySQL、Vue3、Element Plus 和 `/api/datahub/**` 接口路径；当前项目也必须继续使用 `datahub_datasource`、`datahub_metadata_table`、`datahub_metadata_column`、`datahub_quality_rule`、`datahub_quality_result` 等固定表名，不能改成外部项目中的数据模型。
+
+
 

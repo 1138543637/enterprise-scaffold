@@ -149,6 +149,15 @@ const routes: RouteRecordRaw[] = [
         meta: {
             requiresAuth: true
         }
+    },
+    {
+        path: '/datahub/quality',
+        name: 'DatahubQuality',
+        component: () => import('../views/datahub/DatahubQualityView.vue'),
+        meta: {
+            requiresAuth: true,
+            title: '数据质量检测'
+        }
     }
 
 ]

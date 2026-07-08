@@ -2236,3 +2236,8 @@ error_msg 为空或 NULL
 7. 前端页面不显示 undefined。
 8. 表清单、字段元数据、采集日志正常展示。
 
+## D4-04 部署与验收说明
+
+D4-04 新增 SQL 文件 `scaffold-sql/d4_04_datahub_quality.sql`，本地 MySQL 可在项目根目录执行 `mysql -uroot -p enterprise_scaffold < scaffold-sql/d4_04_datahub_quality.sql`，Docker MySQL 可先执行 `docker exec -it enterprise-scaffold-mysql mysql -uroot -p`，进入 MySQL 后执行 `USE enterprise_scaffold;`，再粘贴 SQL 文件内容或通过容器挂载方式导入。D4-04 不新增 Docker 服务，不修改 `scaffold-docker/docker-compose.yml`，不修改端口、volume、环境变量和上传目录挂载规则。但是本阶段新增后端和前端代码，因此必须重新构建并验收 Docker Compose：进入 `D:\Code\enterprise-scaffold\scaffold-docker`，执行 `docker compose --env-file .env up -d --build`、`docker compose ps`、`docker logs -f enterprise-scaffold-backend`。验收时确认 `enterprise-scaffold-mysql`、`enterprise-scaffold-backend`、`enterprise-scaffold-frontend` 均正常运行，后端接口 `/api/datahub/quality-rules/page`、`/api/datahub/quality-results/check`、`/api/datahub/quality-results/page` 能正常响应，前端 `/datahub/quality` 页面不空白、不出现 undefined，表格数据能正常展示。
+
+
