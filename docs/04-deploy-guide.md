@@ -1936,5 +1936,10 @@ Docker Compose 验收命令：
 其中 `/api/datahub/health` 需要 JWT。
 
 
+## D4-02：数据源管理部署与验收
+
+D4-02 新增 SQL 文件 scaffold-sql/d4_02_datahub_datasource.sql。已有本地数据库需要执行 cd /d D:\Code\enterprise-scaffold 后运行 mysql -u root -p < scaffold-sql\d4_02_datahub_datasource.sql。Docker MySQL 已启动时可以执行 mysql -h 127.0.0.1 -P 3306 -u root -p < scaffold-sql\d4_02_datahub_datasource.sql。执行后使用 USE enterprise_scaffold; SHOW TABLES LIKE 'datahub_datasource'; SELECT datasource_code, datasource_name, datasource_type, host, env_type, status FROM datahub_datasource; 验收表和初始化数据。后端编译执行 cd /d D:\Code\enterprise-scaffold\scaffold-backend 和 mvn -DskipTests compile。前端构建执行 cd /d D:\Code\enterprise-scaffold\scaffold-frontend 和 pnpm build。Docker Compose 验收执行 cd /d D:\Code\enterprise-scaffold\scaffold-docker、docker compose --env-file .env up -d --build、docker compose ps、docker logs -f enterprise-scaffold-backend。页面验收地址为 http://localhost:5173/datahub/datasources。
+
+
 
 

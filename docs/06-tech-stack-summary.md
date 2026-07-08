@@ -3154,4 +3154,9 @@ Docker Compose 验收时执行 `docker compose --env-file .env up -d --build`、
 D4-01 是数据治理项目的模块初始化阶段。我没有另起新项目，而是在 `enterprise-scaffold` 中新增 `cn.sxu.enterprise.module.datahub` 模块，继续复用 JWT、`ApiResult` 和 `@OperLog`，保证后续数据治理能力都能纳入统一认证、统一返回和审计体系。
 
 
+## D4-02：数据源管理技术总结
+
+本阶段新增数据治理数据源管理能力，新增 datahub_datasource 表、DatahubDatasource Entity、DatahubDatasourceMapper、DatahubDatasourceService、DatahubDatasourceServiceImpl、DatahubDatasourceController、DatahubDatasourcePageQuery、DatahubDatasourcePageVO、DatahubDatasourceTestRequest、DatahubDatasourceTestVO。新增接口 GET /api/datahub/datasources/page 和 POST /api/datahub/datasources/test-connection。后端继续使用 Spring Boot 3、MyBatis-Plus BaseMapper、MyBatis-Plus Page、LambdaQueryWrapper、JWT、ApiResult、PageResult 和 @OperLog。前端新增 scaffold-frontend/src/api/datahub/datasource.ts 和 scaffold-frontend/src/views/datahub/DatahubDatasourceView.vue，继续使用 Vue3、TypeScript、Element Plus、Axios、Vue Router，并通过 unwrapApiResult 兼容 ApiResult 和 AxiosResponse 返回层级。页面布局继续使用 CSS Grid。简历表达：实现国企 / 政务数据治理平台的数据源管理模块，支持多类型数据源台账维护、分页筛选和连接测试，为元数据采集、数据质量检测和数据共享发布提供基础。
+
+
 

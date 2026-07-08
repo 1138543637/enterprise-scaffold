@@ -771,4 +771,9 @@ D4-01 参考 `RuoYi-Vue`、`RuoYi-Vue-Pro` 和 `MyBatis-Plus` 的模块化分层
 D4 是国企 / 政务数据治理与共享交换平台，不能改成普通报表系统、BI 系统或数据分析系统。
 
 
+## D4-02：GitHub 参考说明
+
+D4-02 参考 RuoYi-Vue、RuoYi-Vue-Pro、MyBatis-Plus 和 Vue Vben Admin 的后台管理分层思想、分页查询组织方式、操作日志思想和前端列表页面结构。本项目只参考这些项目的架构思想，不复制源码，不引入若依代码生成器，不改变当前项目的认证、返回结构、包名、接口路径和 Docker 命名。D4-02 的自有实现固定为 cn.sxu.enterprise.module.datahub、datahub_datasource、DatahubDatasourceController、GET /api/datahub/datasources/page、POST /api/datahub/datasources/test-connection、scaffold-frontend/src/api/datahub/datasource.ts 和 scaffold-frontend/src/views/datahub/DatahubDatasourceView.vue。
+
+
 

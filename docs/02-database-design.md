@@ -965,4 +965,8 @@ D4-01 不新增数据库表，不新增数据库字段，不新增 SQL 文件，
 D4 后续数据库表统一使用 `datahub_` 前缀，数据库名继续固定为 `enterprise_scaffold`，逻辑删除字段继续使用 `deleted`，通用状态字段继续使用 `status`。
 
 
+## D4-02：datahub_datasource 数据源管理表
+
+D4-02 新增 datahub_datasource 表，用于记录数据治理平台中的数据源基础信息。字段包括 id、datasource_code、datasource_name、datasource_type、jdbc_url、host、port、database_name、username、password、owner_name、env_type、test_status、last_test_time、status、create_by、create_time、update_by、update_time、deleted、remark。datasource_type 表示数据源类型，例如 MYSQL、POSTGRESQL、ORACLE、SQLSERVER、API。env_type 表示环境类型，DEV 为开发环境，TEST 为测试环境，PROD 为生产环境。test_status 表示最近连接测试状态，0 为未测试，1 为成功，2 为失败。status 表示数据源状态，0 为正常，1 为停用。本阶段暂不设置数据库外键，后续 datahub_metadata_table、datahub_metadata_column、datahub_quality_result 等表通过 datasource_id 和 datasource_code 与 datahub_datasource 做逻辑关联。
+
 

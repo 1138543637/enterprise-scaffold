@@ -814,3 +814,15 @@ Java 17、Spring Boot 3、MyBatis-Plus、MySQL、Spring Security、JWT、Spring 
 D4 后续将继续建设数据源管理、元数据采集、数据质量检测、敏感数据识别与脱敏、API 共享发布和数据治理看板能力。
 
 
+## D4-02：数据源管理
+
+当前项目四“国企 / 政务数据治理与共享交换平台”已完成数据源管理能力。已新增 datahub_datasource 数据源管理表，已新增 GET /api/datahub/datasources/page 数据源分页查询接口，已新增 POST /api/datahub/datasources/test-connection 数据源连接测试接口，已新增前端页面 /datahub/datasources。接口继续需要 JWT 认证，继续使用 ApiResult 和 PageResult，继续使用 @OperLog 记录操作日志。本阶段不新增 Docker 服务，但需要 Docker Compose 重新 build 后端和前端镜像完成验收。
+
+jdbc:mysql://localhost:3306/enterprise_scaffold?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+
+{
+"datasourceType": "MYSQL",
+"jdbcUrl": "jdbc:mysql://enterprise-scaffold-mysql:3306/enterprise_scaffold?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true",
+"username": "root",
+"password": "123456"
+}

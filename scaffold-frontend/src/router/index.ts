@@ -133,6 +133,14 @@ const routes: RouteRecordRaw[] = [
         meta: {
             requiresAuth: true
         }
+    },
+    {
+        path: '/datahub/datasources',
+        name: 'DatahubDatasources',
+        component: () => import('../views/datahub/DatahubDatasourceView.vue'),
+        meta: {
+            requiresAuth: true
+        }
     }
 
 ]
