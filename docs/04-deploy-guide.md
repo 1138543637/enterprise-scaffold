@@ -1863,6 +1863,55 @@ R3-06 不新增 SQL 文件，不新增数据库表，不新增数据库字段。
 如果 Docker MySQL 中缺少 R3 表，需要先补执行 R3-02、R3-03、R3-04 的 SQL 文件后再验收风控看板接口。
 
 
+## R3-07：项目三总体验收与 Docker Compose 验收
+
+R3-07 不新增 Docker 服务，不修改 `docker-compose.yml`，不修改 `.env.example`，不修改后端 Dockerfile、前端 Dockerfile 和 Nginx 配置。
+
+由于本阶段修改了前端首页 `/dashboard` 和文档，仍然必须重新构建前端镜像，并执行完整 Docker Compose 验收。为了避免后端、前端、Kafka 环境不一致，建议统一执行完整重建命令。
+
+后端编译验收：
+
+cd /d D:\Code\enterprise-scaffold\scaffold-backend
+mvn -DskipTests compile
+
+前端构建验收：
+
+cd /d D:\Code\enterprise-scaffold\scaffold-frontend
+pnpm build
+
+Docker Compose 验收：
+
+cd /d D:\Code\enterprise-scaffold\scaffold-docker
+docker compose --env-file .env up -d --build
+docker compose ps
+docker logs --tail=200 enterprise-scaffold-kafka
+docker logs -f enterprise-scaffold-backend
+
+预期容器状态：
+
+- `enterprise-scaffold-mysql`：running / healthy
+- `enterprise-scaffold-backend`：running
+- `enterprise-scaffold-frontend`：running
+- `enterprise-scaffold-emqx`：running
+- `enterprise-scaffold-prometheus`：running
+- `enterprise-scaffold-grafana`：running
+- `enterprise-scaffold-kafka`：running
+
+Kafka 验收时必须确认 Kafka 日志中出现 `Kafka Server started`。后端验收时必须确认后端日志中出现 `Tomcat started on port 8080` 和 `Started ScaffoldBackendApplication`。
+
+页面验收地址：
+
+- `http://localhost:5173/dashboard`
+- `http://localhost:5173/risk/dashboard`
+- `http://localhost:5173/risk/transactions`
+- `http://localhost:5173/risk/rules`
+- `http://localhost:5173/risk/review-orders`
+
+如果页面提示加载失败，先查 F12 Network，再查前端 ApiResult 解包，再查 Docker 后端日志。
+
+************************************************************************************************************
+
+
 
 
 

@@ -3058,4 +3058,58 @@ Docker Compose 新增 `enterprise-scaffold-kafka` 容器，端口固定为 `9092
 
 R3-06 没有新增数据库表，而是复用已有风控业务表做聚合统计。后端通过 MyBatis-Plus 完成数量统计、分组统计和最近记录查询，前端使用 Vue3、Element Plus 和 ECharts 展示统计卡片、分布图和最近记录表格。为了避免前端返回层级错误，新增 API 文件使用 unwrapApiResult 兼容 ApiResult 和 AxiosResponse。
 
+## R3-07：项目三银行实时交易风控总体验收与收尾
+
+R3-07 完成了项目三银行实时交易风控与反欺诈平台的总体验收与收尾。本阶段不新增数据库表、不新增 SQL 文件、不新增后端业务接口、不新增 Docker 服务，重点是对 R3-01 至 R3-06 的能力进行汇总、验收和展示。
+
+本阶段涉及的关键路径：
+
+- 前端首页：`scaffold-frontend/src/views/dashboard/DashboardView.vue`
+- 风控看板页面：`scaffold-frontend/src/views/risk/RiskDashboardView.vue`
+- 交易流水页面：`scaffold-frontend/src/views/risk/RiskTransactionView.vue`
+- 规则引擎页面：`scaffold-frontend/src/views/risk/RiskRuleView.vue`
+- 人工审核页面：`scaffold-frontend/src/views/risk/RiskReviewOrderView.vue`
+- 风控后端包：`cn.sxu.enterprise.module.risk`
+- 风控接口前缀：`/api/risk/**`
+- 风控前端路由前缀：`/risk/**`
+
+项目三完整业务链路：
+
+交易模拟 `risk_transaction`
+-> Kafka 实时交易 `risk.transaction.events`
+-> Kafka 消费写入 `risk_transaction`
+-> 风控规则 `risk_rule`
+-> 规则命中 `risk_rule_hit`
+-> 风险评分
+-> 人工审核 `risk_review_order`
+-> 审核通过 / 审核拒绝
+-> 风控看板 `/risk/dashboard`
+
+R3-07 使用和验收的技术包括：Spring Boot 3、MyBatis-Plus、MySQL、Spring Security、JWT、Spring AOP、@OperLog、Kafka、Docker Compose、Vue3、Vite、TypeScript、Element Plus、ECharts、CSS Grid、ApiResult、PageResult、前端 ApiResult 兼容解包、Docker Compose 全链路部署验收。
+
+启动和验证：
+
+cd /d D:\Code\enterprise-scaffold\scaffold-backend
+mvn -DskipTests compile
+
+cd /d D:\Code\enterprise-scaffold\scaffold-frontend
+pnpm build
+
+cd /d D:\Code\enterprise-scaffold\scaffold-docker
+docker compose --env-file .env up -d --build
+docker compose ps
+docker logs --tail=200 enterprise-scaffold-kafka
+docker logs -f enterprise-scaffold-backend
+
+简历表达：
+
+基于 Spring Boot 3、MyBatis-Plus、MySQL、Vue3、Element Plus、ECharts、Kafka 和 Docker Compose，实现银行实时交易风控与反欺诈平台，覆盖交易模拟、Kafka 实时接入、规则引擎、规则命中、风险评分、人工审核和风控看板完整业务链路，并完成 Docker Compose 全链路部署验收。
+
+面试解释：
+
+项目三不是单独做一个页面，而是在企业级脚手架中扩展 `cn.sxu.enterprise.module.risk` 模块，统一复用 JWT、ApiResult、PageResult、@OperLog 和 Docker Compose。交易可以通过 HTTP 接口模拟，也可以通过 Kafka Topic `risk.transaction.events` 实时接入；规则引擎根据交易数据生成规则命中，风险评分后生成审核单，最后通过风控看板展示交易、规则命中、风险等级和人工审核情况。
+
+************************************************************************************************************
+
+
 

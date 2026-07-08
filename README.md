@@ -759,4 +759,45 @@ R3-05 不新增数据库表、不新增数据库字段、不新增 SQL 文件，
 
 R3-06 使银行风控模块具备交易总览、风险交易统计、规则命中统计、人工审核统计、渠道分布、交易类型分布、风险等级分布、最近交易、最近规则命中和最近审核单展示能力。
 
+## 项目三：银行实时交易风控与反欺诈平台已完成
+
+当前项目三已经完成 R3-01 至 R3-07 阶段，具备银行实时交易风控与反欺诈平台的完整业务链路。
+
+已完成能力：
+
+- 新增银行风控模块 `cn.sxu.enterprise.module.risk`
+- 新增健康检查接口 `GET /api/risk/health`
+- 新增交易流水表 `risk_transaction`
+- 新增交易模拟、最新交易查询和交易分页查询
+- 新增风控规则表 `risk_rule`
+- 新增规则命中表 `risk_rule_hit`
+- 新增规则引擎第一版
+- 新增人工审核单表 `risk_review_order`
+- 新增风险评分和人工审核能力
+- 新增 Kafka 实时交易接入能力
+- 固定 Kafka Topic 为 `risk.transaction.events`
+- 新增风控看板 `/risk/dashboard`
+- 新增首页 `/dashboard` 项目三入口导航和验收链路展示
+- 完成 Docker Compose 全链路验收
+
+项目三核心链路：
+
+交易模拟
+-> Kafka 实时交易接入
+-> 规则引擎
+-> 规则命中
+-> 风险评分
+-> 人工审核
+-> 审核通过 / 审核拒绝
+-> 风控看板
+
+项目三使用技术：
+
+Java 17、Spring Boot 3、MyBatis-Plus、MySQL、Spring Security、JWT、Spring AOP、Kafka、Vue3、Vite、TypeScript、Element Plus、ECharts、Docker Compose。
+
+项目三完成后，下一阶段进入 D4-01：国企 / 政务数据治理与共享交换平台。
+
+************************************************************************************************************
+
+
 

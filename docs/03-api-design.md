@@ -2020,4 +2020,37 @@ Kafka 消费后的交易数据继续通过已有 `GET /api/risk/transactions/pag
 
 所有接口继续使用 `/api/risk/**` 路径，继续需要 JWT 认证，继续使用 `ApiResult` 统一返回，Controller 方法继续使用 `@OperLog` 记录操作日志。
 
+## R3-07：项目三总体验收接口说明
+
+R3-07 不新增后端业务接口。本阶段对项目三银行实时交易风控模块已有接口进行总体验收。
+
+项目三核心接口包括：
+
+- `GET /api/risk/health`：银行风控模块健康检查。
+- `POST /api/risk/transactions/simulate`：模拟生成银行交易流水。
+- `GET /api/risk/transactions/latest`：查询最新交易流水。
+- `GET /api/risk/transactions/page`：分页查询交易流水。
+- `GET /api/risk/rules/page`：分页查询风控规则。
+- `POST /api/risk/rule-hits/generate`：基于交易流水生成规则命中记录。
+- `GET /api/risk/rule-hits/page`：分页查询规则命中记录。
+- `GET /api/risk/review-orders/page`：分页查询人工审核单。
+- `GET /api/risk/review-orders/summary`：查询人工审核单汇总统计。
+- `POST /api/risk/review-orders/create-from-transaction`：基于交易和规则命中生成审核单。
+- `POST /api/risk/review-orders/{id}/approve`：人工审核通过。
+- `POST /api/risk/review-orders/{id}/reject`：人工审核拒绝。
+- `POST /api/risk/kafka/simulate-publish`：模拟发布单条 Kafka 交易消息。
+- `POST /api/risk/kafka/simulate-batch`：批量模拟发布 Kafka 交易消息。
+- `GET /api/risk/dashboard/summary`：风控看板汇总统计。
+- `GET /api/risk/dashboard/channel-stats`：交易渠道统计。
+- `GET /api/risk/dashboard/transaction-type-stats`：交易类型统计。
+- `GET /api/risk/dashboard/risk-level-stats`：风险等级统计。
+- `GET /api/risk/dashboard/recent-transactions`：最近交易流水。
+- `GET /api/risk/dashboard/recent-rule-hits`：最近规则命中。
+- `GET /api/risk/dashboard/recent-review-orders`：最近人工审核单。
+
+以上接口除公开健康检查规则外，均继续使用 JWT 认证，继续返回 `ApiResult` 统一结构，分页接口继续返回 `PageResult` 结构，Controller 方法继续使用 `@OperLog` 记录操作日志。
+
+************************************************************************************************************
+
+
 

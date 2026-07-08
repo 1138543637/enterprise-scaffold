@@ -5,8 +5,9 @@
         <p class="page-subtitle">Enterprise Scaffold</p>
         <h1>企业级项目演示首页</h1>
         <p class="page-desc">
-          当前脚手架已经完成系统基础能力、项目一智能矿山平台，并已推进项目二云网融合 AIOps 智能运维平台。
-          首页展示顺序固定为：公共脚手架 -> 项目一 -> 项目二。
+          当前脚手架已经完成系统基础能力、项目一智能矿山平台、项目二云网融合 AIOps 智能运维平台，
+          并已推进到项目三银行实时交易风控与反欺诈平台收尾阶段。
+          首页展示顺序固定为：公共脚手架 -> 项目一 -> 项目二 -> 项目三。
         </p>
       </div>
 
@@ -34,8 +35,14 @@
 
       <el-card shadow="hover" class="summary-card">
         <div class="summary-title">项目二</div>
-        <div class="summary-value">A2-08 收尾验收</div>
+        <div class="summary-value">A2 已完成</div>
         <div class="summary-desc">云网融合 AIOps 智能运维平台。</div>
+      </el-card>
+
+      <el-card shadow="hover" class="summary-card">
+        <div class="summary-title">项目三</div>
+        <div class="summary-value">R3-07 收尾验收</div>
+        <div class="summary-desc">银行实时交易风控与反欺诈平台。</div>
       </el-card>
     </section>
 
@@ -49,10 +56,10 @@
 
       <div class="entry-grid">
         <el-card
-          v-for="entry in mineEntries"
-          :key="entry.path"
-          shadow="hover"
-          class="entry-card"
+            v-for="entry in mineEntries"
+            :key="entry.path"
+            shadow="hover"
+            class="entry-card"
         >
           <div class="entry-content">
             <div>
@@ -91,10 +98,10 @@
 
       <div class="entry-grid">
         <el-card
-          v-for="entry in aiopsEntries"
-          :key="entry.path"
-          shadow="hover"
-          class="entry-card"
+            v-for="entry in aiopsEntries"
+            :key="entry.path"
+            shadow="hover"
+            class="entry-card"
         >
           <div class="entry-content">
             <div>
@@ -142,6 +149,49 @@
       <div class="flow-grid">
         <div v-for="(item, index) in aiopsFlow" :key="item" class="flow-item">
           <span class="flow-index">{{ index + 1 }}</span>
+          <span>{{ item }}</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="project-section risk-section">
+      <div class="section-title">
+        <h2>项目三：银行实时交易风控与反欺诈平台</h2>
+        <p>
+          R3-07 收尾阶段用于验收交易模拟、Kafka 实时交易、规则引擎、规则命中、风险评分、人工审核和风控看板完整链路。
+          项目三固定放在项目二后面。
+        </p>
+      </div>
+
+      <div class="entry-grid">
+        <el-card
+            v-for="entry in riskEntries"
+            :key="entry.path"
+            shadow="hover"
+            class="entry-card risk-card"
+        >
+          <div class="entry-content">
+            <div>
+              <div class="entry-title">{{ entry.title }}</div>
+              <div class="entry-desc">{{ entry.desc }}</div>
+            </div>
+            <el-button type="warning" @click="goPage(entry.path)">进入</el-button>
+          </div>
+        </el-card>
+      </div>
+    </section>
+
+    <section class="project-section risk-section">
+      <div class="section-title">
+        <h2>项目三验收链路</h2>
+        <p>
+          按下面顺序演示，能体现银行风控从交易接入、规则识别、风险评分到人工审核和看板展示的完整闭环。
+        </p>
+      </div>
+
+      <div class="flow-grid">
+        <div v-for="(item, index) in riskFlow" :key="item" class="flow-item risk-flow-item">
+          <span class="flow-index risk-flow-index">{{ index + 1 }}</span>
           <span>{{ item }}</span>
         </div>
       </div>
@@ -227,6 +277,29 @@ const aiopsEntries = [
   }
 ]
 
+const riskEntries = [
+  {
+    title: '银行风控综合看板',
+    desc: '交易总览、风险交易、规则命中、人工审核和风险分布图。',
+    path: '/risk/dashboard'
+  },
+  {
+    title: '交易流水与 Kafka 模拟',
+    desc: 'HTTP 交易模拟、Kafka 批量模拟发布和交易流水分页查询。',
+    path: '/risk/transactions'
+  },
+  {
+    title: '规则引擎与规则命中',
+    desc: '风控规则分页、规则命中生成和规则命中记录查询。',
+    path: '/risk/rules'
+  },
+  {
+    title: '人工审核单',
+    desc: '风险评分、审核单生成、审核通过和审核拒绝。',
+    path: '/risk/review-orders'
+  }
+]
+
 const mineFlow = [
   '设备台账 mine_device',
   '传感器台账 mine_sensor',
@@ -253,6 +326,20 @@ const aiopsFlow = [
   'Actuator 指标 /actuator/prometheus',
   'Prometheus Targets UP',
   'Grafana 数据源与 Explore 查询'
+]
+
+const riskFlow = [
+  '交易流水 risk_transaction',
+  'Kafka Topic risk.transaction.events',
+  'Kafka 消费写入 risk_transaction',
+  '风控规则 risk_rule',
+  '规则命中 risk_rule_hit',
+  '交易风险标记 risk_flag',
+  '风险评分 risk_score / risk_level',
+  '人工审核单 risk_review_order',
+  '审核通过 approve',
+  '审核拒绝 reject',
+  '风控综合看板 /risk/dashboard'
 ]
 
 const goPage = (path: string) => {
@@ -366,6 +453,11 @@ const handleLogout = () => {
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
 }
 
+.risk-section {
+  border: 1px solid #fed7aa;
+  background: #fffaf4;
+}
+
 .section-title {
   margin-bottom: 18px;
 }
@@ -390,6 +482,11 @@ const handleLogout = () => {
 
 .entry-card {
   border-radius: 12px;
+}
+
+.risk-card {
+  border-color: #fed7aa;
+  background: #fffdf8;
 }
 
 .entry-content {
@@ -433,6 +530,11 @@ const handleLogout = () => {
   line-height: 1.5;
 }
 
+.risk-flow-item {
+  border-color: #fed7aa;
+  background: #fff7ed;
+}
+
 .flow-index {
   display: inline-flex;
   width: 26px;
@@ -445,6 +547,10 @@ const handleLogout = () => {
   color: #ffffff;
   font-size: 13px;
   font-weight: 700;
+}
+
+.risk-flow-index {
+  background: #f59e0b;
 }
 
 @media (max-width: 768px) {
