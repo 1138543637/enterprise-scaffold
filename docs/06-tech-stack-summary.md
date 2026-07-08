@@ -2974,3 +2974,26 @@ R3-03 不新增 Docker 服务，不修改 Docker 配置，但新增 SQL、后端
 R3-04 在银行实时交易风控模块中补充风险评分和人工审核闭环。后端继续使用 Java 17、Spring Boot 3、MyBatis-Plus、MySQL、JWT、`ApiResult`、`PageResult`、`@OperLog` 和 Spring 事务。新增 `risk_review_order` 表，基于 `risk_transaction`、`risk_rule`、`risk_rule_hit` 汇总交易风险分，生成待审核单，并提供审核通过、审核拒绝和汇总统计接口。前端继续使用 Vue3、Vite、TypeScript、Axios 和 Element Plus，新增 `/risk/review-orders` 页面，使用 CSS Grid 展示统计卡片、生成区和查询区。本阶段不新增 Docker 服务，但必须通过 Docker Compose 重新构建后端和前端镜像完成验收。
 
 
+## R3-05：Kafka 实时交易消息接入
+
+R3-05 新增 Kafka 和 Spring Kafka，用于银行实时交易风控平台的实时交易消息接入。
+
+后端新增 `spring-kafka` 依赖，新增 `RiskKafkaProperties` 读取 `enterprise.risk.kafka` 配置，新增 `RiskKafkaConfig` 配置 Kafka Producer、Consumer、KafkaAdmin 和 Topic。
+
+后端新增 `RiskTransactionKafkaMessage` 表示交易消息体，新增 `RiskKafkaBatchSimulateRequest` 表示批量模拟请求。
+
+后端新增 `RiskTransactionKafkaProducer` 负责通过 `KafkaTemplate` 发送交易消息，新增 `RiskTransactionKafkaListener` 负责监听 `risk.transaction.events` 并写入已有 `risk_transaction` 表。
+
+后端新增 `RiskKafkaController` 暴露 `POST /api/risk/kafka/simulate-publish` 和 `POST /api/risk/kafka/simulate-batch` 接口。
+
+Docker Compose 新增 `enterprise-scaffold-kafka` 容器，端口固定为 `9092`，volume 固定为 `enterprise-scaffold-kafka-data`。
+
+前端在 `scaffold-frontend/src/api/risk/transaction.ts` 中新增 Kafka 模拟发布 API，在 `scaffold-frontend/src/views/risk/RiskTransactionView.vue` 中新增 Kafka 单条模拟和批量模拟按钮。
+
+该阶段继续保持 JWT 认证、`ApiResult`、`PageResult`、`@OperLog`、CSS Grid 布局和前端 ApiResult 解包规则。
+
+简历表达：基于 Spring Kafka 和 Docker Compose 为银行实时交易风控平台接入 Kafka 消息通道，实现交易消息生产、消费、入库和前端模拟发布能力，使风控系统具备实时交易流接入特征。
+
+面试解释：R3-05 没有新增业务表，而是把 Kafka 作为交易接入通道。前端触发模拟发布接口，后端通过 KafkaTemplate 发送交易消息，KafkaListener 消费消息后写入 `risk_transaction`，后续规则命中、风险评分和人工审核继续复用已有表和接口。
+
+

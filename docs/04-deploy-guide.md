@@ -1658,5 +1658,35 @@ Docker 前端验收地址：`http://localhost:5173/risk/rules`
 R3-04 新增 SQL 文件 `scaffold-sql/r3_04_risk_review_order.sql`，第一行必须是 `SET NAMES utf8mb4;`，第二段必须是 `USE enterprise_scaffold;`。本地 MySQL 执行命令：在 `D:\Code\enterprise-scaffold` 执行 `mysql -u root -p enterprise_scaffold < scaffold-sql\r3_04_risk_review_order.sql`。Docker MySQL 执行命令：在 `D:\Code\enterprise-scaffold` 执行 `docker exec -i enterprise-scaffold-mysql sh -c "mysql -uroot -p$MYSQL_PASSWORD enterprise_scaffold" < scaffold-sql\r3_04_risk_review_order.sql`。本阶段不新增 Docker 服务，不修改 Docker Compose 配置，但新增了后端和前端代码，所以必须重建 `enterprise-scaffold-backend` 和 `enterprise-scaffold-frontend` 镜像。固定验收命令：进入 `D:\Code\enterprise-scaffold\scaffold-docker`，执行 `docker compose --env-file .env up -d --build`，再执行 `docker compose ps`，最后执行 `docker logs -f enterprise-scaffold-backend` 查看后端日志。前端验收地址为 `http://localhost:5173/risk/review-orders`。
 
 
+## R3-05：Kafka Docker Compose 部署与验收
+
+R3-05 新增 Kafka Docker 服务，容器名固定为 `enterprise-scaffold-kafka`，端口固定为 `9092`，volume 固定为 `enterprise-scaffold-kafka-data`，Topic 固定为 `risk.transaction.events`。
+
+本阶段修改了后端代码、前端代码和 Docker Compose 配置，因此必须重新构建并验收 Docker Compose。
+
+Kafka 服务使用 `apache/kafka:3.7.0`。
+
+如果使用 Docker 后端容器运行，后端环境变量必须配置为 `RISK_KAFKA_ENABLED=true`、`RISK_KAFKA_BOOTSTRAP_SERVERS=enterprise-scaffold-kafka:9092`、`RISK_KAFKA_TRANSACTION_TOPIC=risk.transaction.events`、`RISK_KAFKA_CONSUMER_GROUP_ID=enterprise-scaffold-risk-consumer`、`SPRING_KAFKA_BOOTSTRAP_SERVERS=enterprise-scaffold-kafka:9092`。
+
+如果本地后端通过 `mvn spring-boot:run` 启动，而 Kafka 使用 Docker 容器启动，则本地后端应使用 `RISK_KAFKA_BOOTSTRAP_SERVERS=localhost:9092`。
+
+Docker Compose 验收时必须执行：
+
+cd /d D:\Code\enterprise-scaffold\scaffold-docker
+docker compose --env-file .env up -d --build
+docker compose ps
+docker logs -f enterprise-scaffold-backend
+
+同时需要额外检查 Kafka 日志：
+
+docker logs --tail=200 enterprise-scaffold-kafka
+
+验收时应先确认 Kafka 日志出现 `Kafka Server started`，再确认后端日志出现 `Tomcat started on port 8080` 和 `Started ScaffoldBackendApplication`。
+
+接口验收地址包括 `GET http://localhost:8080/api/health`、`POST http://localhost:8080/api/auth/login`、`POST http://localhost:8080/api/risk/kafka/simulate-publish`、`POST http://localhost:8080/api/risk/kafka/simulate-batch`、`GET http://localhost:8080/api/risk/transactions/page?pageNo=1&pageSize=10`。
+
+前端验收地址为 `http://localhost:5173/risk/transactions`。
+
+
 
 

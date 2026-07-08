@@ -10,7 +10,13 @@ spring:
     url: jdbc:mysql://localhost:3306/enterprise_scaffold?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: ${MYSQL_PASSWORD:}
+kafka:
+  bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:${RISK_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}}
 
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
@@ -42,6 +48,13 @@ enterprise:
       topic: ${MINE_MQTT_TOPIC:mine/sensor/data}
       qos: ${MINE_MQTT_QOS:1}
       completion-timeout: ${MINE_MQTT_COMPLETION_TIMEOUT:5000}
+
+  risk:
+    kafka:
+      enabled: ${RISK_KAFKA_ENABLED:false}
+      bootstrap-servers: ${RISK_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+      transaction-topic: ${RISK_KAFKA_TRANSACTION_TOPIC:risk.transaction.events}
+      consumer-group-id: ${RISK_KAFKA_CONSUMER_GROUP_ID:enterprise-scaffold-risk-consumer}
 
 management:
   endpoints:

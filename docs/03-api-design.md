@@ -1941,4 +1941,24 @@ R3-03 新增接口继续使用 `/api/risk/**` 前缀，继续需要 JWT，继续
 R3-04 新增接口全部位于 `/api/risk/review-orders` 下，继续需要 JWT。`GET /api/risk/review-orders/page` 用于分页查询人工审核单，返回 `ApiResult<PageResult<RiskReviewOrderPageVO>>`。`GET /api/risk/review-orders/summary` 用于查询审核单汇总统计，返回 `ApiResult<RiskReviewSummaryVO>`。`POST /api/risk/review-orders/create-from-transaction` 用于基于 `risk_transaction` 和 `risk_rule_hit` 生成审核单，请求体为 `RiskReviewOrderCreateRequest`，返回 `ApiResult<List<RiskReviewOrderPageVO>>`。`POST /api/risk/review-orders/{id}/approve` 用于审核通过，请求体为 `RiskReviewApproveRequest`。`POST /api/risk/review-orders/{id}/reject` 用于审核拒绝，请求体为 `RiskReviewRejectRequest`。所有 Controller 方法继续使用 `@OperLog` 记录操作日志。
 
 
+## R3-05：Kafka 接入接口设计
+
+R3-05 新增 Kafka 单条模拟发布接口 `POST /api/risk/kafka/simulate-publish`。
+
+该接口需要 JWT 认证，请求头必须携带 `Authorization: Bearer <token>`，请求体为 `RiskTransactionKafkaMessage`，返回结构为 `ApiResult<RiskTransactionKafkaMessage>`。
+
+该接口用于向 Kafka Topic `risk.transaction.events` 发送一条模拟交易消息，后端会自动补齐缺失的交易流水号、账户号、客户信息、商户信息、交易类型、渠道、金额、币种、IP、设备号、地点、交易时间、交易状态和备注。
+
+R3-05 新增 Kafka 批量模拟发布接口 `POST /api/risk/kafka/simulate-batch`。
+
+该接口需要 JWT 认证，请求头必须携带 `Authorization: Bearer <token>`，请求体为 `RiskKafkaBatchSimulateRequest`，返回结构为 `ApiResult<Integer>`。
+
+该接口用于批量向 Kafka Topic `risk.transaction.events` 发送模拟交易消息，支持 `count`、`transactionType`、`channel`、`minAmount`、`maxAmount`、`location`、`remark` 等参数。
+
+`count` 最小为 1，最大为 100。
+
+两个接口都继续使用 `@OperLog` 记录操作日志，操作日志标题固定为“银行风控-Kafka”，业务类型分别为“模拟发布”和“批量模拟发布”。
+
+Kafka 消费后的交易数据继续通过已有 `GET /api/risk/transactions/page` 查询。
+
 

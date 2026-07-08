@@ -39,7 +39,9 @@
       <div class="panel-header">
         <div>
           <div class="panel-title">模拟交易</div>
-          <div class="panel-subtitle">不填账户、客户、交易类型和渠道时，后端会自动生成随机交易</div>
+          <div class="panel-subtitle">
+            普通模拟直接写入数据库；Kafka 模拟会先发送到 Topic：risk.transaction.events，再由后端监听消费写入 risk_transaction
+          </div>
         </div>
       </div>
 
@@ -90,11 +92,22 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="操作">
-            <el-button :loading="simulateLoading" type="primary" @click="handleSimulate">
-              生成交易
-            </el-button>
-            <el-button @click="resetSimulateForm">重置</el-button>
+          <el-form-item label="操作" class="action-item">
+            <div class="button-group">
+              <el-button :loading="simulateLoading" type="primary" @click="handleSimulate">
+                生成交易
+              </el-button>
+
+              <el-button :loading="kafkaLoading" type="warning" @click="handleKafkaPublish">
+                Kafka模拟交易
+              </el-button>
+
+              <el-button :loading="kafkaLoading" type="danger" @click="handleKafkaBatch">
+                Kafka批量模拟
+              </el-button>
+
+              <el-button @click="resetSimulateForm">重置</el-button>
+            </div>
           </el-form-item>
         </div>
       </el-form>
@@ -156,12 +169,12 @@
 
           <el-form-item label="交易时间" class="range-item">
             <el-date-picker
-              v-model="dateRange"
-              type="datetimerange"
-              range-separator="至"
-              start-placeholder="开始时间"
-              end-placeholder="结束时间"
-              value-format="YYYY-MM-DD HH:mm:ss"
+                v-model="dateRange"
+                type="datetimerange"
+                range-separator="至"
+                start-placeholder="开始时间"
+                end-placeholder="结束时间"
+                value-format="YYYY-MM-DD HH:mm:ss"
             />
           </el-form-item>
 
@@ -219,13 +232,13 @@
 
       <div class="pagination-wrapper">
         <el-pagination
-          v-model:current-page="query.pageNo"
-          v-model:page-size="query.pageSize"
-          :total="total"
-          :page-sizes="[10, 20, 50, 100]"
-          layout="total, sizes, prev, pager, next, jumper"
-          @size-change="loadPage"
-          @current-change="loadPage"
+            v-model:current-page="query.pageNo"
+            v-model:page-size="query.pageSize"
+            :total="total"
+            :page-sizes="[10, 20, 50, 100]"
+            layout="total, sizes, prev, pager, next, jumper"
+            @size-change="loadPage"
+            @current-change="loadPage"
         />
       </div>
     </div>
@@ -240,6 +253,8 @@ import {
   getRiskTransactionLatestApi,
   getRiskTransactionPageApi,
   simulateRiskTransactionsApi,
+  simulateRiskKafkaPublishApi,
+  simulateRiskKafkaBatchApi,
   type RiskTransactionVO
 } from '../../api/risk/transaction'
 
@@ -247,6 +262,7 @@ const router = useRouter()
 
 const loading = ref(false)
 const simulateLoading = ref(false)
+const kafkaLoading = ref(false)
 const records = ref<RiskTransactionVO[]>([])
 const latestRecords = ref<RiskTransactionVO[]>([])
 const total = ref(0)
@@ -312,6 +328,12 @@ function toArray<T>(response: unknown): T[] {
   }
 
   return []
+}
+
+function sleep(ms: number) {
+  return new Promise<void>((resolve) => {
+    window.setTimeout(resolve, ms)
+  })
 }
 
 const safeLatestRecords = computed(() =>
@@ -384,6 +406,70 @@ async function handleSimulate() {
     await loadData()
   } finally {
     simulateLoading.value = false
+  }
+}
+
+async function handleKafkaPublish() {
+  kafkaLoading.value = true
+
+  try {
+    const amount =
+        simulateForm.maxAmount && simulateForm.maxAmount > 0
+            ? simulateForm.maxAmount
+            : 16888.88
+
+    const message = await simulateRiskKafkaPublishApi({
+      accountNo: simulateForm.accountNo || undefined,
+      customerName: simulateForm.customerName || undefined,
+      transactionType: simulateForm.transactionType || 'PAYMENT',
+      channel: simulateForm.channel || 'APP',
+      amount,
+      currency: 'CNY',
+      location: '境外',
+      remark: 'R3-05 前端单条 Kafka 模拟交易'
+    })
+
+    ElMessage.success(`Kafka交易消息已发送：${message.transactionNo || '已发送'}`)
+
+    query.pageNo = 1
+
+    // Kafka 消费是异步的，稍等一下再刷新，避免刚发送完马上查列表查不到。
+    await sleep(800)
+    await loadData()
+  } catch (error) {
+    console.error(error)
+    ElMessage.error('Kafka单条模拟发布失败，请先查 F12 Network，再查 Docker 后端日志')
+  } finally {
+    kafkaLoading.value = false
+  }
+}
+
+async function handleKafkaBatch() {
+  kafkaLoading.value = true
+
+  try {
+    const count = await simulateRiskKafkaBatchApi({
+      count: simulateForm.count,
+      transactionType: simulateForm.transactionType || 'PAYMENT',
+      channel: simulateForm.channel || 'APP',
+      minAmount: simulateForm.minAmount,
+      maxAmount: simulateForm.maxAmount,
+      location: '境外',
+      remark: 'R3-05 前端批量 Kafka 模拟交易'
+    })
+
+    ElMessage.success(`Kafka批量交易消息已发送：${count || 0} 条`)
+
+    query.pageNo = 1
+
+    // Kafka 消费是异步的，稍等一下再刷新，避免刚发送完马上查列表查不到。
+    await sleep(1200)
+    await loadData()
+  } catch (error) {
+    console.error(error)
+    ElMessage.error('Kafka批量模拟发布失败，请先查 F12 Network，再查 ApiResult 解包，再查 Docker 后端日志')
+  } finally {
+    kafkaLoading.value = false
   }
 }
 
@@ -558,6 +644,16 @@ onMounted(() => {
   width: 100%;
 }
 
+.action-item {
+  grid-column: span 2;
+}
+
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .pagination-wrapper {
   display: flex;
   justify-content: flex-end;
@@ -568,6 +664,10 @@ onMounted(() => {
   .metric-grid,
   .form-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .action-item {
+    grid-column: span 2;
   }
 }
 
@@ -590,7 +690,8 @@ onMounted(() => {
     grid-template-columns: 1fr;
   }
 
-  .range-item {
+  .range-item,
+  .action-item {
     grid-column: auto;
   }
 }

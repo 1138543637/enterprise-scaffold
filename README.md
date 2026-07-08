@@ -721,3 +721,19 @@ R3-03 不新增 Docker 服务，不修改 Docker 配置，但新增 SQL、后端
 
 R3-04 新增银行风控风险评分和人工审核能力。系统基于 `risk_transaction` 交易流水和 `risk_rule_hit` 规则命中记录计算风险总分，达到审核阈值后生成 `risk_review_order` 人工审核单。新增接口包括 `GET /api/risk/review-orders/page`、`GET /api/risk/review-orders/summary`、`POST /api/risk/review-orders/create-from-transaction`、`POST /api/risk/review-orders/{id}/approve`、`POST /api/risk/review-orders/{id}/reject`。新增前端页面 `/risk/review-orders`。本阶段新增 SQL 文件 `scaffold-sql/r3_04_risk_review_order.sql`，需要同时在本地 MySQL 和 Docker MySQL 执行。本阶段不新增 Docker 服务，不修改 Docker Compose 配置，但需要执行 `docker compose --env-file .env up -d --build` 重建并验收后端和前端。
 
+
+## R3-05：Kafka 接入
+
+当前银行实时交易风控与反欺诈平台已完成 Kafka 接入能力。
+
+系统新增 Kafka Docker 服务 `enterprise-scaffold-kafka`，固定端口 `9092`，固定 volume `enterprise-scaffold-kafka-data`，固定 Topic `risk.transaction.events`。
+
+后端新增 Spring Kafka 生产者和消费者，支持 `POST /api/risk/kafka/simulate-publish` 单条模拟交易消息发布和 `POST /api/risk/kafka/simulate-batch` 批量模拟交易消息发布。
+
+Kafka 消费后的交易数据继续写入 `risk_transaction` 表，并可在 `/risk/transactions` 页面查看。
+
+R3-05 不新增数据库表、不新增数据库字段、不新增 SQL 文件，而是在已有 R3-02 交易流水、R3-03 规则命中、R3-04 风险评分与人工审核基础上新增实时消息接入能力。
+
+该阶段使风控平台从普通接口模拟交易升级为 Kafka 实时交易流接入场景，更贴近银行科技和金融风控系统中的实际交易处理架构。
+
+

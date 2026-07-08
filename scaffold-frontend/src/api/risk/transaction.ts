@@ -64,6 +64,76 @@ export interface RiskTransactionVO {
   remark: string
 }
 
+export interface RiskTransactionKafkaMessage {
+  transactionNo?: string
+  accountNo?: string
+  customerId?: number
+  customerName?: string
+  merchantId?: string
+  merchantName?: string
+  transactionType?: string
+  channel?: string
+  amount?: number
+  currency?: string
+  ipAddr?: string
+  deviceId?: string
+  location?: string
+  transactionTime?: string
+  transactionStatus?: number
+  remark?: string
+}
+
+export interface RiskKafkaBatchSimulateRequest {
+  count?: number
+  transactionType?: string
+  channel?: string
+  minAmount?: number
+  maxAmount?: number
+  location?: string
+  remark?: string
+}
+
+export interface ApiResult<T> {
+  code: number
+  msg: string
+  data: T
+}
+
+function unwrapApiResult<T>(response: any): T {
+  if (response && typeof response === 'object' && 'code' in response && 'data' in response) {
+    return response.data as T
+  }
+
+  if (
+      response &&
+      response.data &&
+      typeof response.data === 'object' &&
+      'code' in response.data &&
+      'data' in response.data
+  ) {
+    return response.data.data as T
+  }
+
+  if (response && response.data !== undefined) {
+    return response.data as T
+  }
+
+  return response as T
+}
+
+export function simulateRiskKafkaPublishApi(
+    data?: RiskTransactionKafkaMessage,
+): Promise<RiskTransactionKafkaMessage> {
+  return request
+      .post<any, RiskTransactionKafkaMessage>('/api/risk/kafka/simulate-publish', data || {})
+      .then((res) => unwrapApiResult<RiskTransactionKafkaMessage>(res))
+}
+
+export function simulateRiskKafkaBatchApi(data?: RiskKafkaBatchSimulateRequest): Promise<number> {
+  return request
+      .post<any, number>('/api/risk/kafka/simulate-batch', data || { count: 10 })
+      .then((res) => unwrapApiResult<number>(res))
+}
 export function simulateRiskTransactionsApi(
   data: RiskTransactionSimulateRequest
 ): Promise<RiskTransactionVO[]> {

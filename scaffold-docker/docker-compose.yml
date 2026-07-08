@@ -22,7 +22,8 @@ services:
       timeout: 5s
       retries: 10
       start_period: 30s
-
+    networks:
+      - enterprise-scaffold-network
   enterprise-scaffold-backend:
     build:
       context: ../scaffold-backend
@@ -35,6 +36,8 @@ services:
         condition: service_healthy
       enterprise-scaffold-emqx:
         condition: service_started
+      enterprise-scaffold-kafka:
+        condition: service_started
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://enterprise-scaffold-mysql:3306/enterprise_scaffold?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
@@ -46,11 +49,18 @@ services:
       MINE_MQTT_CLIENT_ID: enterprise-scaffold-mine-subscriber
       MINE_MQTT_TOPIC: mine/sensor/data
       MINE_MQTT_QOS: 1
+      RISK_KAFKA_ENABLED: "true"
+      RISK_KAFKA_BOOTSTRAP_SERVERS: "enterprise-scaffold-kafka:9092"
+      RISK_KAFKA_TRANSACTION_TOPIC: "risk.transaction.events"
+      RISK_KAFKA_CONSUMER_GROUP_ID: "enterprise-scaffold-risk-consumer"
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: "enterprise-scaffold-kafka:9092"
     ports:
       - "8080:8080"
     volumes:
       - ../uploads:/app/uploads
-
+      - enterprise-scaffold-kafka-data:/bitnami/kafka
+    networks:
+      - enterprise-scaffold-network
   enterprise-scaffold-frontend:
     build:
       context: ../scaffold-frontend
@@ -62,7 +72,8 @@ services:
       - enterprise-scaffold-backend
     ports:
       - "5173:80"
-
+    networks:
+      - enterprise-scaffold-network
   enterprise-scaffold-emqx:
     image: emqx/emqx:5.8.8
     container_name: enterprise-scaffold-emqx
@@ -70,7 +81,8 @@ services:
     ports:
       - "1883:1883"
       - "18083:18083"
-
+    networks:
+      - enterprise-scaffold-network
   enterprise-scaffold-prometheus:
     image: prom/prometheus:v2.55.1
     container_name: enterprise-scaffold-prometheus
@@ -87,7 +99,8 @@ services:
     depends_on:
       enterprise-scaffold-backend:
         condition: service_started
-
+    networks:
+      - enterprise-scaffold-network
   enterprise-scaffold-grafana:
     image: grafana/grafana:11.5.2
     container_name: enterprise-scaffold-grafana
@@ -102,8 +115,45 @@ services:
     depends_on:
       enterprise-scaffold-prometheus:
         condition: service_started
-
+    networks:
+      - enterprise-scaffold-network
+  enterprise-scaffold-kafka:
+    image: apache/kafka:3.7.0
+    container_name: enterprise-scaffold-kafka
+    hostname: enterprise-scaffold-kafka
+    user: "0:0"
+    restart: unless-stopped
+    ports:
+      - "9092:29092"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@enterprise-scaffold-kafka:9093
+      KAFKA_LISTENERS: PLAINTEXT://:9092,PLAINTEXT_HOST://:29092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://enterprise-scaffold-kafka:9092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
+      CLUSTER_ID: 4L6g3nShT-eMCtK--X86sw
+    volumes:
+      - enterprise-scaffold-kafka-data:/tmp/kraft-combined-logs
+    networks:
+      enterprise-scaffold-network:
+        aliases:
+          - enterprise-scaffold-kafka
 volumes:
   enterprise-scaffold-mysql-data:
   enterprise-scaffold-prometheus-data:
   enterprise-scaffold-grafana-data:
+  enterprise-scaffold-kafka-data:
+
+networks:
+  enterprise-scaffold-network:
+    name: enterprise-scaffold-network
+    driver: bridge

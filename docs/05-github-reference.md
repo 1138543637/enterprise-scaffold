@@ -705,3 +705,18 @@ R3-03 可以参考 GitHub 上的 Java 风控和规则引擎项目，但只能参
 R3-04 可以参考 GitHub 上 Java 风控、反欺诈、风险评分和审核流相关项目的分层思想。例如 `yasinkabboura/FraudDetectionBased` 可参考 Kafka 交易流和欺诈识别的整体链路，GitHub `fraud-detection` Java 主题可参考规则评分、告警分诊和管理后台的常见组织方式，Redis 的 Transaction Risk Scoring 示例可参考交易风险评分的概念和阈值思想。只能参考业务拆分、交易风险评分、审核流、列表页面和看板思路，不能照搬它们的包名、表名、字段名、接口路径、模型依赖或前端结构。本项目继续固定使用 `cn.sxu.enterprise.module.risk`、`/api/risk/**`、`risk_` 表前缀、`ApiResult`、`PageResult` 和 JWT。
 
 
+## R3-05：Kafka 接入 GitHub 参考说明
+
+R3-05 参考 Spring Kafka 的 `KafkaTemplate`、`@KafkaListener`、`ConcurrentKafkaListenerContainerFactory`、`KafkaAdmin` 和 Topic 创建方式。
+
+R3-05 参考 Apache Kafka 的 Producer、Consumer、Topic、Broker 和 KRaft 单节点运行模式。
+
+R3-05 参考 RuoYi-Vue 和 RuoYi-Vue-Pro 的企业后台 Controller / Service / Mapper 分层、统一返回结构和操作日志设计思想。
+
+本项目没有直接复制外部项目业务代码，而是在已有 `cn.sxu.enterprise.module.risk` 模块中新增 `RiskKafkaProperties`、`RiskKafkaConfig`、`RiskTransactionKafkaMessage`、`RiskKafkaBatchSimulateRequest`、`RiskTransactionKafkaProducer`、`RiskTransactionKafkaListener` 和 `RiskKafkaController`。
+
+本阶段继续保持 `/api/risk/**` 接口前缀、`risk_` 数据库表前缀、`ApiResult`、`PageResult`、JWT 认证和 `@OperLog` 操作日志契约不变。
+
+Docker Compose 层面参考 Kafka 官方 Docker 镜像运行方式，最终保持项目固定容器命名 `enterprise-scaffold-kafka`、固定端口 `9092` 和固定 volume `enterprise-scaffold-kafka-data`，避免引入额外的独立项目或破坏已有 M1、A2、R3 模块结构。
+
+
