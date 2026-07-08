@@ -1962,3 +1962,62 @@ R3-05 新增 Kafka 批量模拟发布接口 `POST /api/risk/kafka/simulate-batch
 Kafka 消费后的交易数据继续通过已有 `GET /api/risk/transactions/page` 查询。
 
 
+## R3-06：风控看板接口
+
+### 风控看板汇总统计
+
+接口：`GET /api/risk/dashboard/summary`
+
+认证：需要 JWT。
+
+返回：`ApiResult<RiskDashboardSummaryVO>`
+
+统计字段：
+
+- `transactionTotal`：交易总数
+- `riskTransactionTotal`：风险交易数
+- `ruleTotal`：风控规则数
+- `ruleHitTotal`：规则命中数
+- `pendingReviewTotal`：待审核数
+- `approvedReviewTotal`：审核通过数
+- `rejectedReviewTotal`：审核拒绝数
+
+### 交易渠道统计
+
+接口：`GET /api/risk/dashboard/channel-stats`
+
+返回：`ApiResult<List<RiskChannelStatVO>>`
+
+### 交易类型统计
+
+接口：`GET /api/risk/dashboard/transaction-type-stats`
+
+返回：`ApiResult<List<RiskTransactionTypeStatVO>>`
+
+### 风险等级统计
+
+接口：`GET /api/risk/dashboard/risk-level-stats`
+
+返回：`ApiResult<List<RiskLevelStatVO>>`
+
+### 最近交易流水
+
+接口：`GET /api/risk/dashboard/recent-transactions`
+
+返回：`ApiResult<List<RiskRecentTransactionVO>>`
+
+### 最近规则命中
+
+接口：`GET /api/risk/dashboard/recent-rule-hits`
+
+返回：`ApiResult<List<RiskRecentRuleHitVO>>`
+
+### 最近人工审核单
+
+接口：`GET /api/risk/dashboard/recent-review-orders`
+
+返回：`ApiResult<List<RiskRecentReviewOrderVO>>`
+
+所有接口继续使用 `/api/risk/**` 路径，继续需要 JWT 认证，继续使用 `ApiResult` 统一返回，Controller 方法继续使用 `@OperLog` 记录操作日志。
+
+

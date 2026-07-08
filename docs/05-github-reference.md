@@ -720,3 +720,26 @@ R3-05 参考 RuoYi-Vue 和 RuoYi-Vue-Pro 的企业后台 Controller / Service / 
 Docker Compose 层面参考 Kafka 官方 Docker 镜像运行方式，最终保持项目固定容器命名 `enterprise-scaffold-kafka`、固定端口 `9092` 和固定 volume `enterprise-scaffold-kafka-data`，避免引入额外的独立项目或破坏已有 M1、A2、R3 模块结构。
 
 
+## R3-06：风控看板 GitHub 参考说明
+
+R3-06 主要参考企业后台项目中的看板统计接口、分层结构和前端图表展示方式。
+
+可参考项目：
+
+- RuoYi-Vue-Pro：参考模块化 Controller / Service / Mapper 分层、后台统计接口组织方式。
+- RuoYi-Vue：参考操作日志、统一返回结构、后台管理页面组织方式。
+- RuoYi-Vue3：参考 Vue3 + Element Plus 页面结构。
+- Vue Vben Admin：参考中后台看板布局和统计卡片设计。
+- MyBatis-Plus：参考 QueryWrapper、LambdaQueryWrapper、selectMaps 分组统计写法。
+
+本项目自己的实现固定为：
+
+- 后端包名：`cn.sxu.enterprise.module.risk`
+- 接口路径：`/api/risk/dashboard/**`
+- 前端 API：`scaffold-frontend/src/api/risk/dashboard.ts`
+- 前端页面：`scaffold-frontend/src/views/risk/RiskDashboardView.vue`
+- 前端路由：`/risk/dashboard`
+
+不能复制若依代码，不能更换项目包名，不能把 `/api/risk/dashboard/**` 改成其他路径。
+
+

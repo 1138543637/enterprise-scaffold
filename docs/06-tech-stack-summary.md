@@ -2997,3 +2997,65 @@ Docker Compose 新增 `enterprise-scaffold-kafka` 容器，端口固定为 `9092
 面试解释：R3-05 没有新增业务表，而是把 Kafka 作为交易接入通道。前端触发模拟发布接口，后端通过 KafkaTemplate 发送交易消息，KafkaListener 消费消息后写入 `risk_transaction`，后续规则命中、风险评分和人工审核继续复用已有表和接口。
 
 
+## R3-06：银行风控看板
+
+本阶段新增银行实时交易风控平台的综合看板能力。
+
+新增技术与能力：
+
+- 风控看板统计接口
+- MyBatis-Plus LambdaQueryWrapper 数量统计
+- MyBatis-Plus QueryWrapper + selectMaps 分组统计
+- Vue3 风控看板页面
+- Element Plus 统计卡片、表格、标签
+- ECharts 饼图和柱状图
+- CSS Grid 响应式看板布局
+- 前端 ApiResult 兼容解包
+- Docker Compose 重建镜像验收
+
+后端新增文件：
+
+- `RiskDashboardController`
+- `RiskDashboardService`
+- `RiskDashboardServiceImpl`
+- `RiskDashboardSummaryVO`
+- `RiskChannelStatVO`
+- `RiskTransactionTypeStatVO`
+- `RiskLevelStatVO`
+- `RiskRecentTransactionVO`
+- `RiskRecentRuleHitVO`
+- `RiskRecentReviewOrderVO`
+
+前端新增文件：
+
+- `scaffold-frontend/src/api/risk/dashboard.ts`
+- `scaffold-frontend/src/views/risk/RiskDashboardView.vue`
+
+修改文件：
+
+- `scaffold-frontend/src/router/index.ts`
+
+新增接口：
+
+- `GET /api/risk/dashboard/summary`
+- `GET /api/risk/dashboard/channel-stats`
+- `GET /api/risk/dashboard/transaction-type-stats`
+- `GET /api/risk/dashboard/risk-level-stats`
+- `GET /api/risk/dashboard/recent-transactions`
+- `GET /api/risk/dashboard/recent-rule-hits`
+- `GET /api/risk/dashboard/recent-review-orders`
+
+数据库表：
+
+- 本阶段不新增数据库表。
+- 复用 `risk_transaction`、`risk_rule`、`risk_rule_hit`、`risk_review_order`。
+
+简历表达：
+
+基于 Spring Boot 3、MyBatis-Plus、MySQL、Vue3、Element Plus、ECharts、Kafka 和 Docker Compose 实现银行实时交易风控看板，整合交易流水、规则命中、风险评分、人工审核和 Kafka 实时交易数据，支持交易总览、渠道分布、交易类型分布、风险等级分布和最近风险事件展示。
+
+面试解释：
+
+R3-06 没有新增数据库表，而是复用已有风控业务表做聚合统计。后端通过 MyBatis-Plus 完成数量统计、分组统计和最近记录查询，前端使用 Vue3、Element Plus 和 ECharts 展示统计卡片、分布图和最近记录表格。为了避免前端返回层级错误，新增 API 文件使用 unwrapApiResult 兼容 ApiResult 和 AxiosResponse。
+
+

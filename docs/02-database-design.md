@@ -921,3 +921,18 @@ R3-05 后，`risk_transaction` 同时支持原有 HTTP 模拟交易写入和 Kaf
 
 后续 `risk_rule`、`risk_rule_hit`、`risk_review_order` 继续围绕 `risk_transaction` 完成规则命中、风险评分和人工审核。
 
+
+## R3-06：风控看板数据库说明
+
+R3-06 不新增数据库表，不新增数据库字段，不新增 SQL 文件。
+
+本阶段复用以下已有表进行统计：
+
+- `risk_transaction`：统计交易总数、风险交易数、交易渠道分布、交易类型分布、最近交易流水。
+- `risk_rule`：统计风控规则总数。
+- `risk_rule_hit`：统计规则命中总数、最近规则命中记录。
+- `risk_review_order`：统计待审核数量、审核通过数量、审核拒绝数量、风险等级分布、最近人工审核单。
+
+本阶段继续保持数据库名 `enterprise_scaffold` 不变，继续保持 R3 表名前缀 `risk_` 不变，继续保持逻辑删除字段 `deleted` 不变。
+
+

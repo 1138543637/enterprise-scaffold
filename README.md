@@ -737,3 +737,26 @@ R3-05 不新增数据库表、不新增数据库字段、不新增 SQL 文件，
 该阶段使风控平台从普通接口模拟交易升级为 Kafka 实时交易流接入场景，更贴近银行科技和金融风控系统中的实际交易处理架构。
 
 
+## R3-06：银行实时交易风控看板
+
+当前项目三“银行实时交易风控与反欺诈平台”已完成风控看板能力。
+
+已新增后端接口：
+
+- `GET /api/risk/dashboard/summary`
+- `GET /api/risk/dashboard/channel-stats`
+- `GET /api/risk/dashboard/transaction-type-stats`
+- `GET /api/risk/dashboard/risk-level-stats`
+- `GET /api/risk/dashboard/recent-transactions`
+- `GET /api/risk/dashboard/recent-rule-hits`
+- `GET /api/risk/dashboard/recent-review-orders`
+
+已新增前端页面：
+
+- `/risk/dashboard`
+
+本阶段复用已有 `risk_transaction`、`risk_rule`、`risk_rule_hit`、`risk_review_order` 表，不新增 SQL 文件，不新增数据库表，不新增 Docker 服务。
+
+R3-06 使银行风控模块具备交易总览、风险交易统计、规则命中统计、人工审核统计、渠道分布、交易类型分布、风险等级分布、最近交易、最近规则命中和最近审核单展示能力。
+
+

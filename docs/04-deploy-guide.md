@@ -1688,5 +1688,181 @@ docker logs --tail=200 enterprise-scaffold-kafka
 前端验收地址为 `http://localhost:5173/risk/transactions`。
 
 
+## R3-06：风控看板部署与验收
+
+R3-06 不新增 Docker 服务，不修改 Docker Compose 配置，不新增 Docker 环境变量，不新增 Docker volume。
+
+本阶段新增了后端风控看板接口和前端风控看板页面，因此需要重新构建后端和前端镜像。
+
+### 一、本地后端编译验收
+
+执行目录：
+
+    cd /d D:\Code\enterprise-scaffold\scaffold-backend
+
+执行命令：
+
+    mvn -DskipTests compile
+
+预期结果：
+
+    BUILD SUCCESS
+
+### 二、本地前端构建验收
+
+执行目录：
+
+    cd /d D:\Code\enterprise-scaffold\scaffold-frontend
+
+执行命令：
+
+    pnpm build
+
+预期结果：
+
+    构建成功
+
+### 三、Docker Compose 重建验收
+
+执行目录：
+
+    cd /d D:\Code\enterprise-scaffold\scaffold-docker
+
+执行命令：
+
+    docker compose --env-file .env up -d --build
+    docker compose ps
+    docker logs --tail=200 enterprise-scaffold-kafka
+    docker logs -f enterprise-scaffold-backend
+
+预期容器状态：
+
+    enterprise-scaffold-mysql        running / healthy
+    enterprise-scaffold-backend      running
+    enterprise-scaffold-frontend     running
+    enterprise-scaffold-emqx         running
+    enterprise-scaffold-prometheus   running
+    enterprise-scaffold-grafana      running
+    enterprise-scaffold-kafka        running
+
+Kafka 日志需要看到：
+
+    Kafka Server started
+
+后端日志需要看到：
+
+    Tomcat started on port 8080
+    Started ScaffoldBackendApplication
+
+如果修改了 `.env` 后发现后端容器中的环境变量没有生效，需要强制删除旧后端容器并重建：
+
+    cd /d D:\Code\enterprise-scaffold\scaffold-docker
+    docker compose --env-file .env stop enterprise-scaffold-backend
+    docker compose --env-file .env rm -f enterprise-scaffold-backend
+    docker compose --env-file .env up -d --build enterprise-scaffold-backend
+
+### 四、R3-06 接口验收
+
+先登录获取 token：
+
+    POST http://localhost:8080/api/auth/login
+
+请求体：
+
+    {
+      "username": "admin",
+      "password": "admin123"
+    }
+
+后续请求都需要携带请求头：
+
+    Authorization: Bearer <token>
+
+验收接口：
+
+    GET http://localhost:8080/api/risk/dashboard/summary
+    GET http://localhost:8080/api/risk/dashboard/channel-stats
+    GET http://localhost:8080/api/risk/dashboard/transaction-type-stats
+    GET http://localhost:8080/api/risk/dashboard/risk-level-stats
+    GET http://localhost:8080/api/risk/dashboard/recent-transactions
+    GET http://localhost:8080/api/risk/dashboard/recent-rule-hits
+    GET http://localhost:8080/api/risk/dashboard/recent-review-orders
+
+预期结果：
+
+    code = 0
+    msg = success
+    data 不为 null
+
+如果不携带 token 访问：
+
+    GET http://localhost:8080/api/risk/dashboard/summary
+
+预期返回：
+
+    {
+      "code": 401,
+      "msg": "请先登录或登录已过期",
+      "data": null
+    }
+
+### 五、前端页面验收
+
+访问地址：
+
+    http://localhost:5173/risk/dashboard
+
+预期结果：
+
+1. 未登录访问时跳转 `/login`。
+2. 登录后可以打开 `/risk/dashboard`。
+3. 页面标题显示“银行实时交易风控看板”。
+4. 统计卡片一行多张显示，不能一张卡片铺满整行。
+5. 交易渠道分布图正常展示。
+6. 交易类型分布图正常展示。
+7. 风险等级分布图正常展示。
+8. 最近交易流水表格正常展示。
+9. 最近规则命中表格正常展示。
+10. 最近人工审核单表格正常展示。
+11. 点击刷新看板后能重新加载数据。
+12. 页面不出现 `undefined`。
+13. 页面不提示“风控看板加载失败”。
+14. F12 Network 中接口路径全部是 `/api/risk/dashboard/**`。
+
+### 六、常见问题排查
+
+如果页面提示“风控看板加载失败”，按下面顺序排查：
+
+1. 打开 F12 Console，查看是否有前端红色错误。
+2. 打开 F12 Network，查看失败接口。
+3. 如果接口返回 `401`，重新登录 `admin / admin123`。
+4. 如果接口返回 `404`，检查前端接口路径是否缺少 `/api`，并确认 Docker 后端是否重新 build。
+5. 如果接口返回 `500`，查看后端日志：
+
+        docker logs -f enterprise-scaffold-backend
+
+6. 如果接口 `code = 0` 但页面仍然失败，优先检查前端 `dashboard.ts` 中的 `ApiResult` 解包逻辑。
+7. 如果 Docker `.env` 修改后没有生效，强制删除旧后端容器并重建：
+
+        cd /d D:\Code\enterprise-scaffold\scaffold-docker
+        docker compose --env-file .env stop enterprise-scaffold-backend
+        docker compose --env-file .env rm -f enterprise-scaffold-backend
+        docker compose --env-file .env up -d --build enterprise-scaffold-backend
+
+### 七、R3-06 说明
+
+R3-06 不新增 SQL 文件，不新增数据库表，不新增数据库字段。
+
+本阶段复用已有表：
+
+- `risk_transaction`
+- `risk_rule`
+- `risk_rule_hit`
+- `risk_review_order`
+
+如果 Docker MySQL 中缺少 R3 表，需要先补执行 R3-02、R3-03、R3-04 的 SQL 文件后再验收风控看板接口。
+
+
+
 
 

@@ -121,7 +121,18 @@ const routes: RouteRecordRaw[] = [
         path: '/risk/review-orders',
         name: 'riskReviewOrders',
         component: () => import('../views/risk/RiskReviewOrderView.vue'),
-        meta: { title: '风险人工审核' },
+        meta: {
+            requiresAuth: true,
+            title: '风险人工审核'
+        },
+    },
+    {
+        path: '/risk/dashboard',
+        name: 'RiskDashboard',
+        component: () => import('../views/risk/RiskDashboardView.vue'),
+        meta: {
+            requiresAuth: true
+        }
     }
 
 ]
