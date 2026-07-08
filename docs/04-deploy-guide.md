@@ -1943,3 +1943,296 @@ D4-02 新增 SQL 文件 scaffold-sql/d4_02_datahub_datasource.sql。已有本地
 
 
 
+# 04 Deploy Guide
+
+## 部署方式
+
+当前项目使用 Docker Compose 进行本地开发和部署。
+
+主要目录为：
+
+```text
+D:\Code\enterprise-scaffold\scaffold-docker
+```
+
+常用启动命令：
+
+```cmd
+cd /d D:\Code\enterprise-scaffold\scaffold-docker
+docker compose --env-file .env up -d --build
+```
+
+查看容器：
+
+```cmd
+docker ps
+```
+
+查看后端日志：
+
+```cmd
+docker logs -f enterprise-scaffold-backend
+```
+
+查看后端最近 200 行日志：
+
+```cmd
+docker logs --tail=200 enterprise-scaffold-backend
+```
+
+## 当前容器命名
+
+当前项目中常见容器名包括：
+
+```text
+enterprise-scaffold-backend
+enterprise-scaffold-frontend
+enterprise-scaffold-mysql
+```
+
+其中 MySQL 容器名为：
+
+```text
+enterprise-scaffold-mysql
+```
+
+D4-03 后端连接 MySQL 时必须使用该容器名，不能使用 `localhost` 或 `127.0.0.1`。
+
+## .env 配置
+
+Docker 环境变量文件位于：
+
+```text
+D:\Code\enterprise-scaffold\scaffold-docker\.env
+```
+
+其中 MySQL 相关变量通常包括：
+
+```env
+MYSQL_ROOT_PASSWORD=<MYSQL_ROOT_PASSWORD>
+MYSQL_DATABASE=enterprise_scaffold
+```
+
+注意：`<MYSQL_ROOT_PASSWORD>` 不要写入文档和代码仓库。调试时只需要确保 `datahub_datasource.password` 与 `.env` 中该值一致。
+
+## 进入 MySQL 容器
+
+命令：
+
+```cmd
+docker exec -it enterprise-scaffold-mysql mysql -uroot -p
+```
+
+输入 `.env` 中 `MYSQL_ROOT_PASSWORD` 后进入 MySQL。
+
+进入业务库：
+
+```sql
+SHOW DATABASES;
+USE enterprise_scaffold;
+```
+
+## D4-03 数据源检查
+
+执行：
+
+```sql
+DESC datahub_datasource;
+
+SELECT id, datasource_name, datasource_type, host, port, database_name, username, password, status, deleted, jdbc_url
+FROM datahub_datasource
+WHERE id = 1\G
+```
+
+正确配置应满足：
+
+```text
+datasource_type = MYSQL
+host = enterprise-scaffold-mysql
+port = 3306
+database_name = enterprise_scaffold
+username = root
+password 不为空
+status = 0
+deleted = 0
+jdbc_url 不使用 localhost
+jdbc_url 不使用 127.0.0.1
+```
+
+## D4-03 数据源修复
+
+如果数据源仍然使用 `localhost`，执行：
+
+```sql
+UPDATE datahub_datasource
+SET
+  host = 'enterprise-scaffold-mysql',
+  jdbc_url = 'jdbc:mysql://enterprise-scaffold-mysql:3306/enterprise_scaffold?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true'
+WHERE id = 1;
+```
+
+如果密码为空，执行：
+
+```sql
+UPDATE datahub_datasource
+SET password = '<MYSQL_ROOT_PASSWORD>'
+WHERE id = 1;
+```
+
+如果需要一次性修复，执行：
+
+```sql
+UPDATE datahub_datasource
+SET
+  datasource_type = 'MYSQL',
+  host = 'enterprise-scaffold-mysql',
+  port = 3306,
+  database_name = 'enterprise_scaffold',
+  username = 'root',
+  password = '<MYSQL_ROOT_PASSWORD>',
+  jdbc_url = 'jdbc:mysql://enterprise-scaffold-mysql:3306/enterprise_scaffold?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true',
+  status = 0,
+  deleted = 0
+WHERE id = 1;
+```
+
+## 后端重新构建
+
+如果只改了后端 Java 代码，可以先在后端目录执行：
+
+```cmd
+cd /d D:\Code\enterprise-scaffold\scaffold-backend
+mvn clean package -DskipTests
+```
+
+然后回到 Docker 目录：
+
+```cmd
+cd /d D:\Code\enterprise-scaffold\scaffold-docker
+docker compose --env-file .env up -d --build
+```
+
+## 前端重新构建
+
+如果改了前端 Vue 或 TypeScript 代码，直接执行 Docker Compose 重建即可：
+
+```cmd
+cd /d D:\Code\enterprise-scaffold\scaffold-docker
+docker compose --env-file .env up -d --build
+```
+
+如果构建失败，并出现：
+
+```text
+Cannot redeclare block-scoped variable 'result'
+Cannot find name 'res'
+Property 'tableCount' does not exist on type 'DatahubMetadataCollectResultVO'
+Property 'tableNum' does not exist on type 'DatahubMetadataCollectResultVO'
+Property 'columnCount' does not exist on type 'DatahubMetadataCollectResultVO'
+Property 'columnNum' does not exist on type 'DatahubMetadataCollectResultVO'
+```
+
+说明 `DatahubMetadataView.vue` 中 `handleCollect()` 写法错误。应避免重复声明 `result`，不要使用未定义的 `res`，并使用 `collectResult` 统一处理采集返回值。
+
+## D4-03 接口测试
+
+前端点击“开始采集”时，请求体应为：
+
+```json
+{
+  "dataSourceId": 1
+}
+```
+
+如果采集成功，前端应提示：
+
+```text
+采集成功：表 X 张，字段 Y 个
+```
+
+不能出现：
+
+```text
+采集成功：表 undefined 张，字段 undefined 个
+```
+
+如果出现 undefined，说明前端返回值解包或字段名读取错误。
+
+## 后端日志排查
+
+常见错误一：密码为空。
+
+```text
+Access denied for user 'root'@'172.18.0.5' (using password: NO)
+```
+
+处理方式：
+
+```sql
+UPDATE datahub_datasource
+SET password = '<MYSQL_ROOT_PASSWORD>'
+WHERE id = 1;
+```
+
+常见错误二：密码错误。
+
+```text
+Access denied for user 'root'@'172.18.0.5' (using password: YES)
+```
+
+处理方式：核对 `.env` 中 `MYSQL_ROOT_PASSWORD`，确保与 `datahub_datasource.password` 一致。
+
+常见错误三：Docker host 错误。
+
+```text
+Communications link failure
+```
+
+处理方式：检查 `jdbc_url` 是否仍为 `localhost` 或 `127.0.0.1`，并改为 `enterprise-scaffold-mysql`。
+
+常见错误四：表名错误。
+
+```text
+Table 'enterprise_scaffold.datahub_data_source' doesn't exist
+```
+
+处理方式：后端代码必须查询 `datahub_datasource`。
+
+## 采集结果验证
+
+进入 MySQL 后执行：
+
+```sql
+USE enterprise_scaffold;
+
+SELECT COUNT(*) FROM datahub_metadata_table;
+SELECT COUNT(*) FROM datahub_metadata_column;
+SELECT COUNT(*) FROM datahub_metadata_collect_log;
+
+SELECT *
+FROM datahub_metadata_collect_log
+ORDER BY id DESC
+LIMIT 1\G
+```
+
+成功条件：
+
+```text
+datahub_metadata_table 数量大于 0
+datahub_metadata_column 数量大于 0
+datahub_metadata_collect_log 有记录
+最近一条 collect_status = 0
+error_msg 为空或 NULL
+```
+
+## 部署验收标准
+
+1. Docker Compose 构建成功。
+2. 前端 TypeScript 编译通过。
+3. 后端容器启动成功。
+4. MySQL 容器启动成功。
+5. `datahub_datasource` 中数据源配置正确。
+6. D4-03 采集接口返回 `code = 200`。
+7. 前端页面不显示 undefined。
+8. 表清单、字段元数据、采集日志正常展示。
+

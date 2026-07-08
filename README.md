@@ -826,3 +826,356 @@ jdbc:mysql://localhost:3306/enterprise_scaffold?useUnicode=true&characterEncodin
 "username": "root",
 "password": "123456"
 }
+
+
+# Enterprise Scaffold
+
+Enterprise Scaffold 是一个工程级企业后台脚手架项目，当前重点建设 Datahub 数据治理模块。项目采用前后端分离架构，后端基于 Spring Boot，前端基于 Vue 3 + TypeScript + Element Plus，开发与运行环境基于 Docker Compose。
+
+## 当前阶段
+
+当前项目已经推进到：
+
+```text
+D4-03 元数据采集
+```
+
+D4-03 的目标是在 D4-02 数据源管理基础上，通过已有数据源 ID 自动连接 MySQL 数据库，并采集数据库表和字段元数据。
+
+当前不重新规划项目，不重新选择技术栈，不回退到旧阶段。后续继续基于现有工程结构、Docker 环境和 `datahub_` 表体系迭代。
+
+## 当前文档结构
+
+```text
+docs/01-project-overview.md
+docs/02-database-design.md
+docs/03-api-design.md
+docs/04-deploy-guide.md
+docs/05-github-reference.md
+docs/06-tech-stack-summary.md
+README.md
+```
+
+## 技术栈
+
+后端：
+
+```text
+Java
+Spring Boot
+MyBatis-Plus
+JdbcTemplate
+MySQL
+Maven
+Docker
+Docker Compose
+```
+
+前端：
+
+```text
+Vue 3
+TypeScript
+Vite
+Element Plus
+pnpm
+Axios
+```
+
+数据库：
+
+```text
+MySQL
+```
+
+运行环境：
+
+```text
+Docker Compose
+Nginx
+```
+
+## 当前数据库
+
+业务数据库：
+
+```text
+enterprise_scaffold
+```
+
+MySQL 容器名：
+
+```text
+enterprise-scaffold-mysql
+```
+
+D4-02 数据源表：
+
+```text
+datahub_datasource
+```
+
+D4-03 元数据表：
+
+```text
+datahub_metadata_table
+datahub_metadata_column
+datahub_metadata_collect_log
+```
+
+注意：当前项目真实数据源表名是 `datahub_datasource`，不是 `datahub_data_source`。
+
+## D4-03 数据源字段
+
+当前数据源表关键字段包括：
+
+```text
+id
+datasource_name
+datasource_type
+jdbc_url
+host
+port
+database_name
+username
+password
+status
+deleted
+```
+
+其中：
+
+```text
+datasource_type = MYSQL
+```
+
+用于判断当前数据源是否为 MySQL。
+
+后端必须读取 `datasource_type`，不能只读取 `db_type` 或 `database_type`。
+
+## Docker 环境注意事项
+
+Docker 环境下，后端容器访问 MySQL 不能使用：
+
+```text
+localhost
+127.0.0.1
+```
+
+应使用 MySQL 容器名：
+
+```text
+enterprise-scaffold-mysql
+```
+
+推荐 JDBC URL：
+
+```text
+jdbc:mysql://enterprise-scaffold-mysql:3306/enterprise_scaffold?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+```
+
+如果后端报：
+
+```text
+Access denied for user 'root'@'172.18.0.5' (using password: NO)
+```
+
+说明 `datahub_datasource.password` 为空，需要写入 `.env` 中 `MYSQL_ROOT_PASSWORD` 对应的值。
+
+## 启动项目
+
+进入 Docker 目录：
+
+```cmd
+cd /d D:\Code\enterprise-scaffold\scaffold-docker
+```
+
+启动并构建：
+
+```cmd
+docker compose --env-file .env up -d --build
+```
+
+查看容器：
+
+```cmd
+docker ps
+```
+
+查看后端日志：
+
+```cmd
+docker logs -f enterprise-scaffold-backend
+```
+
+进入 MySQL：
+
+```cmd
+docker exec -it enterprise-scaffold-mysql mysql -uroot -p
+```
+
+## D4-03 采集接口
+
+接口路径：
+
+```http
+POST /api/datahub/metadata/collect
+```
+
+请求体：
+
+```json
+{
+  "dataSourceId": 1
+}
+```
+
+成功响应示例：
+
+```json
+{
+  "code": 200,
+  "msg": "操作成功",
+  "data": {
+    "collectBatchNo": "META202607081200001234",
+    "dataSourceId": 1,
+    "dataSourceName": "本地MySQL",
+    "tableTotal": 12,
+    "columnTotal": 98,
+    "costTime": 1200
+  }
+}
+```
+
+## 常用 SQL
+
+进入数据库：
+
+```sql
+USE enterprise_scaffold;
+```
+
+查看数据源：
+
+```sql
+SELECT id, datasource_name, datasource_type, host, port, database_name, username, password, status, deleted, jdbc_url
+FROM datahub_datasource
+WHERE id = 1\G
+```
+
+修复 Docker 数据源配置：
+
+```sql
+UPDATE datahub_datasource
+SET
+  datasource_type = 'MYSQL',
+  host = 'enterprise-scaffold-mysql',
+  port = 3306,
+  database_name = 'enterprise_scaffold',
+  username = 'root',
+  password = '<MYSQL_ROOT_PASSWORD>',
+  jdbc_url = 'jdbc:mysql://enterprise-scaffold-mysql:3306/enterprise_scaffold?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true',
+  status = 0,
+  deleted = 0
+WHERE id = 1;
+```
+
+查看采集结果：
+
+```sql
+SELECT COUNT(*) FROM datahub_metadata_table;
+SELECT COUNT(*) FROM datahub_metadata_column;
+SELECT COUNT(*) FROM datahub_metadata_collect_log;
+
+SELECT *
+FROM datahub_metadata_collect_log
+ORDER BY id DESC
+LIMIT 1\G
+```
+
+## 前端注意事项
+
+D4-03 前端页面文件：
+
+```text
+scaffold-frontend/src/views/datahub/DatahubMetadataView.vue
+```
+
+采集成功后前端应读取：
+
+```text
+tableTotal
+columnTotal
+```
+
+不能只读取：
+
+```text
+tableCount
+tableNum
+columnCount
+columnNum
+```
+
+如果需要兼容旧字段，可以统一写成：
+
+```ts
+const collectedTableTotal = toNumber(
+  collectResult.tableTotal ?? collectResult.tableCount ?? collectResult.tableNum
+)
+
+const collectedColumnTotal = toNumber(
+  collectResult.columnTotal ?? collectResult.columnCount ?? collectResult.columnNum
+)
+```
+
+前端应统一处理 ApiResult 解包：
+
+```ts
+function unwrapApiData<T>(response: unknown): T {
+  const anyResponse = response as any
+  return (anyResponse?.data?.data ?? anyResponse?.data ?? anyResponse ?? {}) as T
+}
+```
+
+采集成功后必须刷新：
+
+```text
+表清单
+字段清单
+采集日志
+```
+
+否则后端已经采集成功，页面仍可能显示 0 或 No Data。
+
+## 已确认问题
+
+D4-03 调试中已经确认并修复过以下问题：
+
+```text
+1. datahub_datasource 被误写成 datahub_data_source。
+2. datasource_type 没有被读取，导致 MYSQL 被误判。
+3. Docker 中使用 localhost 连接 MySQL 失败。
+4. datahub_datasource.password 为空导致 using password:NO。
+5. 前端采集成功提示出现 undefined。
+6. handleCollect 中重复声明 const result。
+7. handleCollect 中错误使用未定义变量 res。
+8. 前端访问类型中不存在的 tableCount/tableNum/columnCount/columnNum 导致 TS 编译失败。
+```
+
+## 当前验收标准
+
+D4-03 通过标准：
+
+```text
+1. Docker 构建成功。
+2. 前端 TypeScript 编译通过。
+3. 后端启动成功。
+4. /api/datahub/metadata/collect 返回 code = 200。
+5. 前端提示表数量和字段数量正常。
+6. datahub_metadata_table 有数据。
+7. datahub_metadata_column 有数据。
+8. datahub_metadata_collect_log 有成功日志。
+9. 页面表清单、字段元数据、采集日志均能正常显示。
+```
+
