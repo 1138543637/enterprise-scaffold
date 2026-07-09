@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
+@Data
 @TableName("datahub_metadata_column")
 public class DatahubMetadataColumn {
 
@@ -48,6 +50,12 @@ public class DatahubMetadataColumn {
     public String collectBatchNo;
 
     public LocalDateTime collectTime;
+
+    public Integer sensitiveFlag;
+
+    public String sensitiveType;
+
+    public String maskType;
 
     public Integer status;
 

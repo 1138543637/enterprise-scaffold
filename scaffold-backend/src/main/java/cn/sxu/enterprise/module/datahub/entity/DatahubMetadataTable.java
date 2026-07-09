@@ -6,7 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.time.LocalDateTime;
+import lombok.Data;
 
+@Data
 @TableName("datahub_metadata_table")
 public class DatahubMetadataTable {
 

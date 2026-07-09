@@ -158,7 +158,16 @@ const routes: RouteRecordRaw[] = [
             requiresAuth: true,
             title: '数据质量检测'
         }
+    },
+    {
+        path: '/datahub/sensitive',
+        name: 'DatahubSensitive',
+        component: () => import('../views/datahub/DatahubSensitiveView.vue'),
+        meta: {
+            requiresAuth: true
+        }
     }
+
 
 ]
 

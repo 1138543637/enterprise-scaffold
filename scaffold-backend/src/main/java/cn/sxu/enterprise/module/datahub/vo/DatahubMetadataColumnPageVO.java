@@ -3,7 +3,9 @@ package cn.sxu.enterprise.module.datahub.vo;
 import cn.sxu.enterprise.module.datahub.entity.DatahubMetadataColumn;
 
 import java.time.LocalDateTime;
+import lombok.Data;
 
+@Data
 public class DatahubMetadataColumnPageVO {
 
     public Long id;

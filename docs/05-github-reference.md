@@ -1035,5 +1035,10 @@ metaData.getPrimaryKeys(...);
 
 D4-04 数据质量检测可参考 Apache Griffin、AWS Deequ 和 Great Expectations 的设计思想。Apache Griffin 可参考其“质量规则、执行、报告”的模型驱动数据质量平台思路；AWS Deequ 可参考其“约束定义、指标计算、质量验证”的规则检测思路；Great Expectations 可参考其“期望规则、验证结果、可读报告”的数据质量验证思路。以上项目只能参考思想，不能照搬代码，因为当前项目固定使用 Java 17、Spring Boot 3、MyBatis-Plus、MySQL、Vue3、Element Plus 和 `/api/datahub/**` 接口路径；当前项目也必须继续使用 `datahub_datasource`、`datahub_metadata_table`、`datahub_metadata_column`、`datahub_quality_rule`、`datahub_quality_result` 等固定表名，不能改成外部项目中的数据模型。
 
+## D4-05 GitHub 参考项目说明
+
+D4-05 的敏感数据识别和脱敏设计可以参考 Apache Atlas、DataHub、Amundsen、Apache Ranger、Microsoft Presidio 等项目的思想。可以参考它们对“元数据、敏感标签、数据分类、脱敏策略、审计记录”的建模方式，但不能照搬其源码、包名、表名和复杂架构。本项目保持求职项目可控范围，只基于 `datahub_metadata_column` 做字段级敏感识别，基于 `datahub_mask_rule` 做规则化脱敏预览，继续保持 Spring Boot 3 + MyBatis-Plus + MySQL + Vue3 + Element Plus 的轻量实现方式。
+
+
 
 

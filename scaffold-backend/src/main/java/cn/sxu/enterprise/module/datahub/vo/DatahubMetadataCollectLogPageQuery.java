@@ -1,5 +1,7 @@
 package cn.sxu.enterprise.module.datahub.vo;
+import lombok.Data;
 
+@Data
 public class DatahubMetadataCollectLogPageQuery {
 
     public Long pageNo = 1L;

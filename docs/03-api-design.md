@@ -2477,3 +2477,10 @@ ElMessage.success(`采集成功：表 ${collectedTableTotal} 张，字段 ${coll
 D4-04 新增接口继续统一使用 `ApiResult` 返回结构，分页接口继续使用 `ApiResult<PageResult<XXXPageVO>>`。新增 `GET /api/datahub/quality-rules/page`，用于分页查询质量规则，支持 `pageNo`、`pageSize`、`ruleName`、`ruleType`、`targetType`、`targetTableId`、`targetColumnId`、`status` 查询参数。新增 `POST /api/datahub/quality-results/check`，用于执行质量检测，请求体可以传 `{ "ruleId": 1 }` 表示只检测单条规则，也可以传 `{ "targetTableId": 1 }` 表示检测某张元数据表下全部启用规则，返回本次生成的检测结果列表。新增 `GET /api/datahub/quality-results/page`，用于分页查询质量检测结果，支持 `pageNo`、`pageSize`、`ruleName`、`ruleCode`、`tableCode`、`columnName`、`checkStatus`、`tableId`、`columnId` 查询参数。接口路径必须保持 `/api/datahub/quality-rules/page`、`/api/datahub/quality-results/check`、`/api/datahub/quality-results/page`，不能改成 `/api/datahub/quality/rules/page` 或 `/api/datahub/quality/check`。
 
 
+## D4-05 接口设计：敏感数据识别和脱敏
+
+D4-05 新增敏感数据识别和脱敏接口，所有接口继续使用 JWT 认证，成功响应继续使用 `ApiResult`，分页接口继续使用 `ApiResult<PageResult<XXXPageVO>>`。新增接口包括：`POST /api/datahub/sensitive-fields/scan`，用于基于 `datahub_metadata_column` 扫描敏感字段；`GET /api/datahub/sensitive-fields/page`，用于分页查询敏感字段识别结果；`GET /api/datahub/mask-rules/page`，用于分页查询脱敏规则；`POST /api/datahub/mask-results/preview`，用于对指定敏感字段进行脱敏预览；`GET /api/datahub/mask-results/page`，用于分页查询脱敏预览结果。本阶段 Controller 为 `DatahubSensitiveController`，Service 为 `DatahubSensitiveService` 和 `DatahubSensitiveServiceImpl`，Mapper 包括 `DatahubSensitiveFieldMapper`、`DatahubMaskRuleMapper`、`DatahubMaskResultMapper`。
+
+
+
+

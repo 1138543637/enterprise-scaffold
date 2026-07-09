@@ -1183,4 +1183,7 @@ D4-03 通过标准：
 
 Enterprise Scaffold 当前继续基于 D4-03 元数据采集能力推进到 D4-04：数据质量检测。本阶段新增 `datahub_quality_rule` 和 `datahub_quality_result` 两张表，新增后端 `DatahubQuality*` 类，新增接口 `GET /api/datahub/quality-rules/page`、`POST /api/datahub/quality-results/check`、`GET /api/datahub/quality-results/page`，新增前端 API 文件 `scaffold-frontend/src/api/datahub/quality.ts`，新增前端页面 `scaffold-frontend/src/views/datahub/DatahubQualityView.vue`，新增路由 `/datahub/quality`。质量规则支持非空、唯一、范围、格式和枚举检测，检测结果会记录检测总数、异常数、异常率、通过状态和检测时间。D4-04 不新增 Docker 服务，不修改 Docker 配置，但新增后端和前端代码后必须执行 Docker Compose 重建验收。下一步进入 D4-05：敏感数据识别和脱敏。
 
+## D4-05：敏感数据识别和脱敏
+
+当前项目已完成 D4-05：敏感数据识别和脱敏。本阶段基于 D4-03 元数据采集结果，识别手机号、身份证、邮箱、银行卡、姓名、地址等敏感字段，并支持脱敏规则查询和脱敏预览。新增 SQL 文件为 `scaffold-sql/d4_05_datahub_sensitive_mask.sql`，新增表为 `datahub_sensitive_field`、`datahub_mask_rule`、`datahub_mask_result`，新增后端接口为 `POST /api/datahub/sensitive-fields/scan`、`GET /api/datahub/sensitive-fields/page`、`GET /api/datahub/mask-rules/page`、`POST /api/datahub/mask-results/preview`、`GET /api/datahub/mask-results/page`，新增前端页面为 `/datahub/sensitive`。本阶段不新增 Docker 服务、不修改 Docker Compose 配置，但必须执行 SQL、重新构建后端和前端镜像，并通过 Docker Compose 完成验收。
 

@@ -3581,5 +3581,10 @@ Property 'tableCount' does not exist
 
 当前阶段已推进到 D4-04：数据质量检测。本阶段新增后端技术点包括：基于 MyBatis-Plus 的质量规则分页查询、质量结果分页查询，基于 `JdbcTemplate` 读取已采集元数据，基于 `DriverManager` 连接目标 MySQL 数据源并执行规则检测 SQL，支持 `NOT_NULL`、`UNIQUE`、`RANGE`、`FORMAT`、`ENUM` 五类规则。本阶段新增前端技术点包括：新增 `scaffold-frontend/src/api/datahub/quality.ts`，使用 `request.get<any, T>()` 和 `request.post<any, T>()` 防止 AxiosResponse 与业务类型不匹配；新增 `DatahubQualityView.vue`，使用 CSS Grid 实现统计卡片、检测操作区、规则查询区和结果查询区。本阶段新增数据库表为 `datahub_quality_rule` 和 `datahub_quality_result`，新增 SQL 文件为 `scaffold-sql/d4_04_datahub_quality.sql`，并需要同步追加到 `scaffold-sql/enterprise_scaffold_init.sql`。本阶段新增接口为 `GET /api/datahub/quality-rules/page`、`POST /api/datahub/quality-results/check`、`GET /api/datahub/quality-results/page`，新增前端路由为 `/datahub/quality`。本阶段不新增 Docker 服务，不修改 Docker 配置，但必须执行 Docker Compose 重建验收：`cd /d D:\Code\enterprise-scaffold\scaffold-docker`、`docker compose --env-file .env up -d --build`、`docker compose ps`、`docker logs -f enterprise-scaffold-backend`。本阶段固定排查规则：页面加载失败先查 F12 Network，再查 ApiResult 解包，再查 Docker 后端日志；表格 No Data 先确认 `records` 是否为数组；后端 500 先查表名字段是否仍保持 `datahub_datasource`、`datahub_metadata_table`、`datahub_metadata_column`、`datahub_quality_rule`、`datahub_quality_result`。下一阶段是 D4-05：敏感数据识别和脱敏，命名必须继续使用 `cn.sxu.enterprise.module.datahub`、`/api/datahub/**`、`datahub_` 表前缀和 `/datahub/**` 前端路由前缀。
 
+## D4-05 技术栈补充：敏感数据识别和脱敏
+
+D4-05 新增数据治理安全能力，技术上继续使用 Java 17、Spring Boot 3、MyBatis-Plus、MySQL、Vue3、Vite、TypeScript、Axios、Element Plus 和 Docker Compose。本阶段新增 `datahub_sensitive_field`、`datahub_mask_rule`、`datahub_mask_result` 三张表，并扩展 `datahub_metadata_column` 的 `sensitive_flag`、`sensitive_type`、`mask_type` 字段。后端新增 `DatahubSensitiveController`、`DatahubSensitiveService`、`DatahubSensitiveServiceImpl`、`DatahubSensitiveFieldMapper`、`DatahubMaskRuleMapper`、`DatahubMaskResultMapper` 等类，实现敏感字段扫描、敏感字段分页、脱敏规则分页、脱敏预览、脱敏结果分页。前端新增 `scaffold-frontend/src/api/datahub/sensitive.ts` 和 `scaffold-frontend/src/views/datahub/DatahubSensitiveView.vue`，路由为 `/datahub/sensitive`。页面继续使用 CSS Grid，前端 API 文件使用 `request.get<any, T>()` 和 `request.post<any, T>()`，避免 `AxiosResponse<T>` 与 `T` 类型不匹配以及 `ApiResult` 未解包导致的 undefined 问题。
+
+
 
 
