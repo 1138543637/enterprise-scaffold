@@ -2245,5 +2245,9 @@ D4-04 新增 SQL 文件 `scaffold-sql/d4_04_datahub_quality.sql`，本地 MySQL 
 
 D4-05 不新增 Docker 服务，不修改 Docker Compose 配置，但由于新增了后端 Java 类、前端页面和 SQL 文件，必须重新执行 SQL 并重新构建后端和前端镜像。执行 SQL 时，本地 MySQL 可在项目根目录执行 `mysql -uroot -p < scaffold-sql/d4_05_datahub_sensitive_mask.sql`；Docker MySQL 推荐先执行 `docker cp scaffold-sql\d4_05_datahub_sensitive_mask.sql enterprise-scaffold-mysql:/tmp/d4_05_datahub_sensitive_mask.sql`，再进入容器 MySQL 执行 `SOURCE /tmp/d4_05_datahub_sensitive_mask.sql;`。Docker Compose 验收固定执行：进入 `D:\Code\enterprise-scaffold\scaffold-docker`，运行 `docker compose --env-file .env up -d --build`，再运行 `docker compose ps` 查看 `enterprise-scaffold-mysql`、`enterprise-scaffold-backend`、`enterprise-scaffold-frontend` 是否正常，最后运行 `docker logs -f enterprise-scaffold-backend` 查看后端是否无启动错误。
 
+## D4-06 部署说明：API 共享发布与数据治理看板
+
+D4-06 不新增 Docker 服务，不修改 Docker Compose 配置，不新增 Docker 容器名，不新增 Docker 端口，不新增 Docker 环境变量，不新增 Docker volume，也不修改上传目录挂载规则。但是本阶段新增 SQL、后端 Java 类、前端 API 文件和前端页面，所以必须执行 SQL，并重新构建后端和前端镜像。本地 MySQL 执行命令：进入 `D:\Code\enterprise-scaffold` 后运行 `mysql -uroot -p < scaffold-sql\d4_06_datahub_api_dashboard.sql`。Docker MySQL 执行命令：进入 `D:\Code\enterprise-scaffold` 后运行 `docker cp scaffold-sql\d4_06_datahub_api_dashboard.sql enterprise-scaffold-mysql:/tmp/d4_06_datahub_api_dashboard.sql`，再运行 `docker exec -it enterprise-scaffold-mysql sh -c "mysql -uroot -p$MYSQL_PASSWORD enterprise_scaffold -e 'SOURCE /tmp/d4_06_datahub_api_dashboard.sql;'"`。Docker Compose 验收固定执行：进入 `D:\Code\enterprise-scaffold\scaffold-docker`，运行 `docker compose --env-file .env up -d --build`，再运行 `docker compose ps` 查看核心容器状态，最后运行 `docker logs -f enterprise-scaffold-backend` 查看后端是否无启动错误。前端验收地址为 `http://localhost:5173/datahub/apis` 和 `http://localhost:5173/datahub/dashboard`。
+
 
 

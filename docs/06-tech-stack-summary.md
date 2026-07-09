@@ -3586,5 +3586,9 @@ Property 'tableCount' does not exist
 D4-05 新增数据治理安全能力，技术上继续使用 Java 17、Spring Boot 3、MyBatis-Plus、MySQL、Vue3、Vite、TypeScript、Axios、Element Plus 和 Docker Compose。本阶段新增 `datahub_sensitive_field`、`datahub_mask_rule`、`datahub_mask_result` 三张表，并扩展 `datahub_metadata_column` 的 `sensitive_flag`、`sensitive_type`、`mask_type` 字段。后端新增 `DatahubSensitiveController`、`DatahubSensitiveService`、`DatahubSensitiveServiceImpl`、`DatahubSensitiveFieldMapper`、`DatahubMaskRuleMapper`、`DatahubMaskResultMapper` 等类，实现敏感字段扫描、敏感字段分页、脱敏规则分页、脱敏预览、脱敏结果分页。前端新增 `scaffold-frontend/src/api/datahub/sensitive.ts` 和 `scaffold-frontend/src/views/datahub/DatahubSensitiveView.vue`，路由为 `/datahub/sensitive`。页面继续使用 CSS Grid，前端 API 文件使用 `request.get<any, T>()` 和 `request.post<any, T>()`，避免 `AxiosResponse<T>` 与 `T` 类型不匹配以及 `ApiResult` 未解包导致的 undefined 问题。
 
 
+## D4-06 技术栈补充：API 共享发布与数据治理看板
+
+D4-06 继续使用 Java 17、Spring Boot 3、MyBatis-Plus、MySQL、Vue3、Vite、TypeScript、Axios、Element Plus 和 Docker Compose。本阶段后端继续放在 `cn.sxu.enterprise.module.datahub` 包下，新增 `DatahubApiPublish`、`DatahubApiCallLog`、`DatahubApiPublishMapper`、`DatahubApiCallLogMapper`、`DatahubApiPublishService`、`DatahubApiPublishServiceImpl`、`DatahubApiPublishController`、`DatahubDashboardService`、`DatahubDashboardServiceImpl`、`DatahubDashboardController` 以及对应 VO / DTO。数据库新增 `datahub_api_publish` 和 `datahub_api_call_log`。前端新增 `scaffold-frontend/src/api/datahub/apiPublish.ts`、`scaffold-frontend/src/api/datahub/dashboard.ts`、`scaffold-frontend/src/views/datahub/DatahubApiPublishView.vue`、`scaffold-frontend/src/views/datahub/DatahubDashboardView.vue`，路由新增 `/datahub/apis` 和 `/datahub/dashboard`。前端 API 文件继续使用相对路径 import，不使用 `@` 路径别名；接口调用继续防止 `AxiosResponse<T>` 与 `T` 类型不匹配，使用 `unwrapData` 兼容 `request.ts` 已解包和未解包两种情况；页面数组变量赋值前继续使用 `Array.isArray` 保护；统计卡片、查询区和看板布局继续优先使用 CSS Grid。
+
 
 

@@ -1039,6 +1039,10 @@ D4-04 数据质量检测可参考 Apache Griffin、AWS Deequ 和 Great Expectati
 
 D4-05 的敏感数据识别和脱敏设计可以参考 Apache Atlas、DataHub、Amundsen、Apache Ranger、Microsoft Presidio 等项目的思想。可以参考它们对“元数据、敏感标签、数据分类、脱敏策略、审计记录”的建模方式，但不能照搬其源码、包名、表名和复杂架构。本项目保持求职项目可控范围，只基于 `datahub_metadata_column` 做字段级敏感识别，基于 `datahub_mask_rule` 做规则化脱敏预览，继续保持 Spring Boot 3 + MyBatis-Plus + MySQL + Vue3 + Element Plus 的轻量实现方式。
 
+## D4-06 GitHub 参考项目说明
+
+D4-06 可以参考 LinkedIn DataHub、Apache Atlas、Amundsen、Apache Ranger、Kong、Apache APISIX、Spring Boot 企业后台项目和 RuoYi 系列项目的设计思想。DataHub、Atlas、Amundsen 主要用于参考“数据目录、元数据、数据资产看板”的建模方式；Ranger 主要用于参考“数据安全与策略治理”的思想；Kong 和 APISIX 主要用于理解“API 发布、API 上线下线、API 调用网关”的业务概念；RuoYi 系列项目只参考 Controller、Service、Mapper、Entity、VO、DTO 的分层组织方式和后台管理页面布局。不能照搬这些项目的源码、包名、表名、权限框架、网关架构或代码生成器。本项目自己的实现继续保持 `cn.sxu.enterprise.module.datahub` 包名、`datahub_` 表前缀、`/api/datahub/**` 接口路径、`/datahub/**` 前端路由、`ApiResult` 和 `PageResult` 统一返回结构。
+
 
 
 

@@ -166,6 +166,18 @@ const routes: RouteRecordRaw[] = [
         meta: {
             requiresAuth: true
         }
+    },
+    {
+        path: '/datahub/apis',
+        name: 'DatahubApis',
+        component: () => import('../views/datahub/DatahubApiPublishView.vue'),
+        meta: { title: 'API共享发布' }
+    },
+    {
+        path: '/datahub/dashboard',
+        name: 'DatahubDashboard',
+        component: () => import('../views/datahub/DatahubDashboardView.vue'),
+        meta: { title: '数据治理看板' }
     }
 
 
