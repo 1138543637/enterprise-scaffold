@@ -8,6 +8,7 @@
           本页面用于处理 I5-03 异常登录风险和 I5-06 权限审计记录，形成“发现风险 -> 人工处理 -> 留痕复核 -> 看板汇总”的闭环。
         </p>
       </div>
+      <el-button @click="goDashboard">返回首页</el-button>
       <el-button type="primary" :loading="loading" @click="loadAll">刷新数据</el-button>
     </div>
 
@@ -237,7 +238,8 @@ import {
   type IamPermissionAuditPageVO,
   type IamRiskClosureSummaryVO
 } from '../../api/iam/riskClosure'
-
+import {useRouter} from "vue-router";
+const router = useRouter()
 const loading = ref(false)
 const saving = ref(false)
 const activeTab = ref('loginRisk')
@@ -331,7 +333,9 @@ async function loadPermissionAudits() {
     loading.value = false
   }
 }
-
+function goDashboard() {
+  router.push('/dashboard')
+}
 async function loadAll() {
   loading.value = true
   try {

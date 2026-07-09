@@ -5,6 +5,7 @@
         <h2>D4-04 数据质量检测</h2>
         <p>基于 D4-03 已采集的元数据，为表和字段配置质量规则，并生成检测结果。</p>
       </div>
+      <el-button @click="goDashboard">返回首页</el-button>
       <el-button type="primary" :loading="checking" @click="handleCheckSelected">
         执行检测
       </el-button>
@@ -211,7 +212,8 @@ import {
   type DatahubQualityRulePageVO,
   type PageResult
 } from '../../api/datahub/quality'
-
+import {useRouter} from "vue-router";
+const router = useRouter()
 type UnknownResponse = unknown
 
 const ruleLoading = ref(false)
@@ -379,7 +381,9 @@ async function handleCheckRule(row: DatahubQualityRulePageVO) {
   checkForm.targetTableId = row.targetTableId
   await handleCheckSelected()
 }
-
+function goDashboard() {
+  router.push('/dashboard')
+}
 async function handleCheckSelected() {
   if (!checkForm.ruleId && !checkForm.targetTableId) {
     ElMessage.warning('请至少选择一条规则，或选择一张元数据表')

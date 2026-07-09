@@ -8,7 +8,8 @@ import {
   type RiskRuleHitPageVO,
   type RiskRulePageVO,
 } from '../../api/risk/rule'
-
+import {useRouter} from "vue-router";
+const router = useRouter()
 const ruleLoading = ref(false)
 const hitLoading = ref(false)
 const generateLoading = ref(false)
@@ -101,7 +102,9 @@ async function loadHits() {
     hitLoading.value = false
   }
 }
-
+function goDashboard() {
+  router.push('/dashboard')
+}
 async function handleGenerateHits() {
   generateLoading.value = true
   try {
@@ -170,6 +173,7 @@ onMounted(() => {
         <h2>风控规则引擎</h2>
         <p>基于交易流水执行大额交易、高频交易、异地交易、异常设备、夜间交易和黑名单规则。</p>
       </div>
+      <el-button @click="goDashboard">返回首页</el-button>
       <el-button type="primary" :loading="generateLoading" @click="handleGenerateHits">
         生成规则命中
       </el-button>

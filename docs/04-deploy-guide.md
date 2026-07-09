@@ -2289,6 +2289,178 @@ I5-07 不新增 SQL 文件，不新增 Docker 服务，不修改 Docker Compose 
 ## I5-08
 I5-08 新增 IAM 风险闭环处理接口，统一前缀为 /api/iam/risk-closures，接口继续需要 JWT 认证，不加入 SecurityConfig 放行列表，返回结构继续使用 ApiResult，Controller 方法继续使用 @OperLog。新增 GET /api/iam/risk-closures/summary 用于查询闭环统计；新增 POST /api/iam/risk-closures/login-risks/{id}/confirm 用于确认异常登录风险；新增 POST /api/iam/risk-closures/login-risks/{id}/ignore 用于忽略异常登录风险；新增 POST /api/iam/risk-closures/login-risks/{id}/close 用于关闭异常登录风险；新增 POST /api/iam/risk-closures/permission-audits/{id}/review 用于复核权限审计记录；新增 POST /api/iam/risk-closures/permission-audits/{id}/ignore 用于忽略权限审计记录。本阶段不修改原有 /api/iam/login-risks/page、/api/iam/login-risks/detect、/api/iam/permission-audits/page、/api/iam/permission-audits/simulate、/api/iam/permission-audits/{id}/review 接口。
 
+---
 
+# I5-09 部署与验收总结
+
+## 一、本阶段部署变化
+
+I5-09 阶段只修改前端 Dashboard 页面，不新增 Docker 服务，不修改 Docker Compose，不新增环境变量。
+
+本阶段部署变化如下：
+
+```text
+1. 前端 Dashboard 页面增加项目五入口；
+2. 前端 Dashboard 页面增加项目五验收链路；
+3. 需要重新构建前端；
+4. Docker Compose 可以按原方式重新启动；
+5. 后端、MySQL、Redis、Kafka 等服务保持原有配置。
+```
+
+---
+
+## 二、前端构建命令
+
+进入前端目录：
+
+```cmd
+cd /d D:\Code\enterprise-scaffold\scaffold-frontend
+```
+
+执行构建：
+
+```cmd
+pnpm build
+```
+
+预期结果：
+
+```text
+构建成功；
+无 TypeScript 报错；
+无 Vue 模板编译错误；
+无组件找不到错误；
+无路由相关编译错误。
+```
+
+---
+
+## 三、Docker Compose 启动命令
+
+进入 Docker 目录：
+
+```cmd
+cd /d D:\Code\enterprise-scaffold\scaffold-docker
+```
+
+重新构建并启动：
+
+```cmd
+docker compose --env-file .env up -d --build
+```
+
+查看容器状态：
+
+```cmd
+docker compose ps
+```
+
+查看后端日志：
+
+```cmd
+docker logs -f enterprise-scaffold-backend
+```
+
+---
+
+## 四、Dashboard 页面验收
+
+登录系统后进入 Dashboard 首页，检查以下内容：
+
+```text
+1. 首页顶部描述已经包含项目五；
+2. 首页展示顺序为：
+   公共脚手架 -> 项目一 -> 项目二 -> 项目三 -> 项目四 -> 项目五；
+3. summary-grid 中出现“项目五”卡片；
+4. 项目五状态显示“I5-09 收尾验收”；
+5. 项目五位于项目四之后；
+6. 页面最后出现“项目五验收链路”；
+7. 浏览器 Console 无红色报错。
+```
+
+---
+
+## 五、项目五页面跳转验收
+
+从 Dashboard 首页依次点击以下入口：
+
+```text
+IAM 安全看板
+IAM 风险闭环处理
+接口访问日志
+异常登录检测
+接口限流规则
+安全策略配置
+权限审计增强
+```
+
+对应页面路径：
+
+```text
+/iam/security-dashboard
+/iam/risk-closures
+/iam/access-logs
+/iam/login-risks
+/iam/rate-limit-rules
+/iam/security-policies
+/iam/permission-audits
+```
+
+每个页面验收标准：
+
+```text
+1. 页面可以正常打开；
+2. 页面标题正确；
+3. 表格或看板区域正常显示；
+4. 查询按钮可用；
+5. 操作按钮可用；
+6. 接口请求无 404；
+7. 接口请求无 500；
+8. 登录态正常，无异常 401。
+```
+
+---
+
+## 六、I5-09 最终验收清单
+
+```text
+[ ] pnpm build 成功
+[ ] docker compose --env-file .env up -d --build 成功
+[ ] docker compose ps 核心容器均为 Up
+[ ] 后端日志无启动异常
+[ ] 前端页面可以正常访问
+[ ] 首页显示项目五
+[ ] 项目五固定放在项目四之后
+[ ] 项目五入口全部可以点击
+[ ] 项目五验收链路显示完整
+[ ] IAM 安全看板可以打开
+[ ] IAM 风险闭环处理可以打开
+[ ] 接口访问日志页面可以打开
+[ ] 异常登录检测页面可以打开
+[ ] 接口限流规则页面可以打开
+[ ] 安全策略配置页面可以打开
+[ ] 权限审计增强页面可以打开
+[ ] 浏览器 Console 无明显红色报错
+[ ] GitHub 已 commit
+[ ] GitHub 已 push
+```
+
+---
+
+## 七、推荐 Git 提交命令
+
+```cmd
+cd /d D:\Code\enterprise-scaffold
+git status
+git add .
+git commit -m "feat: add iam project entries to dashboard"
+git push
+```
+
+如果本次只提交文档，可以使用：
+
+```cmd
+git commit -m "docs: update iam project final summary"
+```
 
 

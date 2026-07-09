@@ -7,6 +7,7 @@
       </div>
 
       <div class="header-actions">
+        <el-button @click="goDashboard">返回首页</el-button>
         <el-button @click="goDeviceHealth">查看设备健康</el-button>
         <el-button type="primary" @click="openCreateDialog">生成维护任务</el-button>
         <el-button :loading="loading" @click="loadData">刷新数据</el-button>
@@ -545,7 +546,9 @@ function taskStatusTagType(taskStatus: number) {
   }
   return 'info'
 }
-
+function goDashboard() {
+  router.push('/dashboard')
+}
 function goDeviceHealth() {
   router.push('/mine/device-health')
 }

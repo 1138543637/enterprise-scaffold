@@ -6,8 +6,9 @@
         <h1>企业级项目演示首页</h1>
         <p class="page-desc">
           当前脚手架已经完成系统基础能力、项目一智能矿山平台、项目二云网融合 AIOps 智能运维平台、
-          项目三银行实时交易风控与反欺诈平台，并已推进到项目四国企 / 政务数据治理与共享交换平台收尾阶段。
-          首页展示顺序固定为：公共脚手架 -> 项目一 -> 项目二 -> 项目三 -> 项目四。
+          项目三银行实时交易风控与反欺诈平台、项目四国企 / 政务数据治理与共享交换平台，
+          并已推进到项目五统一身份认证、权限审计与数据安全平台收尾阶段。
+          首页展示顺序固定为：公共脚手架 -> 项目一 -> 项目二 -> 项目三 -> 项目四 -> 项目五。
         </p>
       </div>
 
@@ -49,6 +50,12 @@
         <div class="summary-title">项目四</div>
         <div class="summary-value">D4-07 收尾验收</div>
         <div class="summary-desc">国企 / 政务数据治理与共享交换平台。</div>
+      </el-card>
+
+      <el-card shadow="hover" class="summary-card">
+        <div class="summary-title">项目五</div>
+        <div class="summary-value">I5-09 收尾验收</div>
+        <div class="summary-desc">统一身份认证、权限审计与数据安全平台。</div>
       </el-card>
     </section>
 
@@ -250,6 +257,53 @@
         </div>
       </div>
     </section>
+
+    <section class="project-section iam-section">
+      <div class="section-title">
+        <h2>项目五：统一身份认证、权限审计与数据安全平台</h2>
+        <p>
+          I5-09 收尾阶段用于验收 IAM 健康检查、接口访问日志、异常登录检测、接口限流规则、
+          安全策略配置、权限审计增强、IAM 安全看板和风险闭环处理完整链路。项目五固定放在项目四后面，作为最后一个项目演示入口。
+        </p>
+      </div>
+
+      <div class="entry-grid">
+        <el-card
+            v-for="entry in iamEntries"
+            :key="entry.path"
+            shadow="hover"
+            class="entry-card iam-card"
+        >
+          <div class="entry-content">
+            <div>
+              <div class="entry-title">{{ entry.title }}</div>
+              <div class="entry-desc">{{ entry.desc }}</div>
+            </div>
+            <el-button type="primary" @click="goPage(entry.path)">进入</el-button>
+          </div>
+        </el-card>
+      </div>
+    </section>
+
+    <section class="project-section iam-section">
+      <div class="section-title">
+        <h2>项目五验收链路</h2>
+        <p>
+          按下面顺序演示，能体现 IAM 从访问留痕、异常识别、策略配置、权限审计、安全看板到风险闭环处置的完整治理链路。
+        </p>
+      </div>
+
+      <div class="flow-grid">
+        <div
+            v-for="(item, index) in iamFlow"
+            :key="item"
+            class="flow-item iam-flow-item"
+        >
+          <span class="flow-index iam-flow-index">{{ index + 1 }}</span>
+          <span>{{ item }}</span>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -387,6 +441,44 @@ const datahubEntries = [
   }
 ]
 
+const iamEntries = [
+  {
+    title: 'IAM 安全看板',
+    desc: '访问日志、登录风险、限流规则、安全策略和权限审计综合总览。',
+    path: '/iam/security-dashboard'
+  },
+  {
+    title: 'IAM 风险闭环处理',
+    desc: '异常登录确认、忽略、关闭，以及权限审计复核和忽略。',
+    path: '/iam/risk-closures'
+  },
+  {
+    title: '接口访问日志',
+    desc: '记录接口访问路径、请求方法、状态码、耗时、访问 IP 和用户信息。',
+    path: '/iam/access-logs'
+  },
+  {
+    title: '异常登录检测',
+    desc: '识别异常登录风险，支持风险分页查询和模拟检测。',
+    path: '/iam/login-risks'
+  },
+  {
+    title: '接口限流规则',
+    desc: '配置接口限流规则，支持启用、停用和模拟检测。',
+    path: '/iam/rate-limit-rules'
+  },
+  {
+    title: '安全策略配置',
+    desc: '维护密码、登录、会话等安全策略，支持启用、停用和配置更新。',
+    path: '/iam/security-policies'
+  },
+  {
+    title: '权限审计增强',
+    desc: '记录权限变更审计信息，支持模拟生成、分页查询和复核处理。',
+    path: '/iam/permission-audits'
+  }
+]
+
 const mineFlow = [
   '设备台账 mine_device',
   '传感器台账 mine_sensor',
@@ -444,6 +536,23 @@ const datahubFlow = [
   'API 上线 online',
   'API 下线 offline',
   '数据治理综合看板 /datahub/dashboard'
+]
+
+const iamFlow = [
+  'IAM 健康检查 /api/iam/health',
+  '接口访问日志 iam_access_log',
+  '访问日志分页 /iam/access-logs',
+  '异常登录风险 iam_login_risk',
+  '异常登录检测 /iam/login-risks',
+  '接口限流规则 iam_rate_limit_rule',
+  '限流规则管理 /iam/rate-limit-rules',
+  '安全策略配置 iam_security_policy',
+  '安全策略管理 /iam/security-policies',
+  '权限审计记录 iam_permission_audit',
+  '权限审计增强 /iam/permission-audits',
+  'IAM 安全看板 /iam/security-dashboard',
+  '风险闭环处理 /iam/risk-closures',
+  '未处理风险与待复核审计联动下降'
 ]
 
 const goPage = (path: string) => {
@@ -567,6 +676,11 @@ const handleLogout = () => {
   background: #f7fff9;
 }
 
+.iam-section {
+  border: 1px solid #c7d2fe;
+  background: #f8faff;
+}
+
 .section-title {
   margin-bottom: 18px;
 }
@@ -601,6 +715,11 @@ const handleLogout = () => {
 .datahub-card {
   border-color: #bbf7d0;
   background: #fbfffd;
+}
+
+.iam-card {
+  border-color: #c7d2fe;
+  background: #fbfcff;
 }
 
 .entry-content {
@@ -654,6 +773,11 @@ const handleLogout = () => {
   background: #f0fdf4;
 }
 
+.iam-flow-item {
+  border-color: #c7d2fe;
+  background: #eef2ff;
+}
+
 .flow-index {
   display: inline-flex;
   width: 26px;
@@ -674,6 +798,10 @@ const handleLogout = () => {
 
 .datahub-flow-index {
   background: #16a34a;
+}
+
+.iam-flow-index {
+  background: #4f46e5;
 }
 
 @media (max-width: 768px) {

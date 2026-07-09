@@ -5,6 +5,7 @@
         <h2>数据治理看板</h2>
         <p>汇总数据源、元数据、质量检测、敏感字段、脱敏和 API 发布情况。</p>
       </div>
+      <el-button @click="goDashboard">返回首页</el-button>
       <el-button type="primary" @click="loadDashboard">刷新看板</el-button>
     </div>
 
@@ -97,7 +98,8 @@ import {
   type DatahubRecentQualityResultVO,
   type DatahubSensitiveTypeStatVO
 } from '../../api/datahub/dashboard'
-
+import {useRouter} from "vue-router";
+const router = useRouter()
 const loading = ref(false)
 const summary = ref<DatahubDashboardSummaryVO>({
   datasourceCount: 0,
@@ -129,7 +131,9 @@ const statCards = computed(() => [
   { label: 'API发布数量', value: summary.value.apiPublishCount || 0 },
   { label: '已上线 API', value: summary.value.onlineApiCount || 0 }
 ])
-
+function goDashboard() {
+  router.push('/dashboard')
+}
 async function loadDashboard() {
   loading.value = true
   try {

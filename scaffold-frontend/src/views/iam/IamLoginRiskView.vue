@@ -9,6 +9,7 @@
         </p>
       </div>
       <div class="header-actions">
+        <el-button @click="goDashboard">返回首页</el-button>
         <el-button type="primary" :loading="detecting" @click="handleDetect">
           执行风险检测
         </el-button>
@@ -131,7 +132,8 @@ import {
   type IamLoginRiskPageQuery,
   type IamLoginRiskPageVO
 } from '../../api/iam/loginRisk'
-
+import {useRouter} from "vue-router";
+const router = useRouter()
 const loading = ref(false)
 const detecting = ref(false)
 const records = ref<IamLoginRiskPageVO[]>([])
@@ -186,7 +188,9 @@ async function fetchPage() {
     loading.value = false
   }
 }
-
+function goDashboard() {
+  router.push('/dashboard')
+}
 async function handleDetect() {
   detecting.value = true
   try {

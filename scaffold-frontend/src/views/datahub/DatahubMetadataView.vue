@@ -10,6 +10,8 @@ import {
   type DatahubMetadataColumnPageVO,
   type DatahubMetadataTablePageVO
 } from '../../api/datahub/metadata'
+import {useRouter} from "vue-router";
+const router = useRouter()
 
 type PageLike<T> = {
   records?: T[]
@@ -29,7 +31,9 @@ type CollectResultLike = {
   columnCount?: number
   columnNum?: number
 }
-
+function goDashboard() {
+  router.push('/dashboard')
+}
 function unwrapApiData<T>(response: unknown): T {
   const anyResponse = response as any
   return (anyResponse?.data?.data ?? anyResponse?.data ?? anyResponse ?? {}) as T
@@ -296,6 +300,7 @@ onMounted(() => {
         <h2>数据治理 / 元数据采集</h2>
         <p>D4-03：连接数据源，自动采集数据库表和字段元数据。</p>
       </div>
+      <el-button @click="goDashboard">返回首页</el-button>
     </div>
 
     <div class="summary-grid">

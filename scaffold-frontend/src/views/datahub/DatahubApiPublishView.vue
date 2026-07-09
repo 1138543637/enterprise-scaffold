@@ -76,7 +76,7 @@
         />
       </div>
     </el-card>
-
+    <el-button @click="goDashboard">返回首页</el-button>
     <el-dialog v-model="dialogVisible" title="从元数据表发布 API" width="640px">
       <el-alert
         title="先在 /datahub/metadata 页面确认已有元数据表，再复制对应 tableId 到这里发布。"
@@ -128,7 +128,8 @@ import {
   type DatahubApiPublishPageQuery,
   type DatahubApiPublishPageVO
 } from '../../api/datahub/apiPublish'
-
+import {useRouter} from "vue-router";
+const router = useRouter()
 const loading = ref(false)
 const submitLoading = ref(false)
 const dialogVisible = ref(false)
@@ -145,7 +146,9 @@ const query = reactive<DatahubApiPublishPageQuery>({
   onlineStatus: undefined,
   status: undefined
 })
-
+function goDashboard() {
+  router.push('/dashboard')
+}
 const form = reactive<DatahubApiPublishCreateRequest>({
   tableId: 1,
   apiName: '',

@@ -1084,6 +1084,104 @@ I5-07 可参考 RuoYi / RuoYi-Vue / RuoYi-Vue3 的后台首页、监控首页、
 I5-08 新增 SQL 文件并新增后端、前端代码，但不新增 Docker 服务，不修改 Docker Compose 配置，不新增 Docker volume，不修改容器名，不修改端口，不修改环境变量，不修改上传目录挂载规则。需要先在本地 MySQL 或 Docker MySQL 执行 scaffold-sql/i5_08_iam_risk_closure.sql，再执行后端编译、前端构建和 Docker Compose 重建验收。本地 MySQL 执行命令为 mysql -uroot -p < D:\Code\enterprise-scaffold\scaffold-sql\i5_08_iam_risk_closure.sql。Docker MySQL 执行命令为 cd /d D:\Code\enterprise-scaffold 后执行 docker exec -i enterprise-scaffold-mysql mysql -uroot -p你的密码 < scaffold-sql\i5_08_iam_risk_closure.sql。后端验收命令为 cd /d D:\Code\enterprise-scaffold\scaffold-backend 后执行 mvn -DskipTests compile。前端验收命令为 cd /d D:\Code\enterprise-scaffold\scaffold-frontend 后执行 pnpm build。Docker Compose 验收命令继续使用 cd /d D:\Code\enterprise-scaffold\scaffold-docker、docker compose --env-file .env up -d --build、docker compose ps、docker logs -f enterprise-scaffold-backend。
 
 
+---
 
+# I5-09 GitHub 参考总结
+
+## 一、本阶段参考重点
+
+I5-09 阶段已经进入项目五总体验收与收尾，不再继续扩展新的业务功能。
+
+本阶段参考重点不是继续查找新项目，而是借鉴企业级后台系统首页的组织方式，包括：
+
+```text
+1. 多项目入口如何统一展示；
+2. 项目卡片如何排列；
+3. 验收链路如何可视化；
+4. 不同项目如何用颜色区分；
+5. 首页如何体现项目完成度；
+6. 点击卡片如何跳转到已有页面。
+```
+
+---
+
+## 二、项目五 Dashboard 集成借鉴方向
+
+项目五 Dashboard 集成可以借鉴常见后台管理系统中的首页入口设计。
+
+借鉴点如下：
+
+```text
+1. 使用卡片展示模块入口；
+2. 使用简短描述说明模块功能；
+3. 使用按钮进入对应页面；
+4. 使用流程块展示验收链路；
+5. 使用不同背景色区分不同项目；
+6. 保持入口顺序稳定，便于演示。
+```
+
+---
+
+## 三、项目五不再新增参考项目
+
+I5-09 阶段不建议继续引入新的 GitHub 项目作为开发参考。
+
+原因如下：
+
+```text
+1. 项目五已经进入收尾阶段；
+2. 核心后端功能已经完成；
+3. 核心前端页面已经完成；
+4. 数据库表结构已经固定；
+5. 接口路径已经固定；
+6. 当前重点是验收、稳定和文档收尾；
+7. 继续引入新参考项目容易导致范围失控。
+```
+
+---
+
+## 四、参考边界
+
+后续即使参考 GitHub 项目，也必须遵守以下边界：
+
+```text
+1. 不改变当前技术栈；
+2. 不替换现有脚手架；
+3. 不修改已有包名；
+4. 不修改已有表名；
+5. 不修改已有接口路径；
+6. 不修改已有 Docker 容器名；
+7. 不引入新的复杂中间件；
+8. 不复制大段外部代码；
+9. 只借鉴设计思想和页面组织方式。
+```
+
+---
+
+## 五、项目五最终表达
+
+项目五最终可以总结为：
+
+```text
+项目五：统一身份认证、权限审计与数据安全平台
+
+本项目围绕企业后台系统中的身份安全与权限治理场景，构建接口访问日志、异常登录检测、接口限流规则、安全策略配置、权限审计增强、IAM 安全看板和风险闭环处理能力，形成从访问留痕、风险识别、策略配置、权限审计到安全看板展示和风险闭环处置的完整链路。
+```
+
+---
+
+## 六、I5-09 收尾建议
+
+I5-09 阶段建议重点做好以下事情：
+
+```text
+1. 保持功能稳定；
+2. 完成 Dashboard 首页集成；
+3. 完成文档更新；
+4. 完成前端构建；
+5. 完成 Docker Compose 验收；
+6. 完成 GitHub commit 和 push；
+7. 不再临时加入新的复杂功能。
+```
 
 

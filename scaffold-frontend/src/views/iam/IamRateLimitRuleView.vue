@@ -9,6 +9,7 @@
         </p>
       </div>
       <div class="header-actions">
+        <el-button @click="goDashboard">返回首页</el-button>
         <el-button @click="handleRefresh">刷新</el-button>
         <el-button type="primary" @click="openSimulateDialog">模拟检测</el-button>
       </div>
@@ -200,7 +201,8 @@ import {
   type IamRateLimitRuleSimulateRequest,
   type IamRateLimitRuleSimulateVO
 } from '../../api/iam/rateLimitRule'
-
+import {useRouter} from "vue-router";
+const router = useRouter()
 const loading = ref(false)
 const simulateLoading = ref(false)
 const records = ref<IamRateLimitRulePageVO[]>([])
@@ -283,7 +285,9 @@ function handleReset() {
   createTimeRange.value = []
   fetchList()
 }
-
+function goDashboard() {
+  router.push('/dashboard')
+}
 function handleRefresh() {
   fetchList()
 }

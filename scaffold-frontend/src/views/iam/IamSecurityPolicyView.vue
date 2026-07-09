@@ -10,6 +10,7 @@
         </p>
       </div>
       <div class="header-actions">
+        <el-button @click="goDashboard">返回首页</el-button>
         <el-button type="primary" :loading="loading" @click="loadData">刷新</el-button>
         <el-button @click="resetQuery">重置</el-button>
       </div>
@@ -220,7 +221,8 @@ import {
   type IamSecurityPolicyPageQuery,
   type IamSecurityPolicyPageVO
 } from '../../api/iam/securityPolicy'
-
+import {useRouter} from "vue-router";
+const router = useRouter()
 const loading = ref(false)
 const saving = ref(false)
 const records = ref<IamSecurityPolicyPageVO[]>([])
@@ -276,7 +278,9 @@ function buildQueryParams(): IamSecurityPolicyPageQuery {
   }
   return params
 }
-
+function goDashboard() {
+  router.push('/dashboard')
+}
 async function loadData() {
   loading.value = true
   try {

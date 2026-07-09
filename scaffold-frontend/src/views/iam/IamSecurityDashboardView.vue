@@ -9,6 +9,7 @@
         </p>
       </div>
       <div class="header-actions">
+        <el-button @click="goDashboard">返回首页</el-button>
         <el-button type="primary" :loading="loading" @click="loadDashboard">刷新看板</el-button>
       </div>
     </section>
@@ -145,7 +146,8 @@ import {
   getIamSecurityDashboard,
   type IamSecurityDashboardVO
 } from '../../api/iam/securityDashboard'
-
+import {useRouter} from "vue-router";
+const router = useRouter()
 const loading = ref(false)
 
 const dashboard = reactive<IamSecurityDashboardVO>({
@@ -169,7 +171,9 @@ const safeReviewStatusStats = computed(() => Array.isArray(dashboard.reviewStatu
 const safePolicyStatusStats = computed(() => Array.isArray(dashboard.policyStatusStats) ? dashboard.policyStatusStats : [])
 const safeRecentEvents = computed(() => Array.isArray(dashboard.recentEvents) ? dashboard.recentEvents : [])
 const maxRiskTotal = computed(() => Math.max(...safeRiskDistributions.value.map(item => Number(item.totalCount || 0)), 1))
-
+function goDashboard() {
+  router.push('/dashboard')
+}
 const loadDashboard = async () => {
   loading.value = true
   try {

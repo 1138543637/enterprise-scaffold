@@ -3629,5 +3629,140 @@ I5-07 完成项目五 IAM 模块的安全看板增强能力。后端继续使用
 ## I5-08
 I5-08 可参考 RuoYi / RuoYi-Vue / RuoYi-Vue3 中登录日志、操作日志、用户状态处理、审计记录处理和后台管理列表页的分层方式，也可以参考企业后台系统常见的风险处理工单、告警确认、审计复核页面。参考时只学习 Controller、Service、ServiceImpl、VO、前端 API、前端页面、弹窗表单、表格操作和 CSS Grid 布局方式，不能照搬包名、表名、接口路径、菜单体系、返回结构或权限框架。本项目固定使用 cn.sxu.enterprise.module.iam、/api/iam/**、iam_ 表前缀、ApiResult、PageResult、@OperLog、JWT 和现有 Docker Compose 契约。本阶段不引入 Sa-Token，不新增 Redis，不新增 Docker 服务。
 
+---
 
+# I5-09 技术栈收尾总结
+
+## 一、本阶段技术栈变化
+
+I5-09 阶段不新增技术栈，不引入新的第三方框架，不新增中间件。
+
+本阶段技术栈变化为：
+
+```text
+无新增技术栈；
+无新增后端依赖；
+无新增前端依赖；
+无新增 Docker 服务；
+无新增数据库组件。
+```
+
+---
+
+## 二、本阶段使用到的核心技术
+
+I5-09 阶段主要使用以下已有技术：
+
+```text
+Vue 3
+TypeScript
+Element Plus
+Vue Router
+Pinia
+Docker Compose
+```
+
+其中 Dashboard 首页集成主要依赖：
+
+```text
+1. Vue 3 template；
+2. script setup；
+3. TypeScript 数组配置；
+4. Element Plus el-card；
+5. Element Plus el-button；
+6. Vue Router router.push；
+7. scoped CSS。
+```
+
+---
+
+## 三、项目五最终技术链路
+
+项目五最终技术链路为：
+
+```text
+Spring Boot 后端接口
+-> MyBatis Plus 数据查询
+-> MySQL 数据存储
+-> Vue 3 前端页面
+-> Element Plus 表格和卡片
+-> ECharts 看板展示
+-> Vue Router 页面跳转
+-> Docker Compose 统一部署
+```
+
+---
+
+## 四、项目五最终功能链路
+
+项目五最终功能链路为：
+
+```text
+访问留痕
+-> 异常识别
+-> 限流控制
+-> 安全策略
+-> 权限审计
+-> 安全看板
+-> 风险闭环
+```
+
+---
+
+## 五、I5-09 Dashboard 集成技术点
+
+I5-09 阶段 Dashboard 集成涉及以下技术点：
+
+```text
+1. 在 summary-grid 中新增项目五卡片；
+2. 在 script setup 中新增 iamEntries；
+3. 在 script setup 中新增 iamFlow；
+4. 使用 v-for 渲染项目五入口卡片；
+5. 使用 router.push 跳转到 IAM 页面；
+6. 使用 iam-section 区分项目五区域；
+7. 使用 iam-card 区分项目五入口卡片；
+8. 使用 iam-flow-item 和 iam-flow-index 区分项目五验收链路；
+9. 保持项目五固定放在项目四之后。
+```
+
+---
+
+## 六、I5-09 技术栈验收标准
+
+I5-09 阶段技术栈验收标准如下：
+
+```text
+1. Vue 3 页面可以正常编译；
+2. TypeScript 无类型错误；
+3. Element Plus 组件正常显示；
+4. Vue Router 可以正常跳转 IAM 页面；
+5. Pinia 登录状态正常；
+6. Axios 请求正常；
+7. Spring Boot 后端正常启动；
+8. MyBatis Plus 查询正常；
+9. MySQL 数据正常；
+10. Docker Compose 环境正常；
+11. Dashboard 首页展示五个项目；
+12. 项目五固定在最后。
+```
+
+---
+
+## 七、最终技术总结
+
+Enterprise Scaffold 当前已经形成完整的企业级技术栈闭环：
+
+```text
+后端开发
+-> 数据库设计
+-> 前端页面
+-> 权限认证
+-> 接口治理
+-> 日志审计
+-> 风险看板
+-> Docker 部署
+-> Dashboard 总览集成
+```
+
+项目五作为最后一个项目，补齐了统一身份认证、权限审计与数据安全治理能力，使整个脚手架更接近真实企业后台系统。
 

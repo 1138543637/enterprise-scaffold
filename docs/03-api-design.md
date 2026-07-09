@@ -2526,5 +2526,140 @@ I5-07 新增 IAM 安全看板总览接口：`GET /api/iam/security-dashboard/ove
 I5-08 新增 SQL 文件 scaffold-sql/i5_08_iam_risk_closure.sql，第一行固定为 SET NAMES utf8mb4;，第二段固定使用 USE enterprise_scaffold;。本阶段不新增数据库表，仅扩展 I5-03 已有表 iam_login_risk。新增字段 handle_by 用于保存处理人，handle_time 用于保存处理时间，handle_remark 用于保存处理备注；同时将 handle_status 的业务含义固定为 0 未处理、1 已确认、2 已忽略、3 已关闭，并新增 handle_status、handle_time 联合索引，便于后续按处理状态和处理时间查询。权限审计闭环不新增字段，继续复用 I5-06 的 iam_permission_audit.review_status、review_by、review_time 和 remark 字段。
 
 
+---
 
+# I5-09 接口设计收尾总结
+
+## 一、本阶段接口变化
+
+I5-09 阶段不新增后端接口，不修改已有接口路径，不修改 Controller、Service、Mapper。
+
+本阶段接口变化为：
+
+```text
+无新增接口；
+无接口路径变更；
+无 Controller 变更；
+无 Service 变更；
+无 Mapper 变更。
+```
+
+I5-09 的核心工作是把已有项目五 IAM 页面入口集成到 Dashboard 首页中。
+
+---
+
+## 二、项目五最终接口前缀
+
+项目五后端接口统一前缀为：
+
+```text
+/api/iam
+```
+
+---
+
+## 三、项目五最终接口模块
+
+项目五最终接口模块包括：
+
+```text
+IAM 健康检查接口
+接口访问日志接口
+异常登录检测接口
+接口限流规则接口
+安全策略配置接口
+权限审计增强接口
+IAM 安全看板接口
+IAM 风险闭环处理接口
+```
+
+---
+
+## 四、项目五核心接口验收顺序
+
+I5-09 阶段建议按以下顺序验收接口：
+
+```text
+1. GET  /api/iam/health
+2. GET  /api/iam/access-logs/page
+3. GET  /api/iam/login-risks/page
+4. POST /api/iam/login-risks/simulate
+5. GET  /api/iam/rate-limit-rules/page
+6. POST /api/iam/rate-limit-rules/simulate
+7. GET  /api/iam/security-policies/page
+8. GET  /api/iam/permission-audits/page
+9. POST /api/iam/permission-audits/simulate
+10. GET /api/iam/security-dashboard/summary
+11. GET /api/iam/risk-closures/pending
+```
+
+---
+
+## 五、Dashboard 首页跳转入口
+
+I5-09 阶段在 Dashboard 首页新增项目五入口，前端通过 `router.push(path)` 跳转到已有 IAM 页面。
+
+入口对应关系如下：
+
+| 首页入口 | 跳转路径 |
+|---|---|
+| IAM 安全看板 | `/iam/security-dashboard` |
+| IAM 风险闭环处理 | `/iam/risk-closures` |
+| 接口访问日志 | `/iam/access-logs` |
+| 异常登录检测 | `/iam/login-risks` |
+| 接口限流规则 | `/iam/rate-limit-rules` |
+| 安全策略配置 | `/iam/security-policies` |
+| 权限审计增强 | `/iam/permission-audits` |
+
+---
+
+## 六、接口设计验收标准
+
+I5-09 阶段接口验收标准如下：
+
+```text
+1. IAM 健康检查接口可以正常返回；
+2. 接口访问日志可以分页查询；
+3. 异常登录风险可以分页查询和模拟生成；
+4. 限流规则可以分页查询和模拟检测；
+5. 安全策略可以分页查询；
+6. 权限审计记录可以分页查询和模拟生成；
+7. IAM 安全看板统计数据可以正常返回；
+8. 风险闭环页面可以查询待处理风险；
+9. 前端点击 Dashboard 项目五入口后可以正常进入对应页面；
+10. 浏览器 Network 中接口无 404、500 等异常。
+```
+
+---
+
+## 七、统一返回结构要求
+
+项目五继续遵守系统统一返回结构。
+
+普通返回：
+
+```json
+{
+  "code": 200,
+  "message": "success",
+  "data": {}
+}
+```
+
+分页返回：
+
+```json
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "records": [],
+    "total": 0,
+    "current": 1,
+    "size": 10
+  }
+}
+```
+
+前端继续使用 `request.ts` 解包后的数据类型，不直接使用 `AxiosResponse<T>`。
 

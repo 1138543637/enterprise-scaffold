@@ -5,6 +5,7 @@
         <h2>敏感数据识别和脱敏</h2>
         <p>基于元数据字段识别手机号、身份证、邮箱、银行卡、姓名、地址等敏感字段，并进行脱敏预览。</p>
       </div>
+      <el-button @click="goDashboard">返回首页</el-button>
       <el-button type="primary" :loading="scanLoading" @click="handleScan">开始识别</el-button>
     </div>
 
@@ -184,7 +185,8 @@ import {
   type DatahubMaskRulePageVO,
   type DatahubSensitiveFieldPageVO
 } from '../../api/datahub/sensitive'
-
+import {useRouter} from "vue-router";
+const router = useRouter()
 const scanLoading = ref(false)
 const sensitiveLoading = ref(false)
 const maskRuleLoading = ref(false)
@@ -242,7 +244,9 @@ const previewResult = ref<DatahubMaskResultPageVO>()
 const previewForm = reactive({
   rawValue: ''
 })
-
+function goDashboard() {
+  router.push('/dashboard')
+}
 async function handleScan() {
   scanLoading.value = true
   try {

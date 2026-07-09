@@ -11,7 +11,8 @@ import {
   type RiskReviewOrderPageVO,
   type RiskReviewSummaryVO,
 } from '../../api/risk/reviewOrder'
-
+import {useRouter} from "vue-router";
+const router = useRouter()
 const loading = ref(false)
 const generateLoading = ref(false)
 const approveDialogVisible = ref(false)
@@ -157,7 +158,9 @@ async function loadPage() {
     loading.value = false
   }
 }
-
+function goDashboard() {
+  router.push('/dashboard')
+}
 async function refreshAll() {
   await Promise.all([loadSummary(), loadPage()])
 }
@@ -263,6 +266,7 @@ onMounted(() => {
         <p class="eyebrow">R3-04 银行实时交易风控</p>
         <h1>风险评分与人工审核</h1>
       </div>
+      <el-button @click="goDashboard">返回首页</el-button>
       <el-button type="primary" :loading="loading" @click="refreshAll">刷新</el-button>
     </section>
 

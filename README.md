@@ -1234,5 +1234,197 @@ I5-08 完成项目五 IAM 模块的风险闭环处理能力，后端继续使用
 
 
 
+---
 
+# I5-09 项目五收尾说明
+
+## 一、当前完成阶段
+
+当前项目已经推进到：
+
+```text
+I5-09：项目五总体验收与收尾
+```
+
+项目五“统一身份认证、权限审计与数据安全平台”已经完成核心功能开发，并完成 Dashboard 首页集成。
+
+---
+
+## 二、当前首页展示顺序
+
+Enterprise Scaffold 首页展示顺序固定为：
+
+```text
+公共脚手架 -> 项目一 -> 项目二 -> 项目三 -> 项目四 -> 项目五
+```
+
+项目五固定放在项目四之后，作为最后一个完整项目演示入口。
+
+---
+
+## 三、项目五功能总结
+
+项目五围绕企业后台系统中的身份安全与权限治理场景，完成以下能力：
+
+```text
+1. IAM 健康检查；
+2. 接口访问日志；
+3. 异常登录检测；
+4. 接口限流规则；
+5. 安全策略配置；
+6. 权限审计增强；
+7. IAM 安全看板；
+8. IAM 风险闭环处理；
+9. Dashboard 首页集成。
+```
+
+---
+
+## 四、项目五前端页面
+
+项目五前端页面包括：
+
+```text
+/iam/access-logs
+/iam/login-risks
+/iam/rate-limit-rules
+/iam/security-policies
+/iam/permission-audits
+/iam/security-dashboard
+/iam/risk-closures
+```
+
+---
+
+## 五、项目五数据库表
+
+项目五数据库表包括：
+
+```text
+iam_access_log
+iam_login_risk
+iam_rate_limit_rule
+iam_security_policy
+iam_permission_audit
+```
+
+---
+
+## 六、项目五最终验收链路
+
+项目五最终验收链路为：
+
+```text
+IAM 健康检查
+-> 接口访问日志
+-> 异常登录检测
+-> 接口限流规则
+-> 安全策略配置
+-> 权限审计增强
+-> IAM 安全看板
+-> IAM 风险闭环处理
+```
+
+---
+
+## 七、I5-09 本阶段完成内容
+
+I5-09 阶段完成内容如下：
+
+```text
+1. Dashboard 首页新增项目五 summary 卡片；
+2. Dashboard 首页描述更新为五个项目；
+3. Dashboard 首页新增项目五入口区块；
+4. Dashboard 首页新增项目五验收链路区块；
+5. 新增 iamEntries；
+6. 新增 iamFlow；
+7. 新增 iam-section、iam-card、iam-flow-item、iam-flow-index 样式；
+8. 项目五固定放在项目四之后；
+9. 项目五作为最后一个完整项目演示入口。
+```
+
+---
+
+## 八、I5-09 不涉及内容
+
+I5-09 阶段不涉及以下内容：
+
+```text
+不新增 SQL 文件；
+不新增数据库表；
+不修改数据库字段；
+不新增后端 Controller；
+不新增后端 Service；
+不新增后端 Mapper；
+不新增前端 API 文件；
+不修改 request.ts；
+不新增前端路由；
+不修改 Docker Compose；
+不新增 Docker 服务。
+```
+
+---
+
+## 九、构建与部署命令
+
+前端构建：
+
+```cmd
+cd /d D:\Code\enterprise-scaffold\scaffold-frontend
+pnpm build
+```
+
+Docker Compose 启动：
+
+```cmd
+cd /d D:\Code\enterprise-scaffold\scaffold-docker
+docker compose --env-file .env up -d --build
+```
+
+查看容器：
+
+```cmd
+docker compose ps
+```
+
+查看后端日志：
+
+```cmd
+docker logs -f enterprise-scaffold-backend
+```
+
+---
+
+## 十、最终验收清单
+
+```text
+[ ] 前端 pnpm build 成功
+[ ] Docker Compose 启动成功
+[ ] 后端日志无异常
+[ ] Dashboard 首页显示项目五
+[ ] 项目五固定放在项目四之后
+[ ] 项目五入口全部可点击
+[ ] IAM 安全看板可以打开
+[ ] IAM 风险闭环处理可以打开
+[ ] 接口访问日志页面可以打开
+[ ] 异常登录检测页面可以打开
+[ ] 接口限流规则页面可以打开
+[ ] 安全策略配置页面可以打开
+[ ] 权限审计增强页面可以打开
+[ ] 浏览器 Console 无明显红色报错
+[ ] GitHub 已 commit
+[ ] GitHub 已 push
+```
+
+---
+
+## 十一、推荐提交命令
+
+```cmd
+cd /d D:\Code\enterprise-scaffold
+git status
+git add .
+git commit -m "docs: add iam project final summary"
+git push
+```
 

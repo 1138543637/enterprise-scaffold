@@ -9,6 +9,7 @@
         </p>
       </div>
       <div class="header-actions">
+        <el-button @click="goDashboard">返回首页</el-button>
         <el-button @click="handleReset">重置</el-button>
         <el-button type="primary" @click="openSimulateDialog">模拟审计记录</el-button>
       </div>
@@ -196,7 +197,8 @@ import {
   type IamPermissionAuditReviewRequest,
   type IamPermissionAuditSimulateRequest
 } from '../../api/iam/permissionAudit'
-
+import {useRouter} from "vue-router";
+const router = useRouter()
 const loading = ref(false)
 const saving = ref(false)
 const total = ref(0)
@@ -275,7 +277,9 @@ function handleSearch() {
   queryForm.pageNo = 1
   loadData()
 }
-
+function goDashboard() {
+  router.push('/dashboard')
+}
 function handleReset() {
   queryForm.pageNo = 1
   queryForm.pageSize = 10
