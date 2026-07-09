@@ -2502,6 +2502,11 @@ I5-01 新增 IAM 模块健康检查接口：`GET /api/iam/health`。该接口用
 I5-02 新增 IAM 接口访问日志分页查询接口：`GET /api/iam/access-logs/page`。该接口继续使用 JWT 认证，不加入放行列表，Controller 方法继续使用 `@OperLog`，返回结构继续使用 `ApiResult<PageResult<IamAccessLogPageVO>>`。查询参数包括 `pageNo`、`pageSize`、`requestUri`、`requestMethod`、`username`、`clientIp`、`accessStatus`、`beginTime` 和 `endTime`。分页结果字段包括接口路径、请求方法、访问用户、访问 IP、访问状态、响应码、耗时、访问时间、操作名称和备注。该接口属于项目五 IAM 模块，接口路径继续使用 `/api/iam/**`，不影响 D4 的 `/api/datahub/**` 接口，也不修改已有 `/api/auth/login` 和 JWT 认证逻辑。
 
 
+### I5-03：异常登录检测接口
+
+I5-03 新增 IAM 异常登录风险分页查询接口 `GET /api/iam/login-risks/page` 和异常登录检测接口 `POST /api/iam/login-risks/detect`。两个接口继续使用 JWT 认证，不加入放行列表，Controller 方法继续使用 `@OperLog`，返回结构继续使用 `ApiResult` 和 `PageResult`。分页查询参数包括 `pageNo`、`pageSize`、`riskCode`、`username`、`clientIp`、`riskType`、`riskLevel`、`handleStatus`、`beginTime`、`endTime`。检测接口基于 `sys_login_log` 中登录失败记录生成 `iam_login_risk` 风险数据，不修改登录主流程，不重写 `/api/auth/login`，不影响 D4 的 `/api/datahub/**` 接口和 I5-02 的 `/api/iam/access-logs/page` 接口。
+
+
 
 
 

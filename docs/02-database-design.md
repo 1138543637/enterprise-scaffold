@@ -1145,6 +1145,11 @@ I5-01 不新增 SQL 文件，不新增数据库表，不新增数据库字段，
 I5-02 新增 SQL 文件 `scaffold-sql/i5_02_iam_access_log.sql`，SQL 第一行固定为 `SET NAMES utf8mb4;`，第二段固定使用 `USE enterprise_scaffold;`。本阶段新增表 `iam_access_log`，该表属于项目五 IAM 模块，继续使用 `iam_` 前缀。表字段包括 `id`、`trace_id`、`request_uri`、`request_method`、`module_name`、`operation_name`、`user_id`、`username`、`client_ip`、`user_agent`、`request_params`、`response_code`、`response_msg`、`access_status`、`cost_ms`、`access_time`、`status`、`create_by`、`create_time`、`update_by`、`update_time`、`deleted` 和 `remark`。其中 `access_status` 用于区分访问成功和失败，`cost_ms` 用于记录接口耗时，`access_time` 用于记录访问发生时间，`deleted` 继续作为逻辑删除字段。本阶段不新增 Docker 服务、不修改 Docker volume、不修改上传目录挂载规则。
 
 
+### I5-03：iam_login_risk 异常登录风险表
+
+I5-03 新增 SQL 文件 `scaffold-sql/i5_03_iam_login_risk.sql`，SQL 第一行固定为 `SET NAMES utf8mb4;`，第二段固定使用 `USE enterprise_scaffold;`。本阶段新增表 `iam_login_risk`，字段包括 `id`、`risk_code`、`username`、`client_ip`、`risk_type`、`risk_level`、`fail_count`、`first_fail_time`、`last_fail_time`、`detect_time`、`handle_status`、`status`、`create_by`、`create_time`、`update_by`、`update_time`、`deleted`、`remark`。其中 `risk_type` 表示风险类型，当前包括 `LOGIN_FAILED`、`SHORT_TIME_FAILED`、`ABNORMAL_IP`；`risk_level` 表示风险等级，1 为低风险，2 为中风险，3 为高风险；`handle_status` 表示处理状态，0 为未处理，1 为已确认，2 为已忽略。该表继续使用 `iam_` 前缀，`deleted` 字段继续作为逻辑删除字段。
+
+
 
 
 

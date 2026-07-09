@@ -2266,6 +2266,11 @@ I5-01 不新增 Docker 服务，不修改 Docker Compose 配置，不新增 Dock
 I5-02 新增数据库表和后端 Java 代码，因此需要先执行 SQL，再执行后端编译、前端构建和 Docker Compose 重建验收。本阶段不新增 Docker 服务、不修改 Docker Compose 配置、不新增 Docker volume、不修改容器名、不修改端口、不修改环境变量、不修改上传目录挂载规则。Docker Compose 验收仍然必须执行：进入 `D:\Code\enterprise-scaffold\scaffold-docker`，执行 `docker compose --env-file .env up -d --build`，再执行 `docker compose ps` 检查容器状态，最后执行 `docker logs -f enterprise-scaffold-backend` 检查后端启动日志。接口验收地址为 `http://localhost:8080/api/iam/access-logs/page?pageNo=1&pageSize=10`，前端页面验收地址为 `http://localhost:5173/iam/access-logs`。
 
 
+### I5-03：异常登录检测部署验收
+
+I5-03 新增 SQL 文件、后端 Java 代码、前端 API 文件和前端页面，因此需要执行 SQL、后端编译、前端构建和 Docker Compose 重建验收。本阶段不新增 Docker 服务、不修改 Docker Compose 配置、不新增 Docker volume、不修改容器名、不修改端口、不修改环境变量、不修改上传目录挂载规则。SQL 执行后需要检查 `iam_login_risk` 表是否存在，并通过 `GET /api/iam/login-risks/page?pageNo=1&pageSize=10` 和 `POST /api/iam/login-risks/detect` 验收接口。Docker Compose 验收命令继续使用 `docker compose --env-file .env up -d --build`、`docker compose ps`、`docker logs -f enterprise-scaffold-backend`。
+
+
 
 
 

@@ -191,6 +191,14 @@ const routes: RouteRecordRaw[] = [
             title: '接口访问日志',
             requiresAuth: true
         }
+    },
+    {
+        path: '/iam/login-risks',
+        name: 'IamLoginRisks',
+        component: () => import('../views/iam/IamLoginRiskView.vue'),
+        meta: {
+            title: '异常登录检测',
+            requiresAuth: true }
     }
 
 
