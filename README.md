@@ -1226,6 +1226,10 @@ I5-05：安全策略配置已完成。项目五“统一身份认证、权限审
 项目五“统一身份认证、权限审计与数据安全平台”已新增权限审计增强能力。本阶段新增 `iam_permission_audit` 表，新增后端分页接口 `GET /api/iam/permission-audits/page`、模拟审计记录接口 `POST /api/iam/permission-audits/simulate`、复核审计记录接口 `POST /api/iam/permission-audits/{id}/review`，新增前端 API 文件 `scaffold-frontend/src/api/iam/permissionAudit.ts`，新增前端页面 `scaffold-frontend/src/views/iam/IamPermissionAuditView.vue`，新增前端路由 `/iam/permission-audits`。本阶段用于记录和复核用户角色变更、角色菜单变更、用户状态变更、菜单权限标识变更和数据范围变更等权限相关操作。本阶段继续复用 JWT、ApiResult、PageResult、@OperLog 和 Docker Compose，不新增 Docker 服务，不修改 Docker Compose 配置，不重写 `/api/auth/login`，不重写 JWT，不修改 SecurityConfig。
 
 
+## I5-07：IAM 安全看板增强
+
+项目五“统一身份认证、权限审计与数据安全平台”已完成 I5-07：IAM 安全看板增强。本阶段新增 IAM 安全治理总览接口 `GET /api/iam/security-dashboard/overview`，汇总接口访问日志、异常登录风险、接口限流规则、安全策略配置和权限审计记录，展示今日访问量、今日失败访问、未处理登录风险、高风险权限变更、待复核审计、启用安全策略、启用限流规则、风险分布、权限审计复核状态、安全能力启停统计和最近安全事件。前端新增 `scaffold-frontend/src/api/iam/securityDashboard.ts`、`scaffold-frontend/src/views/iam/IamSecurityDashboardView.vue` 和路由 `/iam/security-dashboard`。本阶段不新增 SQL 文件，不新增数据库表，不修改 Docker Compose，不重写登录认证，不修改 JWT，不修改 SecurityConfig。完成后可通过 `http://localhost:5173/iam/security-dashboard` 查看 IAM 安全看板。
+
 
 
 

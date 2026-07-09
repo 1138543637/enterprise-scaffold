@@ -3622,6 +3622,11 @@ I5-05 完成项目五 IAM 模块的安全策略配置能力，后端继续使用
 I5-06 完成项目五 IAM 模块的权限审计增强能力，后端继续使用 Java 17、Spring Boot 3、MyBatis-Plus、MySQL、JWT、ApiResult、PageResult 和 @OperLog，新增 `iam_permission_audit` 表、`GET /api/iam/permission-audits/page` 分页查询接口、`POST /api/iam/permission-audits/simulate` 模拟审计记录接口和 `POST /api/iam/permission-audits/{id}/review` 复核接口。后端分层继续采用 Entity、Mapper、Service、ServiceImpl、Controller、Query、VO、Request 结构，数据库表继续使用 `iam_` 前缀，接口路径继续使用 `/api/iam/**`。前端继续使用 Vue3、Vite、TypeScript、Element Plus、Axios 和 Vue Router，新增 `/iam/permission-audits` 页面和 `scaffold-frontend/src/api/iam/permissionAudit.ts`，并通过兼容式解包防止 ApiResult、AxiosResponse 和 PageResult 层级错误。页面统计卡片、查询区、弹窗和关键布局使用 CSS Grid。本阶段不新增 Docker 服务、不修改 Docker Compose 配置，但必须执行 SQL、后端编译、前端构建和 Docker Compose 重建验收。I5-06 继续遵守 PageResult import 使用 `cn.sxu.enterprise.common.core.page.PageResult` 和 PageResult.of 参数顺序 `total、pages、pageNo、pageSize、records` 的规则。
 
 
+## I5-07：IAM 安全看板增强技术栈总结
+
+I5-07 完成项目五 IAM 模块的安全看板增强能力。后端继续使用 Java 17、Spring Boot 3、MyBatis-Plus、MySQL、JWT、ApiResult 和 @OperLog，不新增 SQL 文件、不新增数据库表，直接汇总 `iam_access_log`、`iam_login_risk`、`iam_rate_limit_rule`、`iam_security_policy`、`iam_permission_audit` 五张既有 IAM 表。新增接口为 `GET /api/iam/security-dashboard/overview`，后端分层继续采用 Controller、Service、ServiceImpl、VO 结构，包名继续使用 `cn.sxu.enterprise.module.iam`，接口路径继续使用 `/api/iam/**`。前端继续使用 Vue3、Vite、TypeScript、Element Plus、Axios 和 Vue Router，新增 API 文件 `scaffold-frontend/src/api/iam/securityDashboard.ts`，新增页面 `scaffold-frontend/src/views/iam/IamSecurityDashboardView.vue`，新增路由 `/iam/security-dashboard`。页面统计卡片、风险分布、审计状态、安全能力启停统计和最近安全事件列表使用 CSS Grid 进行布局，并在前端 API 中通过兼容式解包防止 ApiResult、AxiosResponse 和业务数据层级错误。本阶段不新增 Docker 服务、不修改 Docker Compose 配置，但仍必须执行后端编译、前端构建和 Docker Compose 重建验收。
+
+
 
 
 

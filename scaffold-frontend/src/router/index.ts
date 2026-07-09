@@ -225,7 +225,16 @@ const routes: RouteRecordRaw[] = [
             title: '权限审计增强',
             requiresAuth: true
         }
+    },
+    {
+        path: '/iam/security-dashboard',
+        name: 'IamSecurityDashboard',
+        component: () => import('../views/iam/IamSecurityDashboardView.vue'),
+        meta: {
+            title: 'IAM 安全看板增强',
+            requiresAuth: true }
     }
+
 
 
 

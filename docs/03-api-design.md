@@ -2518,6 +2518,11 @@ I5-05 新增 IAM 安全策略配置分页查询接口 GET /api/iam/security-poli
 I5-06 新增 IAM 权限审计分页查询接口 `GET /api/iam/permission-audits/page`、模拟生成审计记录接口 `POST /api/iam/permission-audits/simulate` 和复核审计记录接口 `POST /api/iam/permission-audits/{id}/review`。接口继续使用 JWT 认证，不加入放行列表，Controller 方法继续使用 `@OperLog`，返回结构继续使用 `ApiResult` 和 `PageResult`。分页查询参数包括 `pageNo`、`pageSize`、`auditCode`、`auditType`、`targetType`、`targetName`、`changeAction`、`riskLevel`、`reviewStatus`、`operatorName`、`beginTime`、`endTime`。模拟生成请求参数包括 `auditType`、`targetType`、`targetId`、`targetName`、`changeAction`、`beforeValue`、`afterValue`、`riskLevel`、`requestIp`、`operatorName`、`remark`。复核请求参数包括 `reviewStatus`、`reviewBy`、`remark`。本阶段只做审计记录管理和复核闭环，不修改登录主流程，不修改 SecurityConfig，不实现真实权限变更拦截。
 
 
+## I5-07：IAM 安全看板接口
+
+I5-07 新增 IAM 安全看板总览接口：`GET /api/iam/security-dashboard/overview`。该接口继续使用 JWT 认证，不加入 SecurityConfig 放行列表，Controller 方法继续使用 `@OperLog`，返回结构继续使用 `ApiResult<IamSecurityDashboardVO>`。`IamSecurityDashboardVO` 包含 `summary`、`riskDistributions`、`reviewStatusStats`、`policyStatusStats`、`recentEvents` 五部分数据。`summary` 展示今日访问量、今日失败访问、未处理登录风险、高风险权限变更、待复核审计、启用安全策略和启用限流规则；`riskDistributions` 展示异常登录风险和权限审计风险的低、中、高风险分布；`reviewStatusStats` 展示权限审计待复核、已复核、已忽略统计；`policyStatusStats` 展示安全策略和限流规则启停统计；`recentEvents` 汇总最近异常登录和权限审计事件。
+
+
 
 
 
