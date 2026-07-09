@@ -1191,3 +1191,17 @@ Enterprise Scaffold 当前继续基于 D4-03 元数据采集能力推进到 D4-0
 
 当前项目四“国企 / 政务数据治理与共享交换平台”已推进到 D4-06。本阶段在 D4-05 敏感数据识别和脱敏完成基础上，新增 API 共享发布与数据治理看板能力。新增 SQL 文件为 `scaffold-sql/d4_06_datahub_api_dashboard.sql`，新增表为 `datahub_api_publish` 和 `datahub_api_call_log`。新增后端接口包括 `GET /api/datahub/api-publishes/page`、`POST /api/datahub/api-publishes/publish-from-table`、`POST /api/datahub/api-publishes/{id}/online`、`POST /api/datahub/api-publishes/{id}/offline`、`GET /api/datahub/dashboard/summary`、`GET /api/datahub/dashboard/datasource-type-stats`、`GET /api/datahub/dashboard/quality-result-stats`、`GET /api/datahub/dashboard/sensitive-type-stats`、`GET /api/datahub/dashboard/recent-quality-results`、`GET /api/datahub/dashboard/recent-apis`。新增前端 API 文件为 `scaffold-frontend/src/api/datahub/apiPublish.ts` 和 `scaffold-frontend/src/api/datahub/dashboard.ts`，新增页面为 `scaffold-frontend/src/views/datahub/DatahubApiPublishView.vue` 和 `scaffold-frontend/src/views/datahub/DatahubDashboardView.vue`，新增路由为 `/datahub/apis` 和 `/datahub/dashboard`。D4-06 不新增 Docker 服务、不修改 Docker Compose 配置，但必须执行 SQL 并重新构建后端和前端镜像完成 Docker Compose 验收。
 
+## D4-07：项目四总体验收与收尾
+
+项目四“国企 / 政务数据治理与共享交换平台”已进入 D4-07 总体验收与收尾阶段。当前项目四已经完成数据源管理、元数据采集、数据质量检测、敏感数据识别和脱敏、API 共享发布、数据治理看板完整链路。D4-07 不新增 SQL 文件、不新增数据库表、不新增后端业务接口、不修改 Docker Compose 配置，主要完成首页 `/dashboard` 项目四入口、README 和 docs 文档收尾、项目四简历表达和面试讲法沉淀。固定验收页面包括 `/datahub/datasources`、`/datahub/metadata`、`/datahub/quality`、`/datahub/sensitive`、`/datahub/apis`、`/datahub/dashboard`。Docker Compose 验收命令继续使用：进入 `D:\Code\enterprise-scaffold\scaffold-docker`，执行 `docker compose --env-file .env up -d --build`、`docker compose ps`、`docker logs -f enterprise-scaffold-backend`。
+
+
+
+******************************************************************************************************
+
+
+
+
+
+
+

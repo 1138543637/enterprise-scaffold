@@ -5,9 +5,9 @@
         <p class="page-subtitle">Enterprise Scaffold</p>
         <h1>企业级项目演示首页</h1>
         <p class="page-desc">
-          当前脚手架已经完成系统基础能力、项目一智能矿山平台、项目二云网融合 AIOps 智能运维平台，
-          并已推进到项目三银行实时交易风控与反欺诈平台收尾阶段。
-          首页展示顺序固定为：公共脚手架 -> 项目一 -> 项目二 -> 项目三。
+          当前脚手架已经完成系统基础能力、项目一智能矿山平台、项目二云网融合 AIOps 智能运维平台、
+          项目三银行实时交易风控与反欺诈平台，并已推进到项目四国企 / 政务数据治理与共享交换平台收尾阶段。
+          首页展示顺序固定为：公共脚手架 -> 项目一 -> 项目二 -> 项目三 -> 项目四。
         </p>
       </div>
 
@@ -43,6 +43,12 @@
         <div class="summary-title">项目三</div>
         <div class="summary-value">R3-07 收尾验收</div>
         <div class="summary-desc">银行实时交易风控与反欺诈平台。</div>
+      </el-card>
+
+      <el-card shadow="hover" class="summary-card">
+        <div class="summary-title">项目四</div>
+        <div class="summary-value">D4-07 收尾验收</div>
+        <div class="summary-desc">国企 / 政务数据治理与共享交换平台。</div>
       </el-card>
     </section>
 
@@ -196,6 +202,54 @@
         </div>
       </div>
     </section>
+
+    <section class="project-section datahub-section">
+      <div class="section-title">
+        <h2>项目四：国企 / 政务数据治理与共享交换平台</h2>
+        <p>
+          D4-07 收尾阶段用于验收数据源管理、元数据采集、数据质量检测、敏感数据识别、脱敏预览、
+          API 共享发布和数据治理看板完整链路。项目四固定放在项目三后面。
+        </p>
+      </div>
+
+      <div class="entry-grid">
+        <el-card
+            v-for="entry in datahubEntries"
+            :key="entry.path"
+            shadow="hover"
+            class="entry-card datahub-card"
+        >
+          <div class="entry-content">
+            <div>
+              <div class="entry-title">{{ entry.title }}</div>
+              <div class="entry-desc">{{ entry.desc }}</div>
+            </div>
+            <el-button type="success" @click="goPage(entry.path)">进入</el-button>
+          </div>
+        </el-card>
+      </div>
+    </section>
+
+    <section class="project-section datahub-section">
+      <div class="section-title">
+        <h2>项目四验收链路</h2>
+        <p>
+          按下面顺序演示，能体现数据治理从数据源接入、元数据采集、质量检测、敏感识别、脱敏处理、
+          API 发布到治理看板展示的完整闭环。
+        </p>
+      </div>
+
+      <div class="flow-grid">
+        <div
+            v-for="(item, index) in datahubFlow"
+            :key="item"
+            class="flow-item datahub-flow-item"
+        >
+          <span class="flow-index datahub-flow-index">{{ index + 1 }}</span>
+          <span>{{ item }}</span>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -300,6 +354,39 @@ const riskEntries = [
   }
 ]
 
+const datahubEntries = [
+  {
+    title: '数据治理综合看板',
+    desc: '数据源、元数据、质量结果、敏感字段、脱敏结果和 API 发布综合统计展示。',
+    path: '/datahub/dashboard'
+  },
+  {
+    title: '数据源管理',
+    desc: '数据源台账、数据源分页查询和连接测试。',
+    path: '/datahub/datasources'
+  },
+  {
+    title: '元数据采集',
+    desc: '采集数据库表和字段元数据，形成数据资产目录。',
+    path: '/datahub/metadata'
+  },
+  {
+    title: '数据质量检测',
+    desc: '质量规则分页、质量检测执行和质量结果查询。',
+    path: '/datahub/quality'
+  },
+  {
+    title: '敏感数据识别与脱敏',
+    desc: '识别手机号、身份证、邮箱等敏感字段，并进行脱敏预览。',
+    path: '/datahub/sensitive'
+  },
+  {
+    title: 'API 共享发布',
+    desc: '基于元数据表模拟发布共享 API，并支持上线、下线和分页查询。',
+    path: '/datahub/apis'
+  }
+]
+
 const mineFlow = [
   '设备台账 mine_device',
   '传感器台账 mine_sensor',
@@ -340,6 +427,23 @@ const riskFlow = [
   '审核通过 approve',
   '审核拒绝 reject',
   '风控综合看板 /risk/dashboard'
+]
+
+const datahubFlow = [
+  '数据源台账 datahub_datasource',
+  '数据源连接测试 test-connection',
+  '元数据表 datahub_metadata_table',
+  '元数据字段 datahub_metadata_column',
+  '元数据采集日志 datahub_metadata_collect_log',
+  '数据质量规则 datahub_quality_rule',
+  '数据质量检测结果 datahub_quality_result',
+  '敏感字段识别 datahub_sensitive_field',
+  '脱敏规则 datahub_mask_rule',
+  '脱敏预览结果 datahub_mask_result',
+  'API 发布 datahub_api_publish',
+  'API 上线 online',
+  'API 下线 offline',
+  '数据治理综合看板 /datahub/dashboard'
 ]
 
 const goPage = (path: string) => {
@@ -458,6 +562,11 @@ const handleLogout = () => {
   background: #fffaf4;
 }
 
+.datahub-section {
+  border: 1px solid #bbf7d0;
+  background: #f7fff9;
+}
+
 .section-title {
   margin-bottom: 18px;
 }
@@ -487,6 +596,11 @@ const handleLogout = () => {
 .risk-card {
   border-color: #fed7aa;
   background: #fffdf8;
+}
+
+.datahub-card {
+  border-color: #bbf7d0;
+  background: #fbfffd;
 }
 
 .entry-content {
@@ -535,6 +649,11 @@ const handleLogout = () => {
   background: #fff7ed;
 }
 
+.datahub-flow-item {
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+}
+
 .flow-index {
   display: inline-flex;
   width: 26px;
@@ -551,6 +670,10 @@ const handleLogout = () => {
 
 .risk-flow-index {
   background: #f59e0b;
+}
+
+.datahub-flow-index {
+  background: #16a34a;
 }
 
 @media (max-width: 768px) {

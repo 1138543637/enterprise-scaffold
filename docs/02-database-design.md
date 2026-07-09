@@ -1129,5 +1129,16 @@ D4-05 新增 SQL 文件 `scaffold-sql/d4_05_datahub_sensitive_mask.sql`，第一
 
 D4-06 新增 SQL 文件 `scaffold-sql/d4_06_datahub_api_dashboard.sql`，SQL 第一行固定为 `SET NAMES utf8mb4;`，第二段固定使用 `USE enterprise_scaffold;`。本阶段新增 `datahub_api_publish` 和 `datahub_api_call_log` 两张表。`datahub_api_publish` 用于保存从元数据表发布出来的共享 API，核心字段包括 `api_code`、`api_name`、`datasource_id`、`datasource_code`、`datasource_name`、`table_id`、`table_code`、`table_name`、`api_path`、`request_method`、`publish_type`、`online_status`、`auth_required`、`owner_name`、`publish_time`、`last_online_time`、`last_offline_time`、`status`、`deleted` 等，其中 `online_status = 0` 表示下线，`online_status = 1` 表示上线。`datahub_api_call_log` 用于后续记录 API 调用流水，核心字段包括 `call_code`、`api_id`、`api_code`、`api_name`、`request_path`、`request_method`、`caller_ip`、`call_status`、`error_msg`、`cost_time`、`call_time`、`status`、`deleted` 等。本阶段暂不实现真实动态数据开放接口，只先完成 API 发布记录、上下线管理和看板统计，为后续继续扩展真实 API 调用、调用日志写入和权限控制保留表结构。
 
+## D4-07：项目四数据库验收说明
+
+D4-07 不新增 SQL 文件，不新增数据库表，不新增数据库字段。本阶段只对项目四已经完成的数据治理表进行总体验收和文档收尾。项目四当前固定数据库为 `enterprise_scaffold`，数据治理相关表继续使用 `datahub_` 前缀。验收链路涉及 `datahub_datasource`、`datahub_metadata_table`、`datahub_metadata_column`、`datahub_metadata_collect_log`、`datahub_quality_rule`、`datahub_quality_result`、`datahub_sensitive_field`、`datahub_mask_rule`、`datahub_mask_result`、`datahub_api_publish`、`datahub_api_call_log`。其中 `datahub_api_publish.table_id` 关联 `datahub_metadata_table.id`，API 上线状态字段固定为 `online_status`，不要写成旧规划里的 `publish_status`。D4-07 的数据库验收重点是确认这些表已经存在、字段命名与后端实体一致、逻辑删除字段 `deleted` 可用、初始化 SQL 已经包含 D4-06 以前所有数据治理建表内容。
+
+******************************************************************************************************
+
+
+
+
+
+
 
 

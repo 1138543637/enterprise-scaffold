@@ -1044,5 +1044,18 @@ D4-05 的敏感数据识别和脱敏设计可以参考 Apache Atlas、DataHub、
 D4-06 可以参考 LinkedIn DataHub、Apache Atlas、Amundsen、Apache Ranger、Kong、Apache APISIX、Spring Boot 企业后台项目和 RuoYi 系列项目的设计思想。DataHub、Atlas、Amundsen 主要用于参考“数据目录、元数据、数据资产看板”的建模方式；Ranger 主要用于参考“数据安全与策略治理”的思想；Kong 和 APISIX 主要用于理解“API 发布、API 上线下线、API 调用网关”的业务概念；RuoYi 系列项目只参考 Controller、Service、Mapper、Entity、VO、DTO 的分层组织方式和后台管理页面布局。不能照搬这些项目的源码、包名、表名、权限框架、网关架构或代码生成器。本项目自己的实现继续保持 `cn.sxu.enterprise.module.datahub` 包名、`datahub_` 表前缀、`/api/datahub/**` 接口路径、`/datahub/**` 前端路由、`ApiResult` 和 `PageResult` 统一返回结构。
 
 
+## D4-07：项目四收尾阶段 GitHub 参考
+
+D4-07 主要参考方向是数据治理平台、元数据管理平台、数据目录和治理看板的收尾表达。可以参考 Apache Atlas、DataHub、Amundsen 等开源项目的数据资产、元数据、分类、搜索、治理看板和文档组织思路；也可以参考 qData 这类整合元数据、数据质量、数据资产和 API 服务的数据治理平台。注意只能参考项目分层、治理链路、文档表达和看板入口设计，不能照搬对方代码、包名、数据库字段、接口路径和 UI。当前项目必须继续保持 `cn.sxu.enterprise.module.datahub` 包名、`/api/datahub/**` 接口路径、`datahub_` 表前缀、`/datahub/**` 前端路由和 `ApiResult / PageResult` 返回结构。D4-07 推荐提交命令：`git add .`、`git commit -m "feat: finish datahub project acceptance wrap-up"`、`git push`。
+
+******************************************************************************************************
+
+
+
+
+
+
+
+
 
 

@@ -2486,6 +2486,17 @@ D4-05 新增敏感数据识别和脱敏接口，所有接口继续使用 JWT 认
 
 D4-06 新增 API 共享发布接口和数据治理看板接口，所有接口继续使用 JWT 认证，返回结构继续使用 `ApiResult`，分页结构继续使用 `PageResult`。API 共享发布接口包括：`GET /api/datahub/api-publishes/page` 用于分页查询 API 发布记录，支持 `apiCode`、`apiName`、`datasourceName`、`tableName`、`requestMethod`、`onlineStatus`、`status` 等查询条件；`POST /api/datahub/api-publishes/publish-from-table` 用于基于 `datahub_metadata_table.id` 发布 API；`POST /api/datahub/api-publishes/{id}/online` 用于将 API 上线；`POST /api/datahub/api-publishes/{id}/offline` 用于将 API 下线。数据治理看板接口包括：`GET /api/datahub/dashboard/summary` 汇总统计数据源、元数据表、元数据字段、质量规则、质量结果、敏感字段、脱敏规则、脱敏结果、API 发布数量和已上线 API 数量；`GET /api/datahub/dashboard/datasource-type-stats` 统计数据源类型分布；`GET /api/datahub/dashboard/quality-result-stats` 统计质量检测通过和不通过数量；`GET /api/datahub/dashboard/sensitive-type-stats` 统计敏感字段类型分布；`GET /api/datahub/dashboard/recent-quality-results` 查询最近质量检测结果；`GET /api/datahub/dashboard/recent-apis` 查询最近 API 发布记录。
 
+## D4-07：项目四接口验收说明
+
+D4-07 不新增后端业务接口。本阶段只验收项目四已经完成的接口是否仍然可用，所有接口继续使用 `Authorization: Bearer <token>` 认证方式，成功返回继续使用 `ApiResult`，分页返回继续使用 `PageResult`。固定验收接口包括：`GET /api/datahub/datasources/page`、`POST /api/datahub/datasources/test-connection`、`POST /api/datahub/metadata/collect`、`GET /api/datahub/metadata/tables/page`、`GET /api/datahub/metadata/columns/page`、`GET /api/datahub/metadata/collect-logs/page`、`GET /api/datahub/quality-rules/page`、`POST /api/datahub/quality-results/check`、`GET /api/datahub/quality-results/page`、`POST /api/datahub/sensitive-fields/scan`、`GET /api/datahub/sensitive-fields/page`、`GET /api/datahub/mask-rules/page`、`POST /api/datahub/mask-results/preview`、`GET /api/datahub/mask-results/page`、`GET /api/datahub/api-publishes/page`、`POST /api/datahub/api-publishes/publish-from-table`、`POST /api/datahub/api-publishes/{id}/online`、`POST /api/datahub/api-publishes/{id}/offline`、`GET /api/datahub/dashboard/summary`、`GET /api/datahub/dashboard/datasource-type-stats`、`GET /api/datahub/dashboard/quality-result-stats`、`GET /api/datahub/dashboard/sensitive-type-stats`、`GET /api/datahub/dashboard/recent-quality-results`、`GET /api/datahub/dashboard/recent-apis`。特别注意，D4-06 实际 API 发布后端路径是 `/api/datahub/api-publishes/**`，不是旧规划里的 `/api/datahub/apis/**`。
+
+******************************************************************************************************
+
+
+
+
+
+
 
 
 

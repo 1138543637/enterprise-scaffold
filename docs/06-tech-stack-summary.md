@@ -3591,4 +3591,17 @@ D4-05 新增数据治理安全能力，技术上继续使用 Java 17、Spring Bo
 D4-06 继续使用 Java 17、Spring Boot 3、MyBatis-Plus、MySQL、Vue3、Vite、TypeScript、Axios、Element Plus 和 Docker Compose。本阶段后端继续放在 `cn.sxu.enterprise.module.datahub` 包下，新增 `DatahubApiPublish`、`DatahubApiCallLog`、`DatahubApiPublishMapper`、`DatahubApiCallLogMapper`、`DatahubApiPublishService`、`DatahubApiPublishServiceImpl`、`DatahubApiPublishController`、`DatahubDashboardService`、`DatahubDashboardServiceImpl`、`DatahubDashboardController` 以及对应 VO / DTO。数据库新增 `datahub_api_publish` 和 `datahub_api_call_log`。前端新增 `scaffold-frontend/src/api/datahub/apiPublish.ts`、`scaffold-frontend/src/api/datahub/dashboard.ts`、`scaffold-frontend/src/views/datahub/DatahubApiPublishView.vue`、`scaffold-frontend/src/views/datahub/DatahubDashboardView.vue`，路由新增 `/datahub/apis` 和 `/datahub/dashboard`。前端 API 文件继续使用相对路径 import，不使用 `@` 路径别名；接口调用继续防止 `AxiosResponse<T>` 与 `T` 类型不匹配，使用 `unwrapData` 兼容 `request.ts` 已解包和未解包两种情况；页面数组变量赋值前继续使用 `Array.isArray` 保护；统计卡片、查询区和看板布局继续优先使用 CSS Grid。
 
 
+## D4-07：项目四总体验收与收尾技术总结
+
+D4-07 完成项目四“国企 / 政务数据治理与共享交换平台”的总体验收与收尾。本阶段不新增 SQL 文件、不新增数据库表、不新增数据库字段、不新增后端业务接口、不新增 Docker 服务、不修改 Docker 配置，主要完成首页 `/dashboard` 的项目四入口导航、README 和 docs 文档补充、简历表达和面试讲法沉淀。项目四完整技术链路为：Spring Boot 3 + MyBatis-Plus + MySQL 实现数据源管理、元数据采集、数据质量检测、敏感字段识别、脱敏预览、API 共享发布和数据治理看板；Vue3 + Vite + TypeScript + Element Plus + Axios + Vue Router 实现 `/datahub/datasources`、`/datahub/metadata`、`/datahub/quality`、`/datahub/sensitive`、`/datahub/apis`、`/datahub/dashboard` 六个前端页面；Docker Compose 继续负责 MySQL、后端、前端、EMQX、Prometheus、Grafana 和 Kafka 的一键部署验收。本阶段继续遵守前端 API 解包、AxiosResponse 类型匹配、数组安全、CSS Grid 布局和 Docker Compose 验收规则。
+
+******************************************************************************************************
+
+
+
+
+
+
+
+
 
