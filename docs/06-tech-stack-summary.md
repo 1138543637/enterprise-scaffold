@@ -3612,6 +3612,9 @@ I5-02 完成项目五 IAM 模块的接口访问日志能力，后端继续使用
 
 I5-03 完成项目五 IAM 模块的异常登录检测能力，后端继续使用 Java 17、Spring Boot 3、MyBatis-Plus、MySQL、JWT、ApiResult、PageResult 和 `@OperLog`，新增 `iam_login_risk` 表、`GET /api/iam/login-risks/page` 分页查询接口和 `POST /api/iam/login-risks/detect` 风险检测接口。后端分层继续采用 Entity、Mapper、Service、ServiceImpl、Controller、Query、VO 结构，数据库表继续使用 `iam_` 前缀，接口路径继续使用 `/api/iam/**`。本阶段检测逻辑复用系统已有 `sys_login_log` 登录日志，识别登录失败、短时间多次失败和异常 IP。前端继续使用 Vue3、Vite、TypeScript、Element Plus、Axios 和 Vue Router，新增 `/iam/login-risks` 页面和 `scaffold-frontend/src/api/iam/loginRisk.ts`，并通过兼容式解包防止 ApiResult、AxiosResponse 和 PageResult 层级错误。页面统计卡片、查询区和关键布局使用 CSS Grid。本阶段不新增 Docker 服务、不修改 Docker Compose 配置，但需要执行 SQL、后端编译、前端构建和 Docker Compose 重建验收。
 
+### I5-04
+I5-04 完成项目五 IAM 模块的接口限流规则管理和模拟检测能力，后端继续使用 Java 17、Spring Boot 3、MyBatis-Plus、MySQL、JWT、ApiResult、PageResult 和 @OperLog，新增 iam_rate_limit_rule 表、GET /api/iam/rate-limit-rules/page 分页查询接口、POST /api/iam/rate-limit-rules/{id}/enable 启用接口、POST /api/iam/rate-limit-rules/{id}/disable 停用接口和 POST /api/iam/rate-limit-rules/simulate 模拟检测接口。后端分层继续采用 Entity、Mapper、Service、ServiceImpl、Controller、Query、VO 结构，数据库表继续使用 iam_ 前缀，接口路径继续使用 /api/iam/**。前端继续使用 Vue3、Vite、TypeScript、Element Plus、Axios 和 Vue Router，新增 /iam/rate-limit-rules 页面和 scaffold-frontend/src/api/iam/rateLimitRule.ts，并通过兼容式解包防止 ApiResult、AxiosResponse 和 PageResult 层级错误。页面统计卡片、查询区和关键布局使用 CSS Grid。本阶段不新增 Docker 服务、不修改 Docker Compose 配置，但需要执行 SQL、后端编译、前端构建和 Docker Compose 重建验收。
+
 
 
 

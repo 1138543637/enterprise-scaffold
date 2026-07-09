@@ -2506,6 +2506,9 @@ I5-02 新增 IAM 接口访问日志分页查询接口：`GET /api/iam/access-log
 
 I5-03 新增 IAM 异常登录风险分页查询接口 `GET /api/iam/login-risks/page` 和异常登录检测接口 `POST /api/iam/login-risks/detect`。两个接口继续使用 JWT 认证，不加入放行列表，Controller 方法继续使用 `@OperLog`，返回结构继续使用 `ApiResult` 和 `PageResult`。分页查询参数包括 `pageNo`、`pageSize`、`riskCode`、`username`、`clientIp`、`riskType`、`riskLevel`、`handleStatus`、`beginTime`、`endTime`。检测接口基于 `sys_login_log` 中登录失败记录生成 `iam_login_risk` 风险数据，不修改登录主流程，不重写 `/api/auth/login`，不影响 D4 的 `/api/datahub/**` 接口和 I5-02 的 `/api/iam/access-logs/page` 接口。
 
+### I5-04
+I5-04 新增 IAM 接口限流规则分页查询接口 GET /api/iam/rate-limit-rules/page、规则启用接口 POST /api/iam/rate-limit-rules/{id}/enable、规则停用接口 POST /api/iam/rate-limit-rules/{id}/disable、模拟检测接口 POST /api/iam/rate-limit-rules/simulate。接口继续使用 JWT 认证，不加入放行列表，Controller 方法继续使用 @OperLog，返回结构继续使用 ApiResult 和 PageResult。分页查询参数包括 pageNo、pageSize、ruleCode、ruleName、requestUri、requestMethod、limitDimension、enabled、beginTime、endTime。模拟检测请求参数包括 requestUri、requestMethod、username、clientIp、currentRequests。模拟检测只根据 iam_rate_limit_rule 中已启用规则判断是否命中，不修改登录主流程，不重写 /api/auth/login，不修改 SecurityConfig，不实现真实 Filter / Interceptor 强制限流。
+
 
 
 

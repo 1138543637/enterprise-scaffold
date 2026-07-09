@@ -199,7 +199,16 @@ const routes: RouteRecordRaw[] = [
         meta: {
             title: '异常登录检测',
             requiresAuth: true }
+    },
+    {
+        path: '/iam/rate-limit-rules',
+        name: 'IamRateLimitRules',
+        component: () => import('../views/iam/IamRateLimitRuleView.vue'),
+        meta: {
+            requiresAuth: true
+        }
     }
+
 
 
 ]
