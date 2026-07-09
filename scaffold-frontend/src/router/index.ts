@@ -216,6 +216,15 @@ const routes: RouteRecordRaw[] = [
             requiresAuth: true,
             title: '安全策略配置'
         }
+    },
+    {
+        path: '/iam/permission-audits',
+        name: 'IamPermissionAudits',
+        component: () => import('../views/iam/IamPermissionAuditView.vue'),
+        meta: {
+            title: '权限审计增强',
+            requiresAuth: true
+        }
     }
 
 

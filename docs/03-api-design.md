@@ -2513,6 +2513,10 @@ I5-04 新增 IAM 接口限流规则分页查询接口 GET /api/iam/rate-limit-ru
 I5-05 新增 IAM 安全策略配置分页查询接口 GET /api/iam/security-policies/page、策略启用接口 POST /api/iam/security-policies/{id}/enable、策略停用接口 POST /api/iam/security-policies/{id}/disable、策略配置更新接口 POST /api/iam/security-policies/{id}/update-config。接口继续使用 JWT 认证，不加入放行列表，Controller 方法继续使用 @OperLog，返回结构继续使用 ApiResult 和 PageResult。分页查询参数包括 pageNo、pageSize、policyCode、policyName、policyType、policyLevel、effectiveScope、enabled、status、beginTime、endTime。更新配置请求参数包括 policyValue、policyUnit、effectiveScope、enabled、remark。本阶段只管理安全策略配置，不修改登录主流程，不重写 /api/auth/login，不修改 SecurityConfig，不实现真实 Filter / Interceptor 强制限流。
 
 
+## I5-06：权限审计增强接口
+
+I5-06 新增 IAM 权限审计分页查询接口 `GET /api/iam/permission-audits/page`、模拟生成审计记录接口 `POST /api/iam/permission-audits/simulate` 和复核审计记录接口 `POST /api/iam/permission-audits/{id}/review`。接口继续使用 JWT 认证，不加入放行列表，Controller 方法继续使用 `@OperLog`，返回结构继续使用 `ApiResult` 和 `PageResult`。分页查询参数包括 `pageNo`、`pageSize`、`auditCode`、`auditType`、`targetType`、`targetName`、`changeAction`、`riskLevel`、`reviewStatus`、`operatorName`、`beginTime`、`endTime`。模拟生成请求参数包括 `auditType`、`targetType`、`targetId`、`targetName`、`changeAction`、`beforeValue`、`afterValue`、`riskLevel`、`requestIp`、`operatorName`、`remark`。复核请求参数包括 `reviewStatus`、`reviewBy`、`remark`。本阶段只做审计记录管理和复核闭环，不修改登录主流程，不修改 SecurityConfig，不实现真实权限变更拦截。
+
 
 
 

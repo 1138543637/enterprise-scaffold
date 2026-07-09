@@ -1221,4 +1221,14 @@ I5-04：接口限流已完成。项目五“统一身份认证、权限审计与
 I5-05：安全策略配置已完成。项目五“统一身份认证、权限审计与数据安全平台”新增安全策略配置能力，新增 iam_security_policy 表，新增后端分页接口 GET /api/iam/security-policies/page，新增策略启用接口 POST /api/iam/security-policies/{id}/enable，新增策略停用接口 POST /api/iam/security-policies/{id}/disable，新增策略配置更新接口 POST /api/iam/security-policies/{id}/update-config，新增前端 API 文件 scaffold-frontend/src/api/iam/securityPolicy.ts，新增前端页面 scaffold-frontend/src/views/iam/IamSecurityPolicyView.vue，新增前端路由 /iam/security-policies。本阶段用于统一管理登录失败阈值、接口限流默认值、风险处理时限和审计日志保留周期，继续复用 JWT、ApiResult、PageResult、@OperLog 和 Docker Compose。本阶段不新增 Docker 服务、不修改 Docker 配置，不重写登录流程，不重写 JWT，不修改 SecurityConfig。下一步进入 I5-06：权限审计增强或 IAM 安全看板增强。
 
 
+## I5-06：权限审计增强
+
+项目五“统一身份认证、权限审计与数据安全平台”已新增权限审计增强能力。本阶段新增 `iam_permission_audit` 表，新增后端分页接口 `GET /api/iam/permission-audits/page`、模拟审计记录接口 `POST /api/iam/permission-audits/simulate`、复核审计记录接口 `POST /api/iam/permission-audits/{id}/review`，新增前端 API 文件 `scaffold-frontend/src/api/iam/permissionAudit.ts`，新增前端页面 `scaffold-frontend/src/views/iam/IamPermissionAuditView.vue`，新增前端路由 `/iam/permission-audits`。本阶段用于记录和复核用户角色变更、角色菜单变更、用户状态变更、菜单权限标识变更和数据范围变更等权限相关操作。本阶段继续复用 JWT、ApiResult、PageResult、@OperLog 和 Docker Compose，不新增 Docker 服务，不修改 Docker Compose 配置，不重写 `/api/auth/login`，不重写 JWT，不修改 SecurityConfig。
+
+
+
+
+
+
+
 

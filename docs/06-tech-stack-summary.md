@@ -3619,6 +3619,8 @@ I5-04 完成项目五 IAM 模块的接口限流规则管理和模拟检测能力
 I5-05 完成项目五 IAM 模块的安全策略配置能力，后端继续使用 Java 17、Spring Boot 3、MyBatis-Plus、MySQL、JWT、ApiResult、PageResult 和 @OperLog，新增 iam_security_policy 表、GET /api/iam/security-policies/page 分页查询接口、POST /api/iam/security-policies/{id}/enable 启用接口、POST /api/iam/security-policies/{id}/disable 停用接口和 POST /api/iam/security-policies/{id}/update-config 配置更新接口。后端分层继续采用 Entity、Mapper、Service、ServiceImpl、Controller、Query、VO、UpdateRequest 结构，数据库表继续使用 iam_ 前缀，接口路径继续使用 /api/iam/**。本阶段安全策略配置用于统一管理登录失败阈值、登录失败统计窗口、接口限流默认阈值、高风险处理时限和审计日志保留天数，为后续权限审计增强、风险闭环处理和 IAM 安全看板提供基础。前端继续使用 Vue3、Vite、TypeScript、Element Plus、Axios 和 Vue Router，新增 /iam/security-policies 页面和 scaffold-frontend/src/api/iam/securityPolicy.ts，并通过兼容式解包防止 ApiResult、AxiosResponse 和 PageResult 层级错误。页面统计卡片、查询区、配置弹窗和关键布局使用 CSS Grid。本阶段不新增 Docker 服务、不修改 Docker Compose 配置，但必须执行 SQL、后端编译、前端构建和 Docker Compose 重建验收。
 
 
+I5-06 完成项目五 IAM 模块的权限审计增强能力，后端继续使用 Java 17、Spring Boot 3、MyBatis-Plus、MySQL、JWT、ApiResult、PageResult 和 @OperLog，新增 `iam_permission_audit` 表、`GET /api/iam/permission-audits/page` 分页查询接口、`POST /api/iam/permission-audits/simulate` 模拟审计记录接口和 `POST /api/iam/permission-audits/{id}/review` 复核接口。后端分层继续采用 Entity、Mapper、Service、ServiceImpl、Controller、Query、VO、Request 结构，数据库表继续使用 `iam_` 前缀，接口路径继续使用 `/api/iam/**`。前端继续使用 Vue3、Vite、TypeScript、Element Plus、Axios 和 Vue Router，新增 `/iam/permission-audits` 页面和 `scaffold-frontend/src/api/iam/permissionAudit.ts`，并通过兼容式解包防止 ApiResult、AxiosResponse 和 PageResult 层级错误。页面统计卡片、查询区、弹窗和关键布局使用 CSS Grid。本阶段不新增 Docker 服务、不修改 Docker Compose 配置，但必须执行 SQL、后端编译、前端构建和 Docker Compose 重建验收。I5-06 继续遵守 PageResult import 使用 `cn.sxu.enterprise.common.core.page.PageResult` 和 PageResult.of 参数顺序 `total、pages、pageNo、pageSize、records` 的规则。
+
 
 
 
