@@ -1,0 +1,132 @@
+SET NAMES utf8mb4;
+
+USE enterprise_scaffold;
+
+CREATE TABLE IF NOT EXISTS iam_access_log (
+    id BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    trace_id VARCHAR(64) NULL COMMENT '链路追踪ID',
+    request_uri VARCHAR(255) NOT NULL COMMENT '接口路径',
+    request_method VARCHAR(20) NOT NULL COMMENT '请求方法',
+    module_name VARCHAR(100) NULL DEFAULT 'IAM' COMMENT '模块名称',
+    operation_name VARCHAR(100) NULL COMMENT '操作名称',
+    user_id BIGINT NULL COMMENT '访问用户ID',
+    username VARCHAR(64) NULL COMMENT '访问用户名',
+    client_ip VARCHAR(64) NULL COMMENT '客户端IP',
+    user_agent VARCHAR(512) NULL COMMENT '浏览器或客户端标识',
+    request_params VARCHAR(1000) NULL COMMENT '请求参数摘要',
+    response_code INT NULL COMMENT '响应业务码或HTTP码',
+    response_msg VARCHAR(255) NULL COMMENT '响应消息摘要',
+    access_status TINYINT NOT NULL DEFAULT 0 COMMENT '访问状态：0成功，1失败',
+    cost_ms BIGINT NOT NULL DEFAULT 0 COMMENT '接口耗时毫秒',
+    access_time DATETIME NOT NULL COMMENT '访问时间',
+    status TINYINT NOT NULL DEFAULT 0 COMMENT '业务状态：0有效，1无效',
+    create_by VARCHAR(64) NULL COMMENT '创建人',
+    create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_by VARCHAR(64) NULL COMMENT '更新人',
+    update_time DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    deleted TINYINT NOT NULL DEFAULT 0 COMMENT '逻辑删除：0未删除，1已删除',
+    remark VARCHAR(500) NULL COMMENT '备注',
+    PRIMARY KEY (id),
+    KEY idx_trace_id (trace_id),
+    KEY idx_request_uri (request_uri),
+    KEY idx_request_method (request_method),
+    KEY idx_username (username),
+    KEY idx_client_ip (client_ip),
+    KEY idx_access_status (access_status),
+    KEY idx_access_time (access_time),
+    KEY idx_deleted (deleted)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='IAM接口访问日志表';
+
+INSERT INTO iam_access_log (
+    trace_id,
+    request_uri,
+    request_method,
+    module_name,
+    operation_name,
+    user_id,
+    username,
+    client_ip,
+    user_agent,
+    request_params,
+    response_code,
+    response_msg,
+    access_status,
+    cost_ms,
+    access_time,
+    status,
+    create_by,
+    create_time,
+    deleted,
+    remark
+)
+SELECT
+    'I5-02-DEMO-0001',
+    '/api/iam/health',
+    'GET',
+    'IAM',
+    '模块健康检查',
+    1,
+    'admin',
+    '127.0.0.1',
+    'PostmanRuntime',
+    '{}',
+    0,
+    'success',
+    0,
+    18,
+    NOW(),
+    0,
+    'system',
+    NOW(),
+    0,
+    'I5-02 初始化演示数据'
+WHERE NOT EXISTS (
+    SELECT 1 FROM iam_access_log WHERE trace_id = 'I5-02-DEMO-0001'
+);
+
+INSERT INTO iam_access_log (
+    trace_id,
+    request_uri,
+    request_method,
+    module_name,
+    operation_name,
+    user_id,
+    username,
+    client_ip,
+    user_agent,
+    request_params,
+    response_code,
+    response_msg,
+    access_status,
+    cost_ms,
+    access_time,
+    status,
+    create_by,
+    create_time,
+    deleted,
+    remark
+)
+SELECT
+    'I5-02-DEMO-0002',
+    '/api/iam/access-logs/page',
+    'GET',
+    'IAM',
+    '接口访问日志分页查询',
+    1,
+    'admin',
+    '127.0.0.1',
+    'Mozilla/5.0',
+    '{"pageNo":1,"pageSize":10}',
+    0,
+    'success',
+    0,
+    32,
+    NOW(),
+    0,
+    'system',
+    NOW(),
+    0,
+    'I5-02 初始化演示数据'
+WHERE NOT EXISTS (
+    SELECT 1 FROM iam_access_log WHERE trace_id = 'I5-02-DEMO-0002'
+);

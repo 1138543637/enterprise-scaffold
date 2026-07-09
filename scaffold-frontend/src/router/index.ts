@@ -171,13 +171,26 @@ const routes: RouteRecordRaw[] = [
         path: '/datahub/apis',
         name: 'DatahubApis',
         component: () => import('../views/datahub/DatahubApiPublishView.vue'),
-        meta: { title: 'API共享发布' }
+        meta: {
+            title: 'API共享发布',
+            requiresAuth: true }
     },
     {
         path: '/datahub/dashboard',
         name: 'DatahubDashboard',
         component: () => import('../views/datahub/DatahubDashboardView.vue'),
-        meta: { title: '数据治理看板' }
+        meta: {
+            title: '数据治理看板' ,
+            requiresAuth: true}
+    },
+    {
+        path: '/iam/access-logs',
+        name: 'IamAccessLogs',
+        component: () => import('../views/iam/IamAccessLogView.vue'),
+        meta: {
+            title: '接口访问日志',
+            requiresAuth: true
+        }
     }
 
 

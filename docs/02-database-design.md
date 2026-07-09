@@ -1140,6 +1140,12 @@ D4-07 不新增 SQL 文件，不新增数据库表，不新增数据库字段。
 I5-01 不新增 SQL 文件，不新增数据库表，不新增数据库字段，也不修改 `enterprise_scaffold_init.sql`。本阶段只创建 IAM 后端模块骨架和健康检查接口，暂不涉及业务数据持久化。项目五后续如果进入 I5-02、I5-03、I5-04、I5-05 等需要新增数据库表的阶段，IAM 相关业务表统一使用 `iam_` 前缀；新增 SQL 文件第一行必须固定为 `SET NAMES utf8mb4;`，第二段必须固定使用 `USE enterprise_scaffold;`。
 
 
+## I5-02：IAM 接口访问日志表
+
+I5-02 新增 SQL 文件 `scaffold-sql/i5_02_iam_access_log.sql`，SQL 第一行固定为 `SET NAMES utf8mb4;`，第二段固定使用 `USE enterprise_scaffold;`。本阶段新增表 `iam_access_log`，该表属于项目五 IAM 模块，继续使用 `iam_` 前缀。表字段包括 `id`、`trace_id`、`request_uri`、`request_method`、`module_name`、`operation_name`、`user_id`、`username`、`client_ip`、`user_agent`、`request_params`、`response_code`、`response_msg`、`access_status`、`cost_ms`、`access_time`、`status`、`create_by`、`create_time`、`update_by`、`update_time`、`deleted` 和 `remark`。其中 `access_status` 用于区分访问成功和失败，`cost_ms` 用于记录接口耗时，`access_time` 用于记录访问发生时间，`deleted` 继续作为逻辑删除字段。本阶段不新增 Docker 服务、不修改 Docker volume、不修改上传目录挂载规则。
+
+
+
 
 
 

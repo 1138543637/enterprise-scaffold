@@ -1205,6 +1205,10 @@ Enterprise Scaffold 当前继续基于 D4-03 元数据采集能力推进到 D4-0
 
 
 
+## I5-02：接口访问日志
+
+I5-02 已在项目五“统一身份认证、权限审计与数据安全平台”中新增接口访问日志能力。该阶段新增 `iam_access_log` 表，新增 IAM 接口访问日志分页查询接口 `GET /api/iam/access-logs/page`，并新增前端页面 `/iam/access-logs`。系统可以按接口路径、请求方法、访问用户、访问 IP、访问状态和访问时间筛选访问日志，为后续权限审计、异常访问检测和数据安全分析提供基础。本阶段继续复用 Java 17、Spring Boot 3、MyBatis-Plus、MySQL、JWT、ApiResult、PageResult、@OperLog、Vue3、Element Plus、Axios、Vue Router 和 Docker Compose。I5-02 不新增 Docker 服务、不修改 Docker Compose 配置，但需要执行 SQL、后端编译、前端构建和 Docker Compose 验收。
+
 
 
 

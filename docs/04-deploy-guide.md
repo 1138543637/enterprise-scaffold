@@ -2261,6 +2261,11 @@ D4-07 不新增 Docker 服务，不修改 Docker Compose 配置，不新增 Dock
 I5-01 不新增 Docker 服务，不修改 Docker Compose 配置，不新增 Docker volume，不修改容器名、端口、环境变量和上传目录挂载规则。本阶段新增了后端 Java 代码，因此需要执行后端编译，并通过 Docker Compose 重建后端镜像完成验收。后端编译命令为：`cd /d D:\Code\enterprise-scaffold\scaffold-backend`，然后执行 `mvn -DskipTests compile`。Docker Compose 验收命令为：`cd /d D:\Code\enterprise-scaffold\scaffold-docker`，然后执行 `docker compose --env-file .env up -d --build`、`docker compose ps`、`docker logs -f enterprise-scaffold-backend`。启动后登录系统获取 token，再访问 `GET http://localhost:8080/api/iam/health`，确认返回 `enterprise-scaffold iam module running`。
 
 
+## I5-02：接口访问日志部署与验收
+
+I5-02 新增数据库表和后端 Java 代码，因此需要先执行 SQL，再执行后端编译、前端构建和 Docker Compose 重建验收。本阶段不新增 Docker 服务、不修改 Docker Compose 配置、不新增 Docker volume、不修改容器名、不修改端口、不修改环境变量、不修改上传目录挂载规则。Docker Compose 验收仍然必须执行：进入 `D:\Code\enterprise-scaffold\scaffold-docker`，执行 `docker compose --env-file .env up -d --build`，再执行 `docker compose ps` 检查容器状态，最后执行 `docker logs -f enterprise-scaffold-backend` 检查后端启动日志。接口验收地址为 `http://localhost:8080/api/iam/access-logs/page?pageNo=1&pageSize=10`，前端页面验收地址为 `http://localhost:5173/iam/access-logs`。
+
+
 
 
 
