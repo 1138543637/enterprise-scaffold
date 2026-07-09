@@ -1199,6 +1199,12 @@ Enterprise Scaffold 当前继续基于 D4-03 元数据采集能力推进到 D4-0
 
 ******************************************************************************************************
 
+## I5-01：抽象 IAM 模块
+
+当前项目已进入项目五“统一身份认证、权限审计与数据安全平台”。I5-01 已新增 IAM 后端模块骨架，包名为 `cn.sxu.enterprise.module.iam`，并新增健康检查接口 `GET /api/iam/health`。该接口继续复用已有 JWT 认证、ApiResult 统一返回结构和 @OperLog 操作日志，不重新实现登录接口，不重写 JWT，不修改系统用户、角色、菜单基础表。I5-01 不新增 SQL 文件、不新增数据库表、不新增前端页面、不新增 Docker 服务、不修改 Docker 配置。后端编译使用 `mvn -DskipTests compile`，Docker Compose 验收继续使用 `docker compose --env-file .env up -d --build`、`docker compose ps`、`docker logs -f enterprise-scaffold-backend`。推荐提交命令：`git add .`、`git commit -m "feat: init iam security module"`、`git push`。
+
+
+
 
 
 

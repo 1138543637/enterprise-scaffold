@@ -2256,6 +2256,10 @@ D4-07 不新增 Docker 服务，不修改 Docker Compose 配置，不新增 Dock
 
 ******************************************************************************************************
 
+## I5-01：抽象 IAM 模块部署验收
+
+I5-01 不新增 Docker 服务，不修改 Docker Compose 配置，不新增 Docker volume，不修改容器名、端口、环境变量和上传目录挂载规则。本阶段新增了后端 Java 代码，因此需要执行后端编译，并通过 Docker Compose 重建后端镜像完成验收。后端编译命令为：`cd /d D:\Code\enterprise-scaffold\scaffold-backend`，然后执行 `mvn -DskipTests compile`。Docker Compose 验收命令为：`cd /d D:\Code\enterprise-scaffold\scaffold-docker`，然后执行 `docker compose --env-file .env up -d --build`、`docker compose ps`、`docker logs -f enterprise-scaffold-backend`。启动后登录系统获取 token，再访问 `GET http://localhost:8080/api/iam/health`，确认返回 `enterprise-scaffold iam module running`。
+
 
 
 
