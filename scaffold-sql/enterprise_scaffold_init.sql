@@ -2091,3 +2091,14 @@ VALUES
 ('PA-MENU-PERM-001', 'MENU_PERMISSION', 'MENU', 100, '权限审计', 'UPDATE', 'perms=iam:audit:view', 'perms=iam:audit:view,iam:audit:review', 'MEDIUM', 'PENDING', '127.0.0.1', 'admin', 0, 'system', NOW(), '初始化权限审计样例：菜单权限标识变化'),
 ('PA-USER-STATUS-001', 'USER_STATUS', 'USER', 3, 'risk_user', 'DISABLE', 'status=0', 'status=1', 'HIGH', 'PENDING', '127.0.0.1', 'admin', 0, 'system', NOW(), '初始化权限审计样例：高风险用户被停用'),
 ('PA-DATA-SCOPE-001', 'DATA_SCOPE', 'ROLE', 2, '数据审计员', 'UPDATE', 'scope=全部数据', 'scope=本部门数据', 'LOW', 'IGNORED', '127.0.0.1', 'admin', 0, 'system', NOW(), '初始化权限审计样例：数据范围变更');
+
+ALTER TABLE iam_login_risk
+    MODIFY COLUMN handle_status tinyint NOT NULL DEFAULT 0 COMMENT '处理状态：0未处理，1已确认，2已忽略，3已关闭';
+
+ALTER TABLE iam_login_risk
+    ADD COLUMN handle_by varchar(64) DEFAULT NULL COMMENT '处理人' AFTER handle_status,
+    ADD COLUMN handle_time datetime DEFAULT NULL COMMENT '处理时间' AFTER handle_by,
+    ADD COLUMN handle_remark varchar(500) DEFAULT NULL COMMENT '处理备注' AFTER handle_time;
+
+ALTER TABLE iam_login_risk
+    ADD INDEX idx_iam_login_risk_handle_status_time (handle_status, handle_time);

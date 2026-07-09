@@ -3626,7 +3626,8 @@ I5-06 完成项目五 IAM 模块的权限审计增强能力，后端继续使用
 
 I5-07 完成项目五 IAM 模块的安全看板增强能力。后端继续使用 Java 17、Spring Boot 3、MyBatis-Plus、MySQL、JWT、ApiResult 和 @OperLog，不新增 SQL 文件、不新增数据库表，直接汇总 `iam_access_log`、`iam_login_risk`、`iam_rate_limit_rule`、`iam_security_policy`、`iam_permission_audit` 五张既有 IAM 表。新增接口为 `GET /api/iam/security-dashboard/overview`，后端分层继续采用 Controller、Service、ServiceImpl、VO 结构，包名继续使用 `cn.sxu.enterprise.module.iam`，接口路径继续使用 `/api/iam/**`。前端继续使用 Vue3、Vite、TypeScript、Element Plus、Axios 和 Vue Router，新增 API 文件 `scaffold-frontend/src/api/iam/securityDashboard.ts`，新增页面 `scaffold-frontend/src/views/iam/IamSecurityDashboardView.vue`，新增路由 `/iam/security-dashboard`。页面统计卡片、风险分布、审计状态、安全能力启停统计和最近安全事件列表使用 CSS Grid 进行布局，并在前端 API 中通过兼容式解包防止 ApiResult、AxiosResponse 和业务数据层级错误。本阶段不新增 Docker 服务、不修改 Docker Compose 配置，但仍必须执行后端编译、前端构建和 Docker Compose 重建验收。
 
-
+## I5-08
+I5-08 可参考 RuoYi / RuoYi-Vue / RuoYi-Vue3 中登录日志、操作日志、用户状态处理、审计记录处理和后台管理列表页的分层方式，也可以参考企业后台系统常见的风险处理工单、告警确认、审计复核页面。参考时只学习 Controller、Service、ServiceImpl、VO、前端 API、前端页面、弹窗表单、表格操作和 CSS Grid 布局方式，不能照搬包名、表名、接口路径、菜单体系、返回结构或权限框架。本项目固定使用 cn.sxu.enterprise.module.iam、/api/iam/**、iam_ 表前缀、ApiResult、PageResult、@OperLog、JWT 和现有 Docker Compose 契约。本阶段不引入 Sa-Token，不新增 Redis，不新增 Docker 服务。
 
 
 

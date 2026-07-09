@@ -1229,8 +1229,8 @@ I5-05：安全策略配置已完成。项目五“统一身份认证、权限审
 ## I5-07：IAM 安全看板增强
 
 项目五“统一身份认证、权限审计与数据安全平台”已完成 I5-07：IAM 安全看板增强。本阶段新增 IAM 安全治理总览接口 `GET /api/iam/security-dashboard/overview`，汇总接口访问日志、异常登录风险、接口限流规则、安全策略配置和权限审计记录，展示今日访问量、今日失败访问、未处理登录风险、高风险权限变更、待复核审计、启用安全策略、启用限流规则、风险分布、权限审计复核状态、安全能力启停统计和最近安全事件。前端新增 `scaffold-frontend/src/api/iam/securityDashboard.ts`、`scaffold-frontend/src/views/iam/IamSecurityDashboardView.vue` 和路由 `/iam/security-dashboard`。本阶段不新增 SQL 文件，不新增数据库表，不修改 Docker Compose，不重写登录认证，不修改 JWT，不修改 SecurityConfig。完成后可通过 `http://localhost:5173/iam/security-dashboard` 查看 IAM 安全看板。
-
-
+## I5-08
+I5-08 完成项目五 IAM 模块的风险闭环处理能力，后端继续使用 Java 17、Spring Boot 3、MyBatis-Plus、MySQL、JWT、ApiResult、PageResult 和 @OperLog。数据库层新增 SQL 文件 scaffold-sql/i5_08_iam_risk_closure.sql，不新增数据库表，仅扩展 iam_login_risk 的 handle_by、handle_time、handle_remark 字段，并固定 handle_status 的 0 未处理、1 已确认、2 已忽略、3 已关闭状态；权限审计闭环继续复用 iam_permission_audit 的 review_status、review_by、review_time 和 remark。后端新增 IamRiskClosureController、IamRiskClosureService、IamRiskClosureServiceImpl、IamRiskClosureSummaryVO、IamLoginRiskHandleRequest、IamPermissionAuditClosureRequest，接口路径继续使用 /api/iam/**。前端继续使用 Vue3、Vite、TypeScript、Element Plus、Axios 和 Vue Router，新增 API 文件 scaffold-frontend/src/api/iam/riskClosure.ts，新增页面 scaffold-frontend/src/views/iam/IamRiskClosureView.vue，新增路由 /iam/risk-closures。页面统计卡片、查询区、表格区域和弹窗布局继续优先使用 CSS Grid，并在前端 API 中通过 unwrapApiResult 与 normalizePage 防止 ApiResult、AxiosResponse 和业务数据层级错误。本阶段不新增 Docker 服务、不修改 Docker Compose 配置，但仍执行 SQL、本地编译、前端构建和 Docker Compose 重建验收。
 
 
 

@@ -233,6 +233,13 @@ const routes: RouteRecordRaw[] = [
         meta: {
             title: 'IAM 安全看板增强',
             requiresAuth: true }
+    },
+    {
+        path: '/iam/risk-closures',
+        name: 'IamRiskClosure',
+        component: () => import('../views/iam/IamRiskClosureView.vue'),
+        meta: { title: 'IAM 风险闭环处理',
+            requiresAuth: true }
     }
 
 

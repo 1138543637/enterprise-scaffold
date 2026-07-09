@@ -2522,7 +2522,8 @@ I5-06 新增 IAM 权限审计分页查询接口 `GET /api/iam/permission-audits/
 
 I5-07 新增 IAM 安全看板总览接口：`GET /api/iam/security-dashboard/overview`。该接口继续使用 JWT 认证，不加入 SecurityConfig 放行列表，Controller 方法继续使用 `@OperLog`，返回结构继续使用 `ApiResult<IamSecurityDashboardVO>`。`IamSecurityDashboardVO` 包含 `summary`、`riskDistributions`、`reviewStatusStats`、`policyStatusStats`、`recentEvents` 五部分数据。`summary` 展示今日访问量、今日失败访问、未处理登录风险、高风险权限变更、待复核审计、启用安全策略和启用限流规则；`riskDistributions` 展示异常登录风险和权限审计风险的低、中、高风险分布；`reviewStatusStats` 展示权限审计待复核、已复核、已忽略统计；`policyStatusStats` 展示安全策略和限流规则启停统计；`recentEvents` 汇总最近异常登录和权限审计事件。
 
-
+## I5-08
+I5-08 新增 SQL 文件 scaffold-sql/i5_08_iam_risk_closure.sql，第一行固定为 SET NAMES utf8mb4;，第二段固定使用 USE enterprise_scaffold;。本阶段不新增数据库表，仅扩展 I5-03 已有表 iam_login_risk。新增字段 handle_by 用于保存处理人，handle_time 用于保存处理时间，handle_remark 用于保存处理备注；同时将 handle_status 的业务含义固定为 0 未处理、1 已确认、2 已忽略、3 已关闭，并新增 handle_status、handle_time 联合索引，便于后续按处理状态和处理时间查询。权限审计闭环不新增字段，继续复用 I5-06 的 iam_permission_audit.review_status、review_by、review_time 和 remark 字段。
 
 
 

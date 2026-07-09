@@ -1080,7 +1080,8 @@ I5-06 可参考 RuoYi / RuoYi-Vue / RuoYi-Vue3 的用户管理、角色管理、
 
 I5-07 可参考 RuoYi / RuoYi-Vue / RuoYi-Vue3 的后台首页、监控首页、操作日志、登录日志、角色管理和菜单管理中的统计展示思路，也可参考企业级后台系统常见的安全运营中心、IAM 总览页、审计中心首页设计。参考时只学习 Controller、Service、Mapper、VO、前端 API、前端页面和看板布局的分层方式，不能照搬包名、表名、接口路径、菜单体系、返回结构或权限框架。本项目固定使用 `cn.sxu.enterprise.module.iam`、`/api/iam/**`、`iam_` 表前缀、`ApiResult`、`PageResult`、`@OperLog`、JWT 和现有 Docker Compose 契约。本阶段不引入 Sa-Token，不新增 Redis，不新增 Docker 服务。推荐提交命令：`git add .`、`git commit -m "feat: implement iam security dashboard"`、`git push`。
 
-
+## I5-08
+I5-08 新增 SQL 文件并新增后端、前端代码，但不新增 Docker 服务，不修改 Docker Compose 配置，不新增 Docker volume，不修改容器名，不修改端口，不修改环境变量，不修改上传目录挂载规则。需要先在本地 MySQL 或 Docker MySQL 执行 scaffold-sql/i5_08_iam_risk_closure.sql，再执行后端编译、前端构建和 Docker Compose 重建验收。本地 MySQL 执行命令为 mysql -uroot -p < D:\Code\enterprise-scaffold\scaffold-sql\i5_08_iam_risk_closure.sql。Docker MySQL 执行命令为 cd /d D:\Code\enterprise-scaffold 后执行 docker exec -i enterprise-scaffold-mysql mysql -uroot -p你的密码 < scaffold-sql\i5_08_iam_risk_closure.sql。后端验收命令为 cd /d D:\Code\enterprise-scaffold\scaffold-backend 后执行 mvn -DskipTests compile。前端验收命令为 cd /d D:\Code\enterprise-scaffold\scaffold-frontend 后执行 pnpm build。Docker Compose 验收命令继续使用 cd /d D:\Code\enterprise-scaffold\scaffold-docker、docker compose --env-file .env up -d --build、docker compose ps、docker logs -f enterprise-scaffold-backend。
 
 
 
