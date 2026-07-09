@@ -207,6 +207,15 @@ const routes: RouteRecordRaw[] = [
         meta: {
             requiresAuth: true
         }
+    },
+    {
+        path: '/iam/security-policies',
+        name: 'IamSecurityPolicy',
+        component: () => import('../views/iam/IamSecurityPolicyView.vue'),
+        meta: {
+            requiresAuth: true,
+            title: '安全策略配置'
+        }
     }
 
 

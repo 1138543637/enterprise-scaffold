@@ -2509,7 +2509,8 @@ I5-03 新增 IAM 异常登录风险分页查询接口 `GET /api/iam/login-risks/
 ### I5-04
 I5-04 新增 IAM 接口限流规则分页查询接口 GET /api/iam/rate-limit-rules/page、规则启用接口 POST /api/iam/rate-limit-rules/{id}/enable、规则停用接口 POST /api/iam/rate-limit-rules/{id}/disable、模拟检测接口 POST /api/iam/rate-limit-rules/simulate。接口继续使用 JWT 认证，不加入放行列表，Controller 方法继续使用 @OperLog，返回结构继续使用 ApiResult 和 PageResult。分页查询参数包括 pageNo、pageSize、ruleCode、ruleName、requestUri、requestMethod、limitDimension、enabled、beginTime、endTime。模拟检测请求参数包括 requestUri、requestMethod、username、clientIp、currentRequests。模拟检测只根据 iam_rate_limit_rule 中已启用规则判断是否命中，不修改登录主流程，不重写 /api/auth/login，不修改 SecurityConfig，不实现真实 Filter / Interceptor 强制限流。
 
-
+### I5-05:
+I5-05 新增 IAM 安全策略配置分页查询接口 GET /api/iam/security-policies/page、策略启用接口 POST /api/iam/security-policies/{id}/enable、策略停用接口 POST /api/iam/security-policies/{id}/disable、策略配置更新接口 POST /api/iam/security-policies/{id}/update-config。接口继续使用 JWT 认证，不加入放行列表，Controller 方法继续使用 @OperLog，返回结构继续使用 ApiResult 和 PageResult。分页查询参数包括 pageNo、pageSize、policyCode、policyName、policyType、policyLevel、effectiveScope、enabled、status、beginTime、endTime。更新配置请求参数包括 policyValue、policyUnit、effectiveScope、enabled、remark。本阶段只管理安全策略配置，不修改登录主流程，不重写 /api/auth/login，不修改 SecurityConfig，不实现真实 Filter / Interceptor 强制限流。
 
 
 
