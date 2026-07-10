@@ -2463,4 +2463,20 @@ git push
 git commit -m "docs: update iam project final summary"
 ```
 
+************************************************************************************************************************************************************************
 
+## G-01：全项目最终部署与验收说明
+
+G-01 是全项目总体验收与长期维护阶段，本阶段不新增 Docker 服务，不修改 Docker Compose 配置，不新增 Docker volume，不修改容器名，不修改端口，不修改环境变量，不修改上传目录挂载规则。
+
+虽然 G-01 主要是文档和验收阶段，但仍必须执行 Docker Compose 验收。Docker Compose 继续负责启动 MySQL、后端、前端、EMQX、Prometheus、Grafana 和 Kafka。
+
+固定部署目录为：
+
+```cmd
+D:\Code\enterprise-scaffold
+
+cd /d D:\Code\enterprise-scaffold\scaffold-docker
+docker compose --env-file .env up -d --build
+
+http://localhost:5173
